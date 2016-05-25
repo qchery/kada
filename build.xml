@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="kada" default="publish" xmlns:ivy="antlib:org.apache.ivy.ant">
+	
+	<property name="lib.dir" value="lib" />
+	<property name="build.dir" value="build" />
+	<property name="src.dir" value="src" />
+	<property name="dest.dir" value="dest" />
+	
+	<property name="ivy.settings.dir" location="./ivysettings.xml"/>
+	
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+	
+	<path id="lib.path.id">
+		<fileset dir="${lib.dir}" />
+	</path>
+	
+	<!-- 编译 -->
+	<target name="compile" depends="clean,resolve">
+		<mkdir dir="${build.dir}"/>
+		<javac destdir="${build.dir}" srcdir="${src.dir}" includeantruntime="false" debug="true" classpathref="lib.path.id" />
+	</target>
+	
+	<!-- 打包 -->
+	<target name="jar" depends="compile">
+		<jar destfile="${dest.dir}/${ant.project.name}.jar">
+			<fileset dir="${src.dir}">
+				<exclude name="test/"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<!-- 发布 -->
+	<target name="publish" depends="jar">
+		<delete file="${dest.dir}/ivy.xml" />
+        <ivy:publish artifactspattern="${dest.dir}/[artifact].[ext]" 
+            resolver="local"
+            pubrevision="${version}"
+            status="release"
+            overwrite="true"
+        />
+        <echo message="project ${ant.project.name} released with version ${version}" />
+	</target>
+	
+	<!-- 获取依赖包 -->
+	<target name="resolve">
+		<ivy:retrieve sync="true" />
+	</target>
+	
+</project>
