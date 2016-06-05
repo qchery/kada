@@ -1,4 +1,4 @@
-package com.qchery.generate.hibernate.model;
+package com.qchery.generate.model.hibernate;
 
 import java.util.List;
 

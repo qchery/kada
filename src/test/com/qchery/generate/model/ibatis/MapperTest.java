@@ -1,10 +1,10 @@
-package test.com.qchery.generate.ibatis.model;
+package test.com.qchery.generate.model.ibatis;
 
 import org.junit.Test;
 
-import com.qchery.generate.ibatis.model.Mapper;
-import com.qchery.generate.ibatis.model.Result;
-import com.qchery.generate.ibatis.model.ResultMap;
+import com.qchery.generate.model.ibatis.Mapper;
+import com.qchery.generate.model.ibatis.Result;
+import com.qchery.generate.model.ibatis.ResultMap;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 

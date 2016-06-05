@@ -1,4 +1,4 @@
-package com.qchery.generate.ibatis.model;
+package com.qchery.generate.model.ibatis;
 
 import java.util.List;
 

@@ -1,15 +1,14 @@
-package com.qchery.generate.hibernate;
+package com.qchery.generate.builder;
 
 import java.util.List;
 
 import com.qchery.generate.Item;
 import com.qchery.generate.ObjectDescriptor;
 import com.qchery.generate.XMLUtils;
-import com.qchery.generate.builder.FileBuilder;
-import com.qchery.generate.hibernate.model.Clazz;
-import com.qchery.generate.hibernate.model.Column;
-import com.qchery.generate.hibernate.model.HibernateMapping;
-import com.qchery.generate.hibernate.model.Property;
+import com.qchery.generate.model.hibernate.Clazz;
+import com.qchery.generate.model.hibernate.Column;
+import com.qchery.generate.model.hibernate.HibernateMapping;
+import com.qchery.generate.model.hibernate.Property;
 
 /**
  * Hibernate配置文件建造器

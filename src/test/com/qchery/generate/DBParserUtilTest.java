@@ -6,12 +6,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.qchery.generate.DBOrmer;
+import com.qchery.generate.builder.HibernateBuilder;
 import com.qchery.generate.builder.JavaBuilder;
+import com.qchery.generate.builder.MybatisBuilder;
 import com.qchery.generate.db.ConnectParam;
 import com.qchery.generate.db.DBHelper;
 import com.qchery.generate.db.DBHelperFactory;
-import com.qchery.generate.hibernate.HibernateBuilder;
-import com.qchery.generate.ibatis.MybatisBuilder;
 
 public class DBParserUtilTest {
     

@@ -1,4 +1,4 @@
-package com.qchery.generate.ibatis;
+package com.qchery.generate.builder;
 
 import java.util.List;
 
@@ -6,10 +6,9 @@ import com.qchery.common.utils.StringUtil;
 import com.qchery.generate.Item;
 import com.qchery.generate.ObjectDescriptor;
 import com.qchery.generate.XMLUtils;
-import com.qchery.generate.builder.FileBuilder;
-import com.qchery.generate.ibatis.model.Mapper;
-import com.qchery.generate.ibatis.model.Result;
-import com.qchery.generate.ibatis.model.ResultMap;
+import com.qchery.generate.model.ibatis.Mapper;
+import com.qchery.generate.model.ibatis.Result;
+import com.qchery.generate.model.ibatis.ResultMap;
 
 /**
  * Mybatis配置文件建造器

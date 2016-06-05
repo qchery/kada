@@ -1,11 +1,11 @@
-package test.com.qchery.generate.hibernate.model;
+package test.com.qchery.generate.model.hibernate;
 
 import org.junit.Test;
 
-import com.qchery.generate.hibernate.model.Clazz;
-import com.qchery.generate.hibernate.model.Column;
-import com.qchery.generate.hibernate.model.HibernateMapping;
-import com.qchery.generate.hibernate.model.Property;
+import com.qchery.generate.model.hibernate.Clazz;
+import com.qchery.generate.model.hibernate.Column;
+import com.qchery.generate.model.hibernate.HibernateMapping;
+import com.qchery.generate.model.hibernate.Property;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 

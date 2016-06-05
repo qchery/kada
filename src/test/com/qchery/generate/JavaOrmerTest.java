@@ -7,8 +7,8 @@ import org.junit.Test;
 import com.qchery.generate.JavaOrmer;
 import com.qchery.generate.ObjectDescriptor;
 import com.qchery.generate.builder.FileBuilder;
-import com.qchery.generate.hibernate.HibernateBuilder;
-import com.qchery.generate.ibatis.MybatisBuilder;
+import com.qchery.generate.builder.HibernateBuilder;
+import com.qchery.generate.builder.MybatisBuilder;
 
 public class JavaOrmerTest {
     
