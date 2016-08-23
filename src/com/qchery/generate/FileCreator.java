@@ -1,9 +1,11 @@
 package com.qchery.generate;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
-import com.qchery.common.utils.FileUtil;
+import org.apache.commons.io.IOUtils;
+
 import com.qchery.generate.builder.FileBuilder;
 
 /**
@@ -17,7 +19,9 @@ public class FileCreator {
         String content = fileBuilder.getContent(descriptor);
         String packagePath = descriptor.getPackageName().replaceAll("\\.", "/");
         File file = newFile(fileBuilder.getFileName(descriptor.getClassName()), packagePath);
-        FileUtil.write(file, content);
+        FileOutputStream output = new FileOutputStream(file);
+        IOUtils.write(content, output);
+        output.close();
     }
     
     private static File newFile(String fileName, String packagePath) {

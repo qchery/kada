@@ -15,7 +15,7 @@ public class OracleHelper extends DBHelper {
     
     @Override
     protected String getLink(String ipAddr, Integer port, String dbName) {
-        return String.format("jdbc:oracle:thin:@%s:%s:%s", ipAddr, port, dbName);
+        return String.format("jdbc:oracle:thin:@//%s:%s/%s", ipAddr, port, dbName);
     }
 
     @Override

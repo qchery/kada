@@ -1,12 +1,11 @@
 package com.qchery.generate.db;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.qchery.common.utils.GenericsUtil;
 
 public class DBHelperFactory {
     
-    private Map<ConnectParam, DBHelper> heplerCache = GenericsUtil.newHashMap();
+    private Map<ConnectParam, DBHelper> heplerCache = new HashMap<>();
     
     public DBHelper getDbHelper(ConnectParam connectParam) {
         

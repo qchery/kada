@@ -1,9 +1,8 @@
 package com.qchery.generate.db;
 
 import java.sql.Types;
+import java.util.HashMap;
 import java.util.Map;
-
-import com.qchery.common.utils.GenericsUtil;
 
 /**
  * sql 、 Java 数据类型匹配
@@ -11,7 +10,7 @@ import com.qchery.common.utils.GenericsUtil;
  * @date 2016年5月15日 - 下午7:55:53
  */
 public class TypeMap {
-    private static Map<Integer, String> typeCache = GenericsUtil.newHashMap();
+    private static Map<Integer, String> typeCache = new HashMap<>();
     
     static {
         typeCache.put(Types.BIGINT, "long");

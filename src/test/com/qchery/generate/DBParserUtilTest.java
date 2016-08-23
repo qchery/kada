@@ -33,10 +33,10 @@ public class DBParserUtilTest {
     
     @Test
     public void testDbWithOracle() {
-        ConnectParam param = new ConnectParam(ORACLE, "127.0.0.1", 1521, "xe", "scott", "tiger");
+        ConnectParam param = new ConnectParam(ORACLE, "172.30.3.114", 1521, "devorcl", "yjsdata", "dev123");
         DBHelper dbDriver = driverFactory.getDbHelper(param);
         grnerator = new DBOrmer(dbDriver, new JavaBuilder());
-        grnerator.generateFile("spring_user");
+        grnerator.generateFile("ph_credit_accountbaseinfo_py");
     }
     
     @Test

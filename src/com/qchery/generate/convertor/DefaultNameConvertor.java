@@ -1,10 +1,10 @@
 package com.qchery.generate.convertor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.qchery.common.utils.GenericsUtil;
 import com.qchery.common.utils.StringUtil;
 
 /**
@@ -87,7 +87,7 @@ public class DefaultNameConvertor implements NameConvertor {
     }
     
     private List<String> splitWithUpCase(String value) {
-        List<String> result = GenericsUtil.newArrayList();
+        List<String> result = new ArrayList<>();
         StringBuffer buf = new StringBuffer();
         boolean isLastCharUp = false;
         for (char c : value.toCharArray()) {

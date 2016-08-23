@@ -5,11 +5,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.dbutils.DbUtils;
 
-import com.qchery.common.utils.GenericsUtil;
 import com.qchery.generate.builder.FileBuilder;
 import com.qchery.generate.convertor.DefaultNameConvertor;
 import com.qchery.generate.convertor.NameConvertor;
@@ -96,7 +96,7 @@ public class DBOrmer {
      * @throws SQLException
      */
     protected List<Item> listItems(Connection conn, String tableName) {
-        List<Item> cols = GenericsUtil.newArrayList();
+        List<Item> cols = new ArrayList<>();
         List<String> primaryKeys = getPrimaryKeys(conn, tableName);
         ResultSet columnRs = null;
         try {
@@ -139,7 +139,7 @@ public class DBOrmer {
      */
     private List<String> getPrimaryKeys(Connection conn, String tableName) {
         ResultSet keyRs = null;
-        List<String> keyList = GenericsUtil.newArrayList();
+        List<String> keyList = new ArrayList<>();
         try {
             keyRs = conn.getMetaData().getPrimaryKeys(conn.getCatalog(), "%", tableName);
             

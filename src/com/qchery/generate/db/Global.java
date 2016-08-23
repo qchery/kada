@@ -3,7 +3,7 @@ package com.qchery.generate.db;
 import java.io.IOException;
 import java.util.Properties;
 
-import com.qchery.common.utils.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 
 public class Global {
     
@@ -23,7 +23,7 @@ public class Global {
     
     public static String getProperty(String key, String defaultValue) {
         String result = props.getProperty(key);
-        if (StringUtil.isBlank(result)) {
+        if (StringUtils.isBlank(result)) {
             result = defaultValue;
         }
         return result;

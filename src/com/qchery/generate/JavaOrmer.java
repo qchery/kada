@@ -2,9 +2,9 @@ package com.qchery.generate;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
-import com.qchery.common.utils.GenericsUtil;
 import com.qchery.generate.builder.FileBuilder;
 import com.qchery.generate.convertor.DefaultNameConvertor;
 import com.qchery.generate.convertor.NameConvertor;
@@ -39,7 +39,7 @@ public class JavaOrmer {
         descriptor.setClassName(className);
         descriptor.setTableName(convertor.toTableName(className));
         
-        List<Item> items = GenericsUtil.newArrayList();
+        List<Item> items = new ArrayList<>();
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
             String fieldName = field.getName();

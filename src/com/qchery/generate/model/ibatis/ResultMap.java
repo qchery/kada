@@ -1,8 +1,8 @@
 package com.qchery.generate.model.ibatis;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.qchery.common.utils.GenericsUtil;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
@@ -20,7 +20,7 @@ public class ResultMap {
     private Result id;
     
     @XStreamImplicit
-    private List<Result> list = GenericsUtil.newArrayList();
+    private List<Result> list = new ArrayList<>();
 
     public ResultMap(String mapperId, String type) {
         super();

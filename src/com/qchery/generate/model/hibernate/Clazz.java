@@ -1,8 +1,8 @@
 package com.qchery.generate.model.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.qchery.common.utils.GenericsUtil;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
@@ -21,7 +21,7 @@ public class Clazz {
     private Property id;
     
     @XStreamImplicit
-    private List<Property> list = GenericsUtil.newArrayList();
+    private List<Property> list = new ArrayList<>();
 
     public Clazz(String name, String table) {
         super();

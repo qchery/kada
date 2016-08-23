@@ -1,9 +1,9 @@
 package com.qchery.generate.builder;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.qchery.common.utils.GenericsUtil;
 import com.qchery.common.utils.StringUtil;
 import com.qchery.generate.Item;
 import com.qchery.generate.ObjectDescriptor;
@@ -71,7 +71,7 @@ public class JavaBuilder implements FileBuilder {
 
     private String getImportDeclare(List<Item> listItems) {
         StringBuffer importDelcare = new StringBuffer();
-        Set<String> importSet = GenericsUtil.newHashSet();
+        Set<String> importSet = new HashSet<>();
         for (Item item : listItems) {
             String type = item.getType();
             if (type.contains(".") && !importSet.contains(type)) {
