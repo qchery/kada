@@ -32,13 +32,13 @@ public class DefaultNameConvertor implements NameConvertor {
      * @return
      */
     private String toJava(String name, boolean isFirstUpper) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         boolean upFlag = false;
         
         for (char c : name.toLowerCase().toCharArray()) {
             
             if (upFlag) {
-                sb.append((char) (c - 32));
+                builder.append((char) (c - 32));
                 upFlag = false;
                 continue;
             }
@@ -48,13 +48,13 @@ public class DefaultNameConvertor implements NameConvertor {
                 continue;
             }
             
-            sb.append(c);
+            builder.append(c);
         }
         
         if (isFirstUpper) {
-            return StringUtil.upperCaseFirst(sb.toString());
+            return StringUtil.upperCaseFirst(builder.toString());
         } else {
-            return sb.toString();
+            return builder.toString();
         }
         
     }
@@ -74,7 +74,7 @@ public class DefaultNameConvertor implements NameConvertor {
     private String toDatabase(String name) {
         String result = name;
         List<String> words = splitWithUpCase(name);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (String word : words) {
             sb.append(word);
             sb.append("_");
@@ -88,19 +88,19 @@ public class DefaultNameConvertor implements NameConvertor {
     
     private List<String> splitWithUpCase(String value) {
         List<String> result = new ArrayList<>();
-        StringBuffer buf = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
         boolean isLastCharUp = false;
         for (char c : value.toCharArray()) {
-            if (c >= 65 && c <= 90 && buf.length() > 0) {
+            if (c >= 65 && c <= 90 && builder.length() > 0) {
                 if (!isLastCharUp) {
-                    result.add(buf.toString());
-                    buf.delete(0, buf.length());
+                    result.add(builder.toString());
+                    builder.delete(0, builder.length());
                     isLastCharUp = true;
                 }
             }
-            buf.append(c);
+            builder.append(c);
         }
-        result.add(buf.toString());
+        result.add(builder.toString());
         return result;
     }
 

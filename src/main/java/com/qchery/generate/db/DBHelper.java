@@ -7,31 +7,34 @@ import java.sql.SQLException;
 public abstract class DBHelper {
 
     ConnectParam connectParam;
-    
+
     DBHelper(ConnectParam connectParam) {
         this.connectParam = connectParam;
     }
 
     /**
      * 获取数据库连接
-     * @param ipAddr
-     * @param port
-     * @param dbName
-     * @return
+     *
+     * @param ipAddr IP地址
+     * @param port   端口号
+     * @param dbName 数据库名称
+     * @return 数据库链接地址
      */
-    protected abstract String getLink(String ipAddr , Integer port , String dbName);
-    
+    protected abstract String getLink(String ipAddr, Integer port, String dbName);
+
     /**
      * 获取驱动名
-     * @return
+     *
+     * @return 驱动名称
      */
     protected abstract String getDriverName();
-    
+
     public abstract String getTableNames();
 
     /**
      * 获取连接
-     * @return
+     *
+     * @return 数据库连接
      * @throws SQLException
      */
     public Connection getConnection() throws SQLException {
@@ -41,6 +44,6 @@ public abstract class DBHelper {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return DriverManager.getConnection(url , connectParam.getUserName() , connectParam.getPassword());
+        return DriverManager.getConnection(url, connectParam.getUserName(), connectParam.getPassword());
     }
 }
