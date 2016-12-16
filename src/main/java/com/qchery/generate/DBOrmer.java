@@ -19,24 +19,25 @@ import com.qchery.generate.db.TypeMap;
 
 /**
  * 将数据表属性列转换在Java对象属性的工具类
+ *
  * @author chinrui1016@163.com
  * @date 2016年5月15日 - 下午7:55:37
  */
 public class DBOrmer {
-    
+
     public static final String COLUMN_NAME = "COLUMN_NAME";
-    
+
     private DBHelper dbHelper;    // 支持多数据库
     private NameConvertor nameConvertor;
     private FileBuilder fileBuilder;
-    
+
     public DBOrmer(DBHelper dbHelper, FileBuilder fileBuilder) {
         Global.initConfig();
         this.dbHelper = dbHelper;
         this.nameConvertor = new DefaultNameConvertor();
         this.fileBuilder = fileBuilder;
     }
-    
+
     /**
      * 将数据库字段转换成对应的Java文件
      */
@@ -46,7 +47,7 @@ public class DBOrmer {
         try {
             conn = dbHelper.getConnection();
             rs = conn.prepareStatement(dbHelper.getTableNames()).executeQuery();
-            
+
             while (rs.next()) {
                 generateFile(conn, rs.getString(1));
             }
@@ -56,9 +57,10 @@ public class DBOrmer {
             DbUtils.closeQuietly(conn, null, rs);
         }
     }
-    
+
     /**
      * 将数据库表字段转换成对就的JAVA代码
+     *
      * @param tableName
      */
     public void generateFile(String tableName) {
@@ -72,7 +74,7 @@ public class DBOrmer {
             DbUtils.closeQuietly(conn);
         }
     }
-    
+
     private void generateFile(Connection conn, String tableName) {
         try {
             ObjectDescriptor descriptor = new ObjectDescriptor();
@@ -85,9 +87,10 @@ public class DBOrmer {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * 获取所有子项组合
+     *
      * @param conn      连接
      * @param tableName 表名
      * @return {@link List}
@@ -102,11 +105,11 @@ public class DBOrmer {
             ResultSetMetaData metaData = columnRs.getMetaData();
             int index = 1;
             while (index++ < metaData.getColumnCount()) {
-                
+
                 String columnName = metaData.getColumnName(index);
                 int columnSize = metaData.getColumnDisplaySize(index);
                 boolean isNotNull = (ResultSetMetaData.columnNoNulls == metaData.isNullable(index));
-                
+
                 String columnType;
                 if (Global.isUseJavaType()) {
                     columnType = TypeMap.getJavaType(metaData.getColumnType(index));
@@ -124,14 +127,15 @@ public class DBOrmer {
         } finally {
             DbUtils.closeQuietly(columnRs);
         }
-        
+
         return cols;
     }
-    
+
     /**
      * 获取主键属性集
-     * @param conn          获取表中的所有主键名称
-     * @param tableName     表名
+     *
+     * @param conn      获取表中的所有主键名称
+     * @param tableName 表名
      * @return
      * @throws SQLException
      */
@@ -140,8 +144,8 @@ public class DBOrmer {
         List<String> keyList = new ArrayList<>();
         try {
             keyRs = conn.getMetaData().getPrimaryKeys(conn.getCatalog(), "%", tableName);
-            
-            while ( keyRs.next() ) {
+
+            while (keyRs.next()) {
                 keyList.add(keyRs.getString(COLUMN_NAME));
             }
         } catch (SQLException e) {
@@ -151,18 +155,19 @@ public class DBOrmer {
         }
         return keyList;
     }
-    
+
     /**
      * 判断字段是否为主键
+     *
      * @param keys       主键属性集
-     * @param columnName       当前属性
+     * @param columnName 当前属性
      * @return
      * @throws SQLException
      */
     private boolean isPrimaryKey(List<String> keys, String columnName) {
         boolean result = false;
-        for ( String key : keys ) {
-            if ( key.equals(columnName) ) {
+        for (String key : keys) {
+            if (key.equals(columnName)) {
                 result = true;
                 break;
             }
@@ -173,5 +178,5 @@ public class DBOrmer {
     public void setFileBuilder(FileBuilder fileBuilder) {
         this.fileBuilder = fileBuilder;
     }
-    
+
 }

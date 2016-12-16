@@ -1,12 +1,13 @@
 public class Person {
 
     private Integer personId;
-    
+
     private String personName;
-    
+
     public Integer getPersonId() {
         return personId;
     }
+
     public String getPersonName() {
         return personName;
     }

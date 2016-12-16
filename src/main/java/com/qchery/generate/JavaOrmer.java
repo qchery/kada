@@ -43,7 +43,8 @@ public class JavaOrmer {
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
             String fieldName = field.getName();
-            Item item = new Item(field.getType().getName(), convertor.toColumnName(fieldName), fieldName);
+            Item item = new Item(field.getType().getName(),
+                    convertor.toColumnName(fieldName), fieldName);
             items.add(item);
         }
         descriptor.setItems(items);
