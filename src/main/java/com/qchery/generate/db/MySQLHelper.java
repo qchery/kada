@@ -4,7 +4,7 @@ package com.qchery.generate.db;
 /**
  * Mysql 数据辅助类
  *
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午7:51:03
  */
 public class MySQLHelper extends DBHelper {

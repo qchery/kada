@@ -12,7 +12,7 @@ import com.qchery.generate.model.hibernate.Property;
 
 /**
  * Hibernate配置文件建造器
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午8:47:06
  */
 public class HibernateBuilder implements FileBuilder {

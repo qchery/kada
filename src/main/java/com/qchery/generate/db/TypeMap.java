@@ -6,7 +6,7 @@ import java.util.Map;
 
 /**
  * sql 、 Java 数据类型匹配
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午7:55:53
  */
 public class TypeMap {

@@ -11,7 +11,7 @@ import com.qchery.generate.convertor.NameConvertor;
 
 /**
  * Java 对象生成 orm 配置
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午9:29:57
  */
 public class JavaOrmer {

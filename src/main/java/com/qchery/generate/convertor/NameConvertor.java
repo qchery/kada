@@ -2,7 +2,7 @@ package com.qchery.generate.convertor;
 
 /**
  * ORM 名称转换器
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午9:27:20
  */
 public interface NameConvertor {

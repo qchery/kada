@@ -1,5 +1,13 @@
 package com.qchery.generate;
 
+import com.qchery.generate.builder.FileBuilder;
+import com.qchery.generate.convertor.NameConvertor;
+import com.qchery.generate.db.DBHelper;
+import com.qchery.generate.db.Global;
+import com.qchery.generate.db.TypeMap;
+import com.qchery.generate.exception.ConfigException;
+import org.apache.commons.dbutils.DbUtils;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -8,19 +16,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.dbutils.DbUtils;
-
-import com.qchery.generate.builder.FileBuilder;
-import com.qchery.generate.convertor.DefaultNameConvertor;
-import com.qchery.generate.convertor.NameConvertor;
-import com.qchery.generate.db.DBHelper;
-import com.qchery.generate.db.Global;
-import com.qchery.generate.db.TypeMap;
-
 /**
  * 将数据表属性列转换在Java对象属性的工具类
  *
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午7:55:37
  */
 public class DBOrmer {
@@ -31,11 +30,7 @@ public class DBOrmer {
     private NameConvertor nameConvertor;
     private FileBuilder fileBuilder;
 
-    public DBOrmer(DBHelper dbHelper, FileBuilder fileBuilder) {
-        Global.initConfig();
-        this.dbHelper = dbHelper;
-        this.nameConvertor = new DefaultNameConvertor();
-        this.fileBuilder = fileBuilder;
+    private DBOrmer() {
     }
 
     /**
@@ -175,8 +170,48 @@ public class DBOrmer {
         return result;
     }
 
-    public void setFileBuilder(FileBuilder fileBuilder) {
+    private void setFileBuilder(FileBuilder fileBuilder) {
         this.fileBuilder = fileBuilder;
     }
 
+    private void setNameConvertor(NameConvertor nameConvertor) {
+        this.nameConvertor = nameConvertor;
+    }
+
+    private void setDbHelper(DBHelper dbHelper) {
+        this.dbHelper = dbHelper;
+    }
+
+    public static class DBOrmerBuilder {
+        private DBHelper dbHelper;
+        private FileBuilder fileBuilder;
+        private NameConvertor nameConvertor;
+
+        public DBOrmer build() {
+            if (null == dbHelper || null == fileBuilder) {
+                throw new ConfigException("dbHelper 与 FileBuilder 不能为空");
+            }
+            Global.initConfig();
+            DBOrmer dbOrmer = new DBOrmer();
+            dbOrmer.setDbHelper(dbHelper);
+            dbOrmer.setFileBuilder(fileBuilder);
+            dbOrmer.setNameConvertor(nameConvertor);
+            return dbOrmer;
+        }
+
+        public DBOrmerBuilder setDbHelper(DBHelper dbHelper) {
+            this.dbHelper = dbHelper;
+            return this;
+        }
+
+        public DBOrmerBuilder setFileBuilder(FileBuilder fileBuilder) {
+            this.fileBuilder = fileBuilder;
+            return this;
+        }
+
+        public DBOrmerBuilder setNameConvertor(NameConvertor nameConvertor) {
+            this.nameConvertor = nameConvertor;
+            return this;
+        }
+    }
 }

@@ -2,7 +2,7 @@ package com.qchery.generate.db;
 
 /**
  * 连接参数
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午9:27:30
  */
 public class ConnectParam {

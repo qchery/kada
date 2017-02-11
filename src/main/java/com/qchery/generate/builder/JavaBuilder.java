@@ -10,11 +10,11 @@ import com.qchery.generate.ObjectDescriptor;
 
 /**
  * 映射生成Java类
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午9:24:39
  */
 public class JavaBuilder implements FileBuilder {
-    
+
     protected String getMainContent(List<Item> items) {
         StringBuilder fields = new StringBuilder();
         StringBuilder methods = new StringBuilder();
@@ -29,10 +29,10 @@ public class JavaBuilder implements FileBuilder {
             methods.append(delcareGetMethod(javaType, fieldName, fcuFieldName));
             methods.append(declareSetMethod(javaType, fieldName, fcuFieldName));
         }
-        
+
         return fields.append(methods).toString();
     }
-    
+
     /**
      * 获取字段声明
      * @param javaType      数据类型
@@ -42,7 +42,7 @@ public class JavaBuilder implements FileBuilder {
     private String delcareField(String javaType, String fieldName) {
         return String.format("private %s %s;\n", javaType, fieldName);
     }
-    
+
     private String declareSetMethod(String javaType, String fieldName,
             String fcuFieldName) {
         String setMethod = String.format("public void set%s(%s %s) {\n"
@@ -62,7 +62,7 @@ public class JavaBuilder implements FileBuilder {
     @Override
     public String getContent(ObjectDescriptor descriptor) {
         List<Item> listItems = descriptor.getItems();
-        return String.format("package %s;\n"
+        return String.format("package %s;\n\n"
                 + "%s"
                 + "public class %s {\n"
                 + "%s"
@@ -78,13 +78,17 @@ public class JavaBuilder implements FileBuilder {
                 importSet.add(type);
             }
         }
-        
+
         for (String importType : importSet) {
             importDelcare.append("import ");
             importDelcare.append(importType);
             importDelcare.append(";\n");
         }
-        
+
+        if (importDelcare.length() > 0) {
+            importDelcare.append("\n");
+        }
+
         return importDelcare.toString();
     }
 
@@ -92,5 +96,5 @@ public class JavaBuilder implements FileBuilder {
     public String getFileName(String className) {
         return className + ".java";
     }
-    
+
 }

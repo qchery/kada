@@ -12,7 +12,7 @@ import com.qchery.generate.model.ibatis.ResultMap;
 
 /**
  * Mybatis配置文件建造器
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午9:24:22
  */
 public class MybatisBuilder implements FileBuilder {

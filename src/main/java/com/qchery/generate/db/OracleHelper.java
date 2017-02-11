@@ -2,7 +2,7 @@ package com.qchery.generate.db;
 
 /**
  * Oracle 数据辅助类
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午7:50:49
  */
 public class OracleHelper extends DBHelper {

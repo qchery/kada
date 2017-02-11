@@ -12,7 +12,7 @@ import com.qchery.generate.builder.FileBuilder;
 /**
  * 文件生成器
  *
- * @author chinrui1016@163.com
+ * @author Chery
  * @date 2016年5月15日 - 下午7:48:57
  */
 public class FileCreator {
