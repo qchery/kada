@@ -1,9 +1,9 @@
-package com.qchery.generate;
+package com.qchery.generate.utils;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-public class XMLUtils {
+public class XMLUtil {
 
     public static String toXML(Object obj) {
         XStream xstream = new XStream(new DomDriver("utf8"));

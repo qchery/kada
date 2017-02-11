@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.qchery.generate.Item;
 import com.qchery.generate.ObjectDescriptor;
-import com.qchery.generate.XMLUtils;
+import com.qchery.generate.utils.XMLUtil;
 import com.qchery.generate.model.hibernate.Clazz;
 import com.qchery.generate.model.hibernate.Column;
 import com.qchery.generate.model.hibernate.HibernateMapping;
@@ -48,7 +48,7 @@ public class HibernateBuilder implements FileBuilder {
             property.setColumn(column);
         }
         mapping.setClazz(clazz);
-        return XMLUtils.toXML(mapping);
+        return XMLUtil.toXML(mapping);
     }
 
     @Override

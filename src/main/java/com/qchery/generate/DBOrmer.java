@@ -1,6 +1,7 @@
 package com.qchery.generate;
 
 import com.qchery.generate.builder.FileBuilder;
+import com.qchery.generate.convertor.DefaultNameConvertor;
 import com.qchery.generate.convertor.NameConvertor;
 import com.qchery.generate.db.DBHelper;
 import com.qchery.generate.db.Global;
@@ -9,6 +10,7 @@ import com.qchery.generate.exception.ConfigException;
 import org.apache.commons.dbutils.DbUtils;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -24,11 +26,12 @@ import java.util.List;
  */
 public class DBOrmer {
 
-    public static final String COLUMN_NAME = "COLUMN_NAME";
+    private static final String COLUMN_NAME = "COLUMN_NAME";
 
     private DBHelper dbHelper;    // 支持多数据库
     private NameConvertor nameConvertor;
     private FileBuilder fileBuilder;
+    private Charset fileCharset;
 
     private DBOrmer() {
     }
@@ -77,6 +80,7 @@ public class DBOrmer {
             descriptor.setClassName(nameConvertor.toClassName(tableName));
             descriptor.setTableName(tableName);
             descriptor.setItems(listItems(conn, tableName));
+            descriptor.setCharset(fileCharset);
             FileCreator.createFile(fileBuilder, descriptor);
         } catch (IOException e) {
             e.printStackTrace();
@@ -170,22 +174,11 @@ public class DBOrmer {
         return result;
     }
 
-    private void setFileBuilder(FileBuilder fileBuilder) {
-        this.fileBuilder = fileBuilder;
-    }
-
-    private void setNameConvertor(NameConvertor nameConvertor) {
-        this.nameConvertor = nameConvertor;
-    }
-
-    private void setDbHelper(DBHelper dbHelper) {
-        this.dbHelper = dbHelper;
-    }
-
     public static class DBOrmerBuilder {
         private DBHelper dbHelper;
         private FileBuilder fileBuilder;
         private NameConvertor nameConvertor;
+        private Charset charset;
 
         public DBOrmer build() {
             if (null == dbHelper || null == fileBuilder) {
@@ -193,24 +186,40 @@ public class DBOrmer {
             }
             Global.initConfig();
             DBOrmer dbOrmer = new DBOrmer();
-            dbOrmer.setDbHelper(dbHelper);
-            dbOrmer.setFileBuilder(fileBuilder);
-            dbOrmer.setNameConvertor(nameConvertor);
+            dbOrmer.dbHelper = dbHelper;
+            dbOrmer.fileBuilder = fileBuilder;
+
+            // 设置 NameConvertor
+            if (null == nameConvertor) {
+                nameConvertor = new DefaultNameConvertor();
+            }
+            dbOrmer.nameConvertor = nameConvertor;
+
+            // 设置文件编码
+            if (null == charset) {
+                charset = Charset.defaultCharset();
+            }
+            dbOrmer.fileCharset = charset;
             return dbOrmer;
         }
 
-        public DBOrmerBuilder setDbHelper(DBHelper dbHelper) {
+        public DBOrmerBuilder dbHelper(DBHelper dbHelper) {
             this.dbHelper = dbHelper;
             return this;
         }
 
-        public DBOrmerBuilder setFileBuilder(FileBuilder fileBuilder) {
+        public DBOrmerBuilder fileBuilder(FileBuilder fileBuilder) {
             this.fileBuilder = fileBuilder;
             return this;
         }
 
-        public DBOrmerBuilder setNameConvertor(NameConvertor nameConvertor) {
+        public DBOrmerBuilder nameConvertor(NameConvertor nameConvertor) {
             this.nameConvertor = nameConvertor;
+            return this;
+        }
+
+        public DBOrmerBuilder charset(Charset charset) {
+            this.charset = charset;
             return this;
         }
     }

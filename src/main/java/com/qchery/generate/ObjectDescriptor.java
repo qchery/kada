@@ -1,9 +1,12 @@
 package com.qchery.generate;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 public class ObjectDescriptor {
 
+    // 文件编码
+    private Charset charset;
     // 包名
     private String packageName;
     // 类名
@@ -12,6 +15,14 @@ public class ObjectDescriptor {
     private String tableName;
     // 字段
     private List<Item> items;
+
+    public Charset getCharset() {
+        return charset;
+    }
+
+    public void setCharset(Charset charset) {
+        this.charset = charset;
+    }
 
     public String getPackageName() {
         return packageName;

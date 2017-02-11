@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.qchery.common.utils.StringUtil;
+import com.qchery.generate.utils.StringUtil;
 import com.qchery.generate.Item;
 import com.qchery.generate.ObjectDescriptor;
 
@@ -24,7 +24,7 @@ public class JavaBuilder implements FileBuilder {
                 javaType = javaType.substring(javaType.lastIndexOf(".") + 1, javaType.length());
             }
             String fieldName = item.getFieldName();
-            String fcuFieldName = StringUtil.upperCaseFirst(fieldName);
+            String fcuFieldName = StringUtil.upperFirstChar(fieldName);
             fields.append(delcareField(javaType, fieldName));
             methods.append(delcareGetMethod(javaType, fieldName, fcuFieldName));
             methods.append(declareSetMethod(javaType, fieldName, fcuFieldName));

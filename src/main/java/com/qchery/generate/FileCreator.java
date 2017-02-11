@@ -1,13 +1,11 @@
 package com.qchery.generate;
 
+import com.qchery.generate.builder.FileBuilder;
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-
-import org.apache.commons.io.IOUtils;
-
-import com.qchery.generate.builder.FileBuilder;
 
 /**
  * 文件生成器
@@ -24,7 +22,7 @@ public class FileCreator {
         String packagePath = descriptor.getPackageName().replaceAll("\\.", "/");
         File file = newFile(fileBuilder.getFileName(descriptor.getClassName()), packagePath);
         try (FileOutputStream output = new FileOutputStream(file)) {
-            IOUtils.write(content, output, Charset.defaultCharset());
+            IOUtils.write(content, output, descriptor.getCharset());
         }
     }
 

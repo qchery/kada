@@ -1,6 +1,6 @@
 package com.qchery.generate.convertor;
 
-import com.qchery.common.utils.StringUtil;
+import com.qchery.generate.utils.StringUtil;
 import com.qchery.generate.exception.ConfigException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,56 +23,14 @@ public class DefaultNameConvertor implements NameConvertor {
 
     @Override
     public String toFieldName(String propName) {
-        return lowerCamelCase(propName);
+        char separatorChar = getSeparator().charAt(0);
+        return StringUtil.lowerCamelCase(propName, separatorChar);
     }
 
     @Override
     public String toClassName(String tableName) {
-        return upperCamelCase(tableName);
-    }
-
-    protected String upperCamelCase(String value) {
-        return convertCamelCase(value, true);
-    }
-
-    protected String lowerCamelCase(String value) {
-        return convertCamelCase(value, false);
-    }
-
-    /**
-     * 格式化表名或属性名
-     *
-     * @param value        输入值
-     * @param isFirstUpper 确定首字母是否大写 true:大写 false:小写
-     * @return 转换成驼峰命名的输出值
-     */
-    private String convertCamelCase(String value, boolean isFirstUpper) {
-        StringBuilder builder = new StringBuilder();
-        boolean upFlag = false;
         char separatorChar = getSeparator().charAt(0);
-
-        for (char c : value.toLowerCase().toCharArray()) {
-
-            if (upFlag) {
-                builder.append((char) (c - 32));
-                upFlag = false;
-                continue;
-            }
-
-            if (c == separatorChar) {
-                upFlag = true;
-                continue;
-            }
-
-            builder.append(c);
-        }
-
-        if (isFirstUpper) {
-            return StringUtil.upperCaseFirst(builder.toString());
-        } else {
-            return builder.toString();
-        }
-
+        return StringUtil.upperCamelCase(tableName, separatorChar);
     }
 
     // --------------------- Java 转 Database Started ---------------------------
