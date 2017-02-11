@@ -4,7 +4,6 @@ import com.qchery.generate.builder.FileBuilder;
 import com.qchery.generate.convertor.DefaultNameConvertor;
 import com.qchery.generate.convertor.NameConvertor;
 import com.qchery.generate.db.DBHelper;
-import com.qchery.generate.db.Global;
 import com.qchery.generate.db.TypeMap;
 import com.qchery.generate.exception.ConfigException;
 import org.apache.commons.dbutils.DbUtils;
@@ -32,6 +31,8 @@ public class DBOrmer {
     private NameConvertor nameConvertor;
     private FileBuilder fileBuilder;
     private Charset fileCharset;
+    private boolean userJavaType;
+    private String packageName;
 
     private DBOrmer() {
     }
@@ -76,7 +77,7 @@ public class DBOrmer {
     private void generateFile(Connection conn, String tableName) {
         try {
             ObjectDescriptor descriptor = new ObjectDescriptor();
-            descriptor.setPackageName(Global.getProperty("package.name"));
+            descriptor.setPackageName(packageName);
             descriptor.setClassName(nameConvertor.toClassName(tableName));
             descriptor.setTableName(tableName);
             descriptor.setItems(listItems(conn, tableName));
@@ -110,7 +111,7 @@ public class DBOrmer {
                 boolean isNotNull = (ResultSetMetaData.columnNoNulls == metaData.isNullable(index));
 
                 String columnType;
-                if (Global.isUseJavaType()) {
+                if (userJavaType) {
                     columnType = TypeMap.getJavaType(metaData.getColumnType(index));
                 } else {
                     columnType = metaData.getColumnTypeName(index);
@@ -175,19 +176,24 @@ public class DBOrmer {
     }
 
     public static class DBOrmerBuilder {
+
+        private static final String DEFAULT_PACKAGE_NAME = "com.qchery";
+
         private DBHelper dbHelper;
         private FileBuilder fileBuilder;
         private NameConvertor nameConvertor;
         private Charset charset;
+        private boolean userJavaType;
+        private String packageName;
 
         public DBOrmer build() {
             if (null == dbHelper || null == fileBuilder) {
                 throw new ConfigException("dbHelper 与 FileBuilder 不能为空");
             }
-            Global.initConfig();
             DBOrmer dbOrmer = new DBOrmer();
             dbOrmer.dbHelper = dbHelper;
             dbOrmer.fileBuilder = fileBuilder;
+            dbOrmer.userJavaType = userJavaType;
 
             // 设置 NameConvertor
             if (null == nameConvertor) {
@@ -200,6 +206,12 @@ public class DBOrmer {
                 charset = Charset.defaultCharset();
             }
             dbOrmer.fileCharset = charset;
+
+            // 设置包名
+            if (null == packageName) {
+                packageName = DEFAULT_PACKAGE_NAME;
+            }
+            dbOrmer.packageName = packageName;
             return dbOrmer;
         }
 
@@ -220,6 +232,16 @@ public class DBOrmer {
 
         public DBOrmerBuilder charset(Charset charset) {
             this.charset = charset;
+            return this;
+        }
+
+        public DBOrmerBuilder userJavaType(boolean userJavaType) {
+            this.userJavaType = userJavaType;
+            return this;
+        }
+
+        public DBOrmerBuilder packageName(String packageName) {
+            this.packageName = packageName;
             return this;
         }
     }
