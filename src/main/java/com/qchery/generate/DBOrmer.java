@@ -7,6 +7,8 @@ import com.qchery.generate.db.DBHelper;
 import com.qchery.generate.db.TypeMap;
 import com.qchery.generate.exception.ConfigException;
 import org.apache.commons.dbutils.DbUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -26,6 +28,8 @@ import java.util.List;
 public class DBOrmer {
 
     private static final String COLUMN_NAME = "COLUMN_NAME";
+
+    private Logger logger = LoggerFactory.getLogger(DBOrmer.class);
 
     private DBHelper dbHelper;    // 支持多数据库
     private NameConvertor nameConvertor;
@@ -97,13 +101,16 @@ public class DBOrmer {
      * @throws SQLException
      */
     protected List<Item> listItems(Connection conn, String tableName) {
-        List<Item> cols = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
         List<String> primaryKeys = getPrimaryKeys(conn, tableName);
+
+        logger.debug("tableName={} | primaryKeys={}", tableName, primaryKeys);
+
         ResultSet columnRs = null;
         try {
             columnRs = conn.createStatement().executeQuery(String.format("Select * from %s", tableName));
             ResultSetMetaData metaData = columnRs.getMetaData();
-            int index = 1;
+            int index = 0;
             while (index++ < metaData.getColumnCount()) {
 
                 String columnName = metaData.getColumnName(index);
@@ -120,15 +127,18 @@ public class DBOrmer {
                 item.setLength(columnSize);
                 item.setNotNull(isNotNull);
                 item.setPK(isPrimaryKey(primaryKeys, columnName));
-                cols.add(item);
+                items.add(item);
             }
+
+            logger.debug("tableName={} | items={}", tableName, items);
+
         } catch (SQLException e) {
-            System.out.println(String.format("获取参数列失败... \n%s", e));
+            logger.error("msg={}", "获取参数列失败", e);
         } finally {
             DbUtils.closeQuietly(columnRs);
         }
 
-        return cols;
+        return items;
     }
 
     /**
@@ -149,7 +159,7 @@ public class DBOrmer {
                 keyList.add(keyRs.getString(COLUMN_NAME));
             }
         } catch (SQLException e) {
-            System.out.println(String.format("获取主键失败... \n%s", e));
+            logger.error("msg={}", "获取主键失败", e);
         } finally {
             DbUtils.closeQuietly(keyRs);
         }

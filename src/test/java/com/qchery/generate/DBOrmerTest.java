@@ -13,7 +13,7 @@ import java.nio.charset.Charset;
 
 import static com.qchery.generate.db.ConnectParam.ORACLE;
 
-public class DBParserUtilTest {
+public class DBOrmerTest {
     
     private DBHelperFactory dbHelperFactory;
     private ConnectParam mysqlConnectParam;
@@ -37,6 +37,7 @@ public class DBParserUtilTest {
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
                 .fileBuilder(new JavaBuilder())
+                .userJavaType(true)
                 .nameConvertor(nameConvertor).build();
         dbOrmer.generateFile();
     }
@@ -66,10 +67,10 @@ public class DBParserUtilTest {
     @Test
     public void testDbWithHibernateMysql() {
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
-                .dbHelper(dbHelperFactory.getDbHelper(oracleConnectParam))
+                .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
                 .nameConvertor(new IgnoreSuffixNameConvertor())
                 .fileBuilder(new HibernateBuilder())
                 .build();
-        dbOrmer.generateFile("sys_user");
+        dbOrmer.generateFile();
     }
 }

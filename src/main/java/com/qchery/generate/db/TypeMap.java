@@ -32,8 +32,8 @@ public class TypeMap {
         typeCache.put(Types.REAL, "float");
         typeCache.put(Types.SMALLINT, "short");
         typeCache.put(Types.TIME, "java.sql.Time");
-        typeCache.put(Types.TIMESTAMP, "java.sql.Timestamp");
-        typeCache.put(Types.TINYINT, "java.lang.Byte");
+        typeCache.put(Types.TIMESTAMP, "java.sql.Date");
+        typeCache.put(Types.TINYINT, "byte");
         typeCache.put(Types.VARBINARY, "byte[]");
         typeCache.put(Types.VARCHAR, "String");
     }

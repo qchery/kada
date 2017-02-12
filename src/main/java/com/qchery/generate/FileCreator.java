@@ -2,6 +2,8 @@ package com.qchery.generate;
 
 import com.qchery.generate.builder.FileBuilder;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,6 +16,8 @@ import java.io.IOException;
  * @date 2016年5月15日 - 下午7:48:57
  */
 public class FileCreator {
+
+    private static Logger logger = LoggerFactory.getLogger(FileCreator.class);
 
     public static void createFile(FileBuilder fileBuilder, ObjectDescriptor descriptor)
             throws IOException {
@@ -28,20 +32,20 @@ public class FileCreator {
 
     private static File newFile(String fileName, String packagePath) {
 
-        File tarDir = new File(getFileStorageDir(packagePath));
-        if (!tarDir.exists()) {
-            tarDir.mkdirs();
+        File destDir = new File(getFileStorageDir(packagePath));
+        if (!destDir.exists()) {
+            destDir.mkdirs();
         }
 
-        File tarFile = new File(tarDir.getAbsolutePath() + File.separatorChar + fileName);
+        File destFile = new File(destDir.getAbsolutePath() + File.separatorChar + fileName);
         try {
-            if (!tarFile.exists()) {
-                tarFile.createNewFile();
+            if (!destFile.exists()) {
+                destFile.createNewFile();
             }
         } catch (IOException e) {
-            System.out.println(String.format("文件创建失败!请检查文件路径!\n%s", e));
+            logger.error("msg={}", "文件创建失败!请检查文件路径!", e);
         }
-        return tarFile;
+        return destFile;
     }
 
     private static String getFileStorageDir(String packagePath) {

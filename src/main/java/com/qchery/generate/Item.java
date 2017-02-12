@@ -54,4 +54,16 @@ public class Item {
     public boolean isNotNull() {
         return notNull;
     }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "type='" + type + '\'' +
+                ", columnName='" + columnName + '\'' +
+                ", fieldName='" + fieldName + '\'' +
+                ", length=" + length +
+                ", isPK=" + isPK +
+                ", notNull=" + notNull +
+                '}';
+    }
 }
