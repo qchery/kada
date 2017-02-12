@@ -19,8 +19,8 @@ public class MapperTest {
         ResultMap resultMap = new ResultMap("FullResultMap", "asHoneypot");
         Result id = new Result("honeypotId", "honeypot_id");
         Result result = new Result("emailAddr", "email_addr");
-        resultMap.setId(id);
-        resultMap.add(result);
+        resultMap.addId(id);
+        resultMap.addResult(result);
         mapper.setResultMap(resultMap);
         return mapper;
     }

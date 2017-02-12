@@ -12,6 +12,7 @@ import com.qchery.generate.model.ibatis.ResultMap;
 
 /**
  * Mybatis配置文件建造器
+ *
  * @author Chery
  * @date 2016年5月15日 - 下午9:24:22
  */
@@ -35,9 +36,9 @@ public class MybatisBuilder implements FileBuilder {
         for (Item item : items) {
             Result result = new Result(item.getFieldName(), item.getColumnName());
             if (item.isPK()) {
-                resultMap.setId(result);
+                resultMap.addId(result);
             } else {
-                resultMap.add(result);
+                resultMap.addResult(result);
             }
         }
         mapper.setResultMap(resultMap);

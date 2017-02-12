@@ -1,7 +1,9 @@
 package com.qchery.generate.model.ibatis;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
@@ -12,28 +14,20 @@ public class ResultMap {
     @XStreamAlias("id")
     @XStreamAsAttribute
     private String mapperId;
-    
+
     @XStreamAsAttribute
     private String type;
-    
-    @XStreamAlias("id")
-    private Result id;
-    
+
+    @XStreamImplicit(itemFieldName = "id")
+    private Set<Result> ids = new HashSet<>();
+
     @XStreamImplicit
-    private List<Result> list = new ArrayList<>();
+    private List<Result> results = new ArrayList<>();
 
     public ResultMap(String mapperId, String type) {
         super();
         this.mapperId = mapperId;
         this.type = type;
-    }
-
-    public Result getId() {
-        return id;
-    }
-
-    public void setId(Result id) {
-        this.id = id;
     }
 
     public String getMapperId() {
@@ -48,11 +42,19 @@ public class ResultMap {
         this.type = type;
     }
 
-    public List<Result> getList() {
-        return list;
+    public List<Result> getResults() {
+        return results;
     }
 
-    public void add(Result result) {
-        this.list.add(result);
+    public void addResult(Result result) {
+        this.results.add(result);
+    }
+
+    public Set<Result> getIds() {
+        return this.ids;
+    }
+
+    public void addId(Result result) {
+        this.ids.add(result);
     }
 }
