@@ -7,18 +7,14 @@ import org.junit.Test;
 public class HibernateMappingTest {
     
     public HibernateMapping createMapping() {
-        Column column = new Column("columnName");
-        
         Property id = new Property("id", "long");
-        id.setColumn(column);
-        
         Property one = new Property("one", "int");
         Property two = new Property("two", "String");
         
         Clazz clazz = new Clazz("AdminLoginRecord", "RM_ADMIN_LOGIN_RECORD");
         clazz.setId(id);
-        clazz.add(one);
-        clazz.add(two);
+        clazz.addProperty(one);
+        clazz.addProperty(two);
         
         HibernateMapping mapping = new HibernateMapping("com.hmg.rmadmin.admin.bean");
         mapping.setClazz(clazz);
@@ -36,6 +32,7 @@ public class HibernateMappingTest {
          xstream.marshal(obj, new CompactWriter(sw));
          return sw.toString();
          */
+        xstream.ignoreUnknownElements();
         // 以格式化的方式输出XML
          System.out.println(xstream.toXML(createMapping));
     }

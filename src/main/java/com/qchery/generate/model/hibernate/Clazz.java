@@ -1,27 +1,35 @@
 package com.qchery.generate.model.hibernate;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 public class Clazz {
-    
-    @XStreamAlias("name")
+
     @XStreamAsAttribute
     private String name;
-    
-    @XStreamAlias("table")
+
     @XStreamAsAttribute
     private String table;
 
-    @XStreamAlias("id")
+    /**
+     * 单一主键
+     */
     private Property id;
-    
+
+    /**
+     * 联合主键
+     */
+    @XStreamAlias("composite-id")
+    private CompositeId compositeId;
+
     @XStreamImplicit
-    private List<Property> list = new ArrayList<>();
+    private List<Property> properties = new ArrayList<>();
 
     public Clazz(String name, String table) {
         super();
@@ -53,12 +61,19 @@ public class Clazz {
         this.id = id;
     }
 
-    public List<Property> getList() {
-        return list;
-    }
-    
-    public void add(Property property) {
-        this.list.add(property);
+    public List<Property> getProperties() {
+        return properties;
     }
 
+    public void addProperty(Property property) {
+        this.properties.add(property);
+    }
+
+    public CompositeId getCompositeId() {
+        return compositeId;
+    }
+
+    public void setCompositeId(CompositeId compositeId) {
+        this.compositeId = compositeId;
+    }
 }

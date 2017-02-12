@@ -6,16 +6,24 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 @XStreamAlias("property")
 public class Property {
 
-    @XStreamAlias("name")
     @XStreamAsAttribute
     private String name;
-    
-    @XStreamAlias("type")
+
     @XStreamAsAttribute
     private String type;
-    
-    @XStreamAlias("column")
-    private Column column;
+
+    @XStreamAsAttribute
+    private String column;
+
+    @XStreamAsAttribute
+    @XStreamAlias("not-null")
+    private Boolean notNull;
+
+    @XStreamAsAttribute
+    private Boolean unique;
+
+    @XStreamAsAttribute
+    private Integer length;
 
     public Property(String name, String type) {
         super();
@@ -39,12 +47,35 @@ public class Property {
         this.type = type;
     }
 
-    public Column getColumn() {
+    public String getColumn() {
         return column;
     }
 
-    public void setColumn(Column column) {
+    public void setColumn(String column) {
         this.column = column;
     }
-    
+
+    public boolean isNotNull() {
+        return notNull;
+    }
+
+    public void setNotNull(boolean notNull) {
+        this.notNull = notNull;
+    }
+
+    public boolean isUnique() {
+        return unique;
+    }
+
+    public void setUnique(boolean unique) {
+        this.unique = unique;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
 }
