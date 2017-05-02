@@ -40,7 +40,7 @@ public class StringUtil {
 
         for (char c : value.toLowerCase().toCharArray()) {
 
-            if (upFlag) {
+            if (upFlag && Character.isLowerCase(c)) {
                 builder.append((char) (c - 32));
                 upFlag = false;
                 continue;
@@ -63,15 +63,13 @@ public class StringUtil {
     }
 
     public static String upperFirstChar(String value) {
-        String stringBuilder = StringUtils.upperCase(value.substring(0, 1)) +
+        return StringUtils.upperCase(value.substring(0, 1)) +
                 value.substring(1);
-        return stringBuilder;
     }
 
     public static String lowerFirstChar(String value) {
-        String stringBuilder = StringUtils.lowerCase(value.substring(0, 1)) +
+        return StringUtils.lowerCase(value.substring(0, 1)) +
                 value.substring(1);
-        return stringBuilder;
     }
 
 }
