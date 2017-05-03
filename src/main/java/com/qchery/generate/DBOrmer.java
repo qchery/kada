@@ -6,6 +6,7 @@ import com.qchery.generate.convertor.NameConvertor;
 import com.qchery.generate.db.DBHelper;
 import com.qchery.generate.db.TypeMap;
 import com.qchery.generate.exception.ConfigException;
+import com.qchery.generate.filter.TableNameFilter;
 import org.apache.commons.dbutils.DbUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -34,6 +36,7 @@ public class DBOrmer {
     private DBHelper dbHelper;    // 支持多数据库
     private NameConvertor nameConvertor;
     private FileBuilder fileBuilder;
+    private TableNameFilter tableNameFilter;
     private Charset fileCharset;
     private boolean userJavaType;
     private String packageName;
@@ -51,9 +54,25 @@ public class DBOrmer {
             conn = dbHelper.getConnection();
             rs = conn.prepareStatement(dbHelper.getTableNames()).executeQuery();
 
+            List<String> tableNames = new ArrayList<>();
             while (rs.next()) {
-                generateFile(conn, rs.getString(1));
+                tableNames.add(rs.getString(1));
+
             }
+
+            if (tableNameFilter != null) {
+                Iterator<String> iterator = tableNames.iterator();
+                while (iterator.hasNext()) {
+                    if (!tableNameFilter.accept(iterator.next())) {
+                        iterator.remove();
+                    }
+                }
+            }
+
+            for (String tableName : tableNames) {
+                generateFile(conn, tableName);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -192,6 +211,7 @@ public class DBOrmer {
         private DBHelper dbHelper;
         private FileBuilder fileBuilder;
         private NameConvertor nameConvertor;
+        private TableNameFilter tableNameFilter;
         private Charset charset;
         private boolean userJavaType;
         private String packageName;
@@ -204,6 +224,7 @@ public class DBOrmer {
             dbOrmer.dbHelper = dbHelper;
             dbOrmer.fileBuilder = fileBuilder;
             dbOrmer.userJavaType = userJavaType;
+            dbOrmer.tableNameFilter = tableNameFilter;
 
             // 设置 NameConvertor
             if (null == nameConvertor) {
@@ -252,6 +273,11 @@ public class DBOrmer {
 
         public DBOrmerBuilder packageName(String packageName) {
             this.packageName = packageName;
+            return this;
+        }
+
+        public DBOrmerBuilder tableNameFilter(TableNameFilter tableNameFilter) {
+            this.tableNameFilter = tableNameFilter;
             return this;
         }
     }
