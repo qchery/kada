@@ -19,7 +19,7 @@ public class TypeMap {
         typeCache.put(Types.BLOB, "byte[]");
         typeCache.put(Types.CHAR, "String");
         typeCache.put(Types.CLOB, "String");
-        typeCache.put(Types.DATE, "java.sql.Date");
+        typeCache.put(Types.DATE, "java.util.Date");
         typeCache.put(Types.DECIMAL, "java.math.BigDecimal");
         typeCache.put(Types.DOUBLE, "double");
         typeCache.put(Types.FLOAT, "double");
@@ -32,7 +32,7 @@ public class TypeMap {
         typeCache.put(Types.REAL, "float");
         typeCache.put(Types.SMALLINT, "short");
         typeCache.put(Types.TIME, "java.sql.Time");
-        typeCache.put(Types.TIMESTAMP, "java.sql.Date");
+        typeCache.put(Types.TIMESTAMP, "java.util.Date");
         typeCache.put(Types.TINYINT, "byte");
         typeCache.put(Types.VARBINARY, "byte[]");
         typeCache.put(Types.VARCHAR, "String");
