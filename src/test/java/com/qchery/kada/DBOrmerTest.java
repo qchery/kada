@@ -3,7 +3,7 @@ package com.qchery.kada;
 import com.qchery.kada.builder.HibernateBuilder;
 import com.qchery.kada.builder.JavaBuilder;
 import com.qchery.kada.builder.MybatisBuilder;
-import com.qchery.kada.convertor.IgnoreSuffixNameConvertor;
+import com.qchery.kada.convertor.IgnorePrefixNameConvertor;
 import com.qchery.kada.db.ConnectParam;
 import com.qchery.kada.db.DBHelperFactory;
 import org.junit.Before;
@@ -32,8 +32,8 @@ public class DBOrmerTest {
 
     @Test
     public void testDbWithMysql() {
-        IgnoreSuffixNameConvertor nameConvertor = new IgnoreSuffixNameConvertor();
-        nameConvertor.excludeSuffix("ACT").excludeSuffix("gen");
+        IgnorePrefixNameConvertor nameConvertor = new IgnorePrefixNameConvertor();
+//        nameConvertor.excludeSuffix("ACT").excludeSuffix("gen");
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
                 .fileBuilder(new JavaBuilder())
@@ -46,7 +46,7 @@ public class DBOrmerTest {
     public void testDbWithOracle() {
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(oracleConnectParam))
-                .nameConvertor(new IgnoreSuffixNameConvertor())
+                .nameConvertor(new IgnorePrefixNameConvertor())
                 .fileBuilder(new JavaBuilder())
                 .build();
         dbOrmer.generateFile("ph_credit_accountbaseinfo_py");
@@ -54,7 +54,7 @@ public class DBOrmerTest {
     
     @Test
     public void testDbWithMybatisMysql() {
-        IgnoreSuffixNameConvertor nameConvertor = new IgnoreSuffixNameConvertor();
+        IgnorePrefixNameConvertor nameConvertor = new IgnorePrefixNameConvertor();
         nameConvertor.excludeSuffix("ACT").excludeSuffix("gen");
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
@@ -68,7 +68,7 @@ public class DBOrmerTest {
     public void testDbWithHibernateMysql() {
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
-                .nameConvertor(new IgnoreSuffixNameConvertor())
+                .nameConvertor(new IgnorePrefixNameConvertor())
                 .fileBuilder(new HibernateBuilder())
                 .build();
         dbOrmer.generateFile();

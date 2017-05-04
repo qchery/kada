@@ -16,7 +16,7 @@ import java.util.Set;
  * @author Chery
  * @date 2017年2月11日 - 上午10:52:41
  */
-public class IgnoreSuffixNameConvertor extends DefaultNameConvertor {
+public class IgnorePrefixNameConvertor extends DefaultNameConvertor {
 
     /**
      * 前缀
@@ -62,7 +62,7 @@ public class IgnoreSuffixNameConvertor extends DefaultNameConvertor {
         this.suffix = suffix;
     }
 
-    public IgnoreSuffixNameConvertor excludeSuffix(String suffix) {
+    public IgnorePrefixNameConvertor excludeSuffix(String suffix) {
         this.excludeSuffixes.add(suffix);
         return this;
     }
