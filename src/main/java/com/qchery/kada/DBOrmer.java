@@ -7,15 +7,13 @@ import com.qchery.kada.db.DBHelper;
 import com.qchery.kada.db.TypeMap;
 import com.qchery.kada.exception.ConfigException;
 import com.qchery.kada.filter.TableNameFilter;
+import com.qchery.kada.scanner.DefaultDBScanner;
 import org.apache.commons.dbutils.DbUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,10 +26,6 @@ import java.util.List;
  * @date 2016年5月15日 - 下午7:55:37
  */
 public class DBOrmer {
-
-    private static final String COLUMN_NAME = "COLUMN_NAME";
-
-    private Logger logger = LoggerFactory.getLogger(DBOrmer.class);
 
     private DBHelper dbHelper;    // 支持多数据库
     private NameConvertor nameConvertor;
@@ -99,109 +93,29 @@ public class DBOrmer {
 
     private void generateFile(Connection conn, String tableName) {
         try {
-            ObjectDescriptor descriptor = new ObjectDescriptor();
-            descriptor.setPackageName(packageName);
-            descriptor.setClassName(nameConvertor.toClassName(tableName));
-            descriptor.setTableName(tableName);
-            descriptor.setItems(listItems(conn, tableName));
-            descriptor.setCharset(fileCharset);
-            FileCreator.createFile(fileBuilder, descriptor);
+            TableDescriptor tableDescriptor = new DefaultDBScanner().scannerTable(conn, tableName);
+
+            ClassDescriptor classDescriptor = new ClassDescriptor();
+            classDescriptor.setPackageName(packageName);
+            classDescriptor.setClassName(nameConvertor.toClassName(tableName));
+
+            ArrayList<MappingItem> mappingItems = new ArrayList<>();
+            for (ColumnDescriptor columnDescriptor : tableDescriptor.getColumnDescriptors()) {
+                String javaType = TypeMap.getJavaType(columnDescriptor.getDbType());
+                String fieldName = nameConvertor.toFieldName(columnDescriptor.getColumnName());
+                FieldDescriptor fieldDescriptor = new FieldDescriptor(javaType, fieldName);
+                classDescriptor.addFieldDescriptor(fieldDescriptor);
+                mappingItems.add(new MappingItem(fieldDescriptor, columnDescriptor));
+            }
+            classDescriptor.setCharset(fileCharset);
+
+            Mapping mapping = new Mapping(classDescriptor, tableDescriptor);
+            mapping.setMappingItems(mappingItems);
+
+            FileCreator.createFile(fileBuilder, mapping);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * 获取所有子项组合
-     *
-     * @param conn      连接
-     * @param tableName 表名
-     * @return {@link List}
-     * @throws SQLException
-     */
-    protected List<Item> listItems(Connection conn, String tableName) {
-        List<Item> items = new ArrayList<>();
-        List<String> primaryKeys = getPrimaryKeys(conn, tableName);
-
-        logger.debug("tableName={} | primaryKeys={}", tableName, primaryKeys);
-
-        ResultSet columnRs = null;
-        try {
-            columnRs = conn.createStatement().executeQuery(String.format("Select * from %s", tableName));
-            ResultSetMetaData metaData = columnRs.getMetaData();
-            int index = 0;
-            while (index++ < metaData.getColumnCount()) {
-
-                String columnName = metaData.getColumnName(index);
-                int columnSize = metaData.getColumnDisplaySize(index);
-                boolean isNotNull = (ResultSetMetaData.columnNoNulls == metaData.isNullable(index));
-
-                String columnType;
-                if (userJavaType) {
-                    columnType = TypeMap.getJavaType(metaData.getColumnType(index));
-                } else {
-                    columnType = metaData.getColumnTypeName(index);
-                }
-                Item item = new Item(columnType, columnName, nameConvertor.toFieldName(columnName));
-                item.setLength(columnSize);
-                item.setNotNull(isNotNull);
-                item.setPK(isPrimaryKey(primaryKeys, columnName));
-                items.add(item);
-            }
-
-            logger.debug("tableName={} | items={}", tableName, items);
-
-        } catch (SQLException e) {
-            logger.error("msg={}", "获取参数列失败", e);
-        } finally {
-            DbUtils.closeQuietly(columnRs);
-        }
-
-        return items;
-    }
-
-    /**
-     * 获取主键属性集
-     *
-     * @param conn      获取表中的所有主键名称
-     * @param tableName 表名
-     * @return
-     * @throws SQLException
-     */
-    private List<String> getPrimaryKeys(Connection conn, String tableName) {
-        ResultSet keyRs = null;
-        List<String> keyList = new ArrayList<>();
-        try {
-            keyRs = conn.getMetaData().getPrimaryKeys(conn.getCatalog(), "%", tableName);
-
-            while (keyRs.next()) {
-                keyList.add(keyRs.getString(COLUMN_NAME));
-            }
-        } catch (SQLException e) {
-            logger.error("msg={}", "获取主键失败", e);
-        } finally {
-            DbUtils.closeQuietly(keyRs);
-        }
-        return keyList;
-    }
-
-    /**
-     * 判断字段是否为主键
-     *
-     * @param keys       主键属性集
-     * @param columnName 当前属性
-     * @return
-     * @throws SQLException
-     */
-    private boolean isPrimaryKey(List<String> keys, String columnName) {
-        boolean result = false;
-        for (String key : keys) {
-            if (key.equals(columnName)) {
-                result = true;
-                break;
-            }
-        }
-        return result;
     }
 
     public static class DBOrmerBuilder {

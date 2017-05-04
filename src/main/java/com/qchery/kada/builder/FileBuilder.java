@@ -1,8 +1,8 @@
 package com.qchery.kada.builder;
 
-import java.sql.SQLException;
+import com.qchery.kada.Mapping;
 
-import com.qchery.kada.ObjectDescriptor;
+import java.sql.SQLException;
 
 /**
  * 文件建造器
@@ -23,10 +23,10 @@ public interface FileBuilder {
     /**
      * 解析数据库关系为相应格式
      *
-     * @param descriptor 对象描述
+     * @param mapping 类与表的映射
      * @return {@link String}
      * @throws SQLException
      */
-    String getContent(ObjectDescriptor descriptor);
+    String getContent(Mapping mapping);
 
 }

@@ -19,14 +19,14 @@ public class FileCreator {
 
     private static Logger logger = LoggerFactory.getLogger(FileCreator.class);
 
-    public static void createFile(FileBuilder fileBuilder, ObjectDescriptor descriptor)
+    public static void createFile(FileBuilder fileBuilder, Mapping mapping)
             throws IOException {
 
-        String content = fileBuilder.getContent(descriptor);
-        String packagePath = descriptor.getPackageName().replaceAll("\\.", "/");
-        File file = newFile(fileBuilder.getFileName(descriptor.getClassName()), packagePath);
+        String content = fileBuilder.getContent(mapping);
+        String packagePath = mapping.getPackageName().replaceAll("\\.", "/");
+        File file = newFile(fileBuilder.getFileName(mapping.getClassName()), packagePath);
         try (FileOutputStream output = new FileOutputStream(file)) {
-            IOUtils.write(content, output, descriptor.getCharset());
+            IOUtils.write(content, output, mapping.getCharset());
         }
     }
 

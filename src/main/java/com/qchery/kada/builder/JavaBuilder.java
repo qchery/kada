@@ -1,12 +1,12 @@
 package com.qchery.kada.builder;
 
+import com.qchery.kada.Mapping;
+import com.qchery.kada.MappingItem;
+import com.qchery.kada.utils.StringUtil;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.qchery.kada.utils.StringUtil;
-import com.qchery.kada.Item;
-import com.qchery.kada.ObjectDescriptor;
 
 /**
  * 映射生成Java类
@@ -15,15 +15,15 @@ import com.qchery.kada.ObjectDescriptor;
  */
 public class JavaBuilder implements FileBuilder {
 
-    protected String getMainContent(List<Item> items) {
+    protected String getMainContent(List<MappingItem> mappingItems) {
         StringBuilder fields = new StringBuilder();
         StringBuilder methods = new StringBuilder();
-        for (Item item : items) {
-            String javaType = item.getType();
+        for (MappingItem mappingItem : mappingItems) {
+            String javaType = mappingItem.getJavaType();
             if (javaType.contains(".")) {
                 javaType = javaType.substring(javaType.lastIndexOf(".") + 1, javaType.length());
             }
-            String fieldName = item.getFieldName();
+            String fieldName = mappingItem.getFieldName();
             String fcuFieldName = StringUtil.upperFirstChar(fieldName);
             fields.append(delcareField(javaType, fieldName));
             methods.append(delcareGetMethod(javaType, fieldName, fcuFieldName));
@@ -60,20 +60,20 @@ public class JavaBuilder implements FileBuilder {
     }
 
     @Override
-    public String getContent(ObjectDescriptor descriptor) {
-        List<Item> listItems = descriptor.getItems();
+    public String getContent(Mapping mapping) {
+        List<MappingItem> mappingItems = mapping.getMappingItems();
         return String.format("package %s;\n\n"
                 + "%s"
                 + "public class %s {\n"
                 + "%s"
-                + "}", descriptor.getPackageName(), getImportDeclare(listItems), descriptor.getClassName(), getMainContent(listItems));
+                + "}", mapping.getPackageName(), getImportDeclare(mappingItems), mapping.getClassName(), getMainContent(mappingItems));
     }
 
-    private String getImportDeclare(List<Item> listItems) {
+    private String getImportDeclare(List<MappingItem> mappingItems) {
         StringBuilder importDelcare = new StringBuilder();
         Set<String> importSet = new HashSet<>();
-        for (Item item : listItems) {
-            String type = item.getType();
+        for (MappingItem fieldDescriptor : mappingItems) {
+            String type = fieldDescriptor.getJavaType();
             if (type.contains(".") && !importSet.contains(type)) {
                 importSet.add(type);
             }

@@ -2,9 +2,8 @@ package com.qchery.kada.builder;
 
 import java.util.List;
 
+import com.qchery.kada.*;
 import com.qchery.kada.utils.StringUtil;
-import com.qchery.kada.Item;
-import com.qchery.kada.ObjectDescriptor;
 import com.qchery.kada.utils.XMLUtil;
 import com.qchery.kada.model.ibatis.Mapper;
 import com.qchery.kada.model.ibatis.Result;
@@ -27,15 +26,15 @@ public class MybatisBuilder implements FileBuilder {
      * </mapper>
      */
     @Override
-    public String getContent(ObjectDescriptor descriptor) {
+    public String getContent(Mapping mapping) {
         Mapper mapper = new Mapper(String.format("%s.%sDao",
-                descriptor.getPackageName(), descriptor.getClassName()));
+                mapping.getPackageName(), mapping.getClassName()));
         ResultMap resultMap = new ResultMap("FullResultMap",
-                StringUtil.lowerFirstChar(descriptor.getClassName()));
-        List<Item> items = descriptor.getItems();
-        for (Item item : items) {
-            Result result = new Result(item.getFieldName(), item.getColumnName());
-            if (item.isPK()) {
+                StringUtil.lowerFirstChar(mapping.getClassName()));
+        List<MappingItem> mappingItems = mapping.getMappingItems();
+        for (MappingItem mappingItem : mappingItems) {
+            Result result = new Result(mappingItem.getFieldName(), mappingItem.getColumnName());
+            if (mappingItem.isPK()) {
                 resultMap.addId(result);
             } else {
                 resultMap.addResult(result);
@@ -43,7 +42,7 @@ public class MybatisBuilder implements FileBuilder {
         }
         mapper.setResultMap(resultMap);
         String content = XMLUtil.toXML(mapper);
-        content = "<?xml version=\"1.0\" encoding=\"" + descriptor.getCharset().name() + "\" ?>\n" +
+        content = "<?xml version=\"1.0\" encoding=\"" + mapping.getCharset().name() + "\" ?>\n" +
                 "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n" + content;
         return content;
     }

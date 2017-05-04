@@ -11,14 +11,15 @@ import com.qchery.kada.convertor.NameConvertor;
 
 /**
  * Java 对象生成 orm 配置
+ *
  * @author Chery
  * @date 2016年5月15日 - 下午9:29:57
  */
 public class JavaOrmer {
-    
+
     private FileBuilder fileBuilder = null;
     private NameConvertor convertor = new DefaultNameConvertor();
-    
+
     public JavaOrmer(FileBuilder fileBuilder) {
         this.fileBuilder = fileBuilder;
     }
@@ -29,26 +30,33 @@ public class JavaOrmer {
 
     /**
      * 将POJO对象的字段转换成对应的XML格式
+     *
      * @param clazz
-     * @throws IOException 
+     * @throws IOException
      */
     public void generateFile(Class<?> clazz) throws IOException {
         String className = clazz.getSimpleName();
-        ObjectDescriptor descriptor = new ObjectDescriptor();
-        descriptor.setPackageName(clazz.getPackage().getName());
-        descriptor.setClassName(className);
-        descriptor.setTableName(convertor.toTableName(className));
-        
-        List<Item> items = new ArrayList<>();
+        ClassDescriptor classDescriptor = new ClassDescriptor();
+        classDescriptor.setPackageName(clazz.getPackage().getName());
+        classDescriptor.setClassName(className);
+        TableDescriptor tableDescriptor = new TableDescriptor(convertor.toTableName(className));
+
+        List<MappingItem> mappingItems = new ArrayList<>();
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
             String fieldName = field.getName();
-            Item item = new Item(field.getType().getName(),
-                    convertor.toColumnName(fieldName), fieldName);
-            items.add(item);
+            FieldDescriptor fieldDescriptor = new FieldDescriptor(field.getType().getName(), fieldName);
+
+            ColumnDescriptor columnDescriptor = new ColumnDescriptor();
+            columnDescriptor.setColumnName(convertor.toColumnName(fieldName));
+
+            tableDescriptor.addColumnDescriptor(columnDescriptor);
+            classDescriptor.addFieldDescriptor(fieldDescriptor);
+            mappingItems.add(new MappingItem(fieldDescriptor, columnDescriptor));
         }
-        descriptor.setItems(items);
-        
-        FileCreator.createFile(fileBuilder, descriptor);
+
+        Mapping mapping = new Mapping(classDescriptor, tableDescriptor);
+        mapping.setMappingItems(mappingItems);
+        FileCreator.createFile(fileBuilder, mapping);
     }
 }

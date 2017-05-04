@@ -14,7 +14,7 @@ public class JavaOrmerTest {
         FileBuilder fileBuilder = new MybatisBuilder();
         JavaOrmer javaOrmer = new JavaOrmer(fileBuilder);
         try {
-            javaOrmer.generateFile(ObjectDescriptor.class);
+            javaOrmer.generateFile(ClassDescriptor.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -25,7 +25,7 @@ public class JavaOrmerTest {
         FileBuilder fileBuilder = new HibernateBuilder();
         JavaOrmer javaOrmer = new JavaOrmer(fileBuilder);
         try {
-            javaOrmer.generateFile(ObjectDescriptor.class);
+            javaOrmer.generateFile(ClassDescriptor.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

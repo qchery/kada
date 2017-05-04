@@ -1,9 +1,10 @@
 package com.qchery.kada;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ObjectDescriptor {
+public class ClassDescriptor {
 
     // 文件编码
     private Charset charset;
@@ -11,10 +12,8 @@ public class ObjectDescriptor {
     private String packageName;
     // 类名
     private String className;
-    // 表名
-    private String tableName;
     // 字段
-    private List<Item> items;
+    private List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
 
     public Charset getCharset() {
         return charset;
@@ -40,20 +39,12 @@ public class ObjectDescriptor {
         this.className = className;
     }
 
-    public String getTableName() {
-        return tableName;
+    public List<FieldDescriptor> getFieldDescriptors() {
+        return fieldDescriptors;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void addFieldDescriptor(FieldDescriptor fieldDescriptor) {
+        this.fieldDescriptors.add(fieldDescriptor);
     }
 
 }
