@@ -2,9 +2,12 @@ package com.qchery.kada.model.ibatis;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
+import java.util.List;
 
 @XStreamAlias("mapper")
-public class Mapper {
+public class MapperTag {
 
     @XStreamAsAttribute
     private String namespace;
@@ -12,7 +15,10 @@ public class Mapper {
     @XStreamAlias("resultMap")
     private ResultMap resultMap;
 
-    public Mapper(String namespace) {
+    @XStreamImplicit
+    private List<Insert> inserts;
+
+    public MapperTag(String namespace) {
         super();
         this.namespace = namespace;
     }
@@ -32,5 +38,13 @@ public class Mapper {
     public void setResultMap(ResultMap resultMap) {
         this.resultMap = resultMap;
     }
-    
+
+    public List<Insert> getInserts() {
+        return inserts;
+    }
+
+    public void setInserts(List<Insert> inserts) {
+        this.inserts = inserts;
+    }
+
 }
