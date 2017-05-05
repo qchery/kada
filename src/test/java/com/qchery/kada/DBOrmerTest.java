@@ -23,8 +23,9 @@ public class DBOrmerTest {
     public void init() {
         this.dbHelperFactory = new DBHelperFactory();
         ConnectParam.ConnectParamBuilder connectParamBuilder = new ConnectParam.ConnectParamBuilder();
-        mysqlConnectParam = connectParamBuilder.databaseName("jeesite")
-                .userName("root").password("123456").build();
+        mysqlConnectParam = connectParamBuilder.databaseName("innereval")
+                .host("172.30.3.112")
+                .userName("innerevaldata").password("1*mysql").build();
         oracleConnectParam = connectParamBuilder.type(ORACLE)
                 .host("172.30.3.114").databaseName("devorcl")
                 .userName("data").password("dev123").build();
@@ -36,8 +37,8 @@ public class DBOrmerTest {
 //        nameConvertor.excludeSuffix("ACT").excludeSuffix("gen");
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
-                .fileBuilder(new JavaBuilder())
-                .userJavaType(true)
+                .fileBuilder(new JavaBuilder()).packageName("com.yylending.ceis")
+                .tableNameFilter(tableName -> tableName.startsWith("pbcc"))
                 .nameConvertor(nameConvertor).build();
         dbOrmer.generateFile();
     }

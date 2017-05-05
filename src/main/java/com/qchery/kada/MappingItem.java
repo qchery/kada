@@ -53,4 +53,9 @@ public class MappingItem {
     public boolean isNotNull() {
         return columnDescriptor.isNotNull();
     }
+
+    public String getComment() {
+        return columnDescriptor.getComment();
+    }
+
 }

@@ -10,6 +10,7 @@ import java.util.Set;
 
 /**
  * 映射生成Java类
+ *
  * @author Chery
  * @date 2016年5月15日 - 下午9:24:39
  */
@@ -25,7 +26,7 @@ public class JavaBuilder implements FileBuilder {
             }
             String fieldName = mappingItem.getFieldName();
             String fcuFieldName = StringUtil.upperFirstChar(fieldName);
-            fields.append(delcareField(javaType, fieldName));
+            fields.append(delcareField(javaType, fieldName, mappingItem.getComment()));
             methods.append(delcareGetMethod(javaType, fieldName, fcuFieldName));
             methods.append(declareSetMethod(javaType, fieldName, fcuFieldName));
         }
@@ -35,24 +36,26 @@ public class JavaBuilder implements FileBuilder {
 
     /**
      * 获取字段声明
-     * @param javaType      数据类型
-     * @param fieldName     字段名
-     * @return
+     *
+     * @param javaType  数据类型
+     * @param fieldName 字段名
+     * @param comment   注释
+     * @return 字段声明
      */
-    private String delcareField(String javaType, String fieldName) {
-        return String.format("private %s %s;\n", javaType, fieldName);
+    private String delcareField(String javaType, String fieldName, String comment) {
+        return String.format("/** %s */ private %s %s;\n", comment, javaType, fieldName);
     }
 
     private String declareSetMethod(String javaType, String fieldName,
-            String fcuFieldName) {
+                                    String fcuFieldName) {
         String setMethod = String.format("public void set%s(%s %s) {\n"
-                    + "    this.%s = %s;\n"
-                    + "}\n", fcuFieldName, javaType, fieldName, fieldName, fieldName);
+                + "    this.%s = %s;\n"
+                + "}\n", fcuFieldName, javaType, fieldName, fieldName, fieldName);
         return setMethod;
     }
 
     private String delcareGetMethod(String javaType, String fieldName,
-            String fcuFieldName) {
+                                    String fcuFieldName) {
         String getMethod = String.format("public %s get%s() {\n"
                 + "    return this.%s;\n"
                 + "}\n", javaType, fcuFieldName, fieldName);
@@ -63,10 +66,10 @@ public class JavaBuilder implements FileBuilder {
     public String getContent(Mapping mapping) {
         List<MappingItem> mappingItems = mapping.getMappingItems();
         return String.format("package %s;\n\n"
-                + "%s"
+                + "%s/** %s */"
                 + "public class %s {\n"
                 + "%s"
-                + "}", mapping.getPackageName(), getImportDeclare(mappingItems), mapping.getClassName(), getMainContent(mappingItems));
+                + "}", mapping.getPackageName(), getImportDeclare(mappingItems), mapping.getTableComment(), mapping.getClassName(), getMainContent(mappingItems));
     }
 
     private String getImportDeclare(List<MappingItem> mappingItems) {

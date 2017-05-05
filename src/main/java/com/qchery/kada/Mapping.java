@@ -59,4 +59,12 @@ public class Mapping {
     public Charset getCharset() {
         return classDescriptor.getCharset();
     }
+
+    public String getTableComment() {
+        String comment = tableDescriptor.getComment();
+        if (null == comment || "".equals(comment)) {
+            comment = tableDescriptor.getTableName();
+        }
+        return comment;
+    }
 }

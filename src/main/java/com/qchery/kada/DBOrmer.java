@@ -7,13 +7,13 @@ import com.qchery.kada.db.DBHelper;
 import com.qchery.kada.db.TypeMap;
 import com.qchery.kada.exception.ConfigException;
 import com.qchery.kada.filter.TableNameFilter;
+import com.qchery.kada.scanner.DBScanner;
 import com.qchery.kada.scanner.DefaultDBScanner;
 import org.apache.commons.dbutils.DbUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,8 +31,8 @@ public class DBOrmer {
     private NameConvertor nameConvertor;
     private FileBuilder fileBuilder;
     private TableNameFilter tableNameFilter;
+    private DBScanner dbScanner = new DefaultDBScanner();
     private Charset fileCharset;
-    private boolean userJavaType;
     private String packageName;
 
     private DBOrmer() {
@@ -43,47 +43,40 @@ public class DBOrmer {
      */
     public void generateFile() {
         Connection conn = null;
-        ResultSet rs = null;
         try {
             conn = dbHelper.getConnection();
-            rs = conn.prepareStatement(dbHelper.getTableNames()).executeQuery();
-
-            List<String> tableNames = new ArrayList<>();
-            while (rs.next()) {
-                tableNames.add(rs.getString(1));
-
-            }
+            List<TableDescriptor> tableDescriptors = dbScanner.scannerTables(conn);
 
             if (tableNameFilter != null) {
-                Iterator<String> iterator = tableNames.iterator();
+                Iterator<TableDescriptor> iterator = tableDescriptors.iterator();
                 while (iterator.hasNext()) {
-                    if (!tableNameFilter.accept(iterator.next())) {
+                    if (!tableNameFilter.accept(iterator.next().getTableName())) {
                         iterator.remove();
                     }
                 }
             }
 
-            for (String tableName : tableNames) {
-                generateFile(conn, tableName);
+            for (TableDescriptor tableDescriptor : tableDescriptors) {
+                generateFile(conn, tableDescriptor);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            DbUtils.closeQuietly(conn, null, rs);
+            DbUtils.closeQuietly(conn);
         }
     }
 
     /**
      * 将数据库表字段转换成对就的JAVA代码
      *
-     * @param tableName
+     * @param tableName 表名
      */
     public void generateFile(String tableName) {
         Connection conn = null;
         try {
             conn = dbHelper.getConnection();
-            generateFile(conn, tableName);
+            generateFile(conn, new TableDescriptor(tableName));
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -91,13 +84,13 @@ public class DBOrmer {
         }
     }
 
-    private void generateFile(Connection conn, String tableName) {
+    private void generateFile(Connection conn, TableDescriptor tableDescriptor) {
         try {
-            TableDescriptor tableDescriptor = new DefaultDBScanner().scannerTable(conn, tableName);
-
+            List<ColumnDescriptor> columnDescriptors = dbScanner.scannerColumns(conn, tableDescriptor.getTableName());
+            tableDescriptor.addAll(columnDescriptors);
             ClassDescriptor classDescriptor = new ClassDescriptor();
             classDescriptor.setPackageName(packageName);
-            classDescriptor.setClassName(nameConvertor.toClassName(tableName));
+            classDescriptor.setClassName(nameConvertor.toClassName(tableDescriptor.getTableName()));
 
             ArrayList<MappingItem> mappingItems = new ArrayList<>();
             for (ColumnDescriptor columnDescriptor : tableDescriptor.getColumnDescriptors()) {
@@ -127,7 +120,6 @@ public class DBOrmer {
         private NameConvertor nameConvertor;
         private TableNameFilter tableNameFilter;
         private Charset charset;
-        private boolean userJavaType;
         private String packageName;
 
         public DBOrmer build() {
@@ -137,7 +129,6 @@ public class DBOrmer {
             DBOrmer dbOrmer = new DBOrmer();
             dbOrmer.dbHelper = dbHelper;
             dbOrmer.fileBuilder = fileBuilder;
-            dbOrmer.userJavaType = userJavaType;
             dbOrmer.tableNameFilter = tableNameFilter;
 
             // 设置 NameConvertor
@@ -177,11 +168,6 @@ public class DBOrmer {
 
         public DBOrmerBuilder charset(Charset charset) {
             this.charset = charset;
-            return this;
-        }
-
-        public DBOrmerBuilder userJavaType(boolean userJavaType) {
-            this.userJavaType = userJavaType;
             return this;
         }
 

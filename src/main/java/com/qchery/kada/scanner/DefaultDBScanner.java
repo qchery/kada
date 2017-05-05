@@ -25,17 +25,37 @@ public class DefaultDBScanner implements DBScanner {
     private Logger logger = LoggerFactory.getLogger(DBOrmer.class);
 
     @Override
-    public TableDescriptor scannerTable(Connection conn, String tableName) {
-        List<String> primaryKeys = getPrimaryKeys(conn, tableName);
-
-        logger.debug("tableName={} | primaryKeys={}", tableName, primaryKeys);
-
-        ResultSet columns = null;
-        TableDescriptor tableDescriptor = new TableDescriptor(tableName);
+    public List<TableDescriptor> scannerTables(Connection conn) {
+        List<TableDescriptor> tableDescriptors = new ArrayList<>();
+        ResultSet resultSet = null;
         try {
             DatabaseMetaData databaseMetaData = conn.getMetaData();
-            columns = databaseMetaData.getColumns(conn.getCatalog(), getSchema(conn), tableName.toUpperCase(), "%");
-            columns.getMetaData();
+            resultSet = databaseMetaData.getTables(conn.getCatalog(), getSchema(conn), "%", new String[]{"TABLE"});
+            while (resultSet.next()) {
+                TableDescriptor tableDescriptor = new TableDescriptor(resultSet.getString("TABLE_NAME"));
+                tableDescriptor.setComment(resultSet.getString("REMARKS"));
+                tableDescriptors.add(tableDescriptor);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(resultSet);
+        }
+        return tableDescriptors;
+    }
+
+    @Override
+    public List<ColumnDescriptor> scannerColumns(Connection conn, String tableName) {
+
+        ResultSet columns = null;
+        List<ColumnDescriptor> columnDescriptors = new ArrayList<>();
+        try {
+            DatabaseMetaData databaseMetaData = conn.getMetaData();
+
+            List<String> primaryKeys = getPrimaryKeys(conn, tableName);
+            logger.debug("tableName={} | primaryKeys={}", tableName, primaryKeys);
+
+            columns = databaseMetaData.getColumns(conn.getCatalog(), getSchema(conn), tableName, "%");
 
             while (columns.next()) {
                 ColumnDescriptor columnDescriptor = new ColumnDescriptor();
@@ -62,7 +82,7 @@ public class DefaultDBScanner implements DBScanner {
                 // 主键
                 columnDescriptor.setPrimaryKey(isPrimaryKey(primaryKeys, columnName));
 
-                tableDescriptor.addColumnDescriptor(columnDescriptor);
+                columnDescriptors.add(columnDescriptor);
             }
 
         } catch (SQLException e) {
@@ -71,7 +91,7 @@ public class DefaultDBScanner implements DBScanner {
             DbUtils.closeQuietly(columns);
         }
 
-        return tableDescriptor;
+        return columnDescriptors;
     }
 
     /**
@@ -79,8 +99,7 @@ public class DefaultDBScanner implements DBScanner {
      *
      * @param conn      获取表中的所有主键名称
      * @param tableName 表名
-     * @return
-     * @throws SQLException
+     * @return 所有主键
      */
     private List<String> getPrimaryKeys(Connection conn, String tableName) {
         ResultSet keyRs = null;
@@ -113,8 +132,7 @@ public class DefaultDBScanner implements DBScanner {
      *
      * @param keys       主键属性集
      * @param columnName 当前属性
-     * @return
-     * @throws SQLException
+     * @return 是否为主键
      */
     private boolean isPrimaryKey(List<String> keys, String columnName) {
         boolean result = false;
@@ -127,32 +145,4 @@ public class DefaultDBScanner implements DBScanner {
         return result;
     }
 
-    private static class ScannerConfig {
-        private boolean userJavaType;
-        private String tableName;
-
-        public static ScannerConfig custom() {
-            ScannerConfig scannerConfig = new ScannerConfig();
-            scannerConfig.setUserJavaType(true);
-            return scannerConfig;
-        }
-
-        public ScannerConfig setUserJavaType(boolean userJavaType) {
-            this.userJavaType = userJavaType;
-            return this;
-        }
-
-        public ScannerConfig setTableName(String tableName) {
-            this.tableName = tableName;
-            return this;
-        }
-
-        public boolean isUserJavaType() {
-            return userJavaType;
-        }
-
-        public String getTableName() {
-            return tableName;
-        }
-    }
 }

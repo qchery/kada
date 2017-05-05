@@ -10,6 +10,7 @@ import java.util.List;
 public class TableDescriptor {
 
     private String tableName;
+    private String comment;
     private List<ColumnDescriptor> columnDescriptors = new ArrayList<>();
 
     public TableDescriptor(String tableName) {
@@ -24,6 +25,14 @@ public class TableDescriptor {
         this.tableName = tableName;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public List<ColumnDescriptor> getColumnDescriptors() {
         return columnDescriptors;
     }
@@ -32,10 +41,15 @@ public class TableDescriptor {
         this.columnDescriptors.add(columnDescriptor);
     }
 
+    public void addAll(List<ColumnDescriptor> columnDescriptors) {
+        this.columnDescriptors.addAll(columnDescriptors);
+    }
+
     @Override
     public String toString() {
         return "TableDescriptor{" +
                 "tableName='" + tableName + '\'' +
+                ", comment='" + comment + '\'' +
                 ", columnDescriptors=" + columnDescriptors +
                 '}';
     }
