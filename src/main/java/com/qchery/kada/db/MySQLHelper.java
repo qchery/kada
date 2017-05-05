@@ -21,14 +21,6 @@ public class MySQLHelper extends DBHelper {
     }
 
     @Override
-    public String getTableNames() {
-        return String.format("SELECT table_name" +
-                        " FROM information_schema.tables " +
-                        " WHERE table_schema = '%s' ",
-                connectParam.getDbName());
-    }
-
-    @Override
     protected String getDriverName() {
         return DRIVER_NAME;
     }

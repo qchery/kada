@@ -29,8 +29,6 @@ public abstract class DBHelper {
      */
     protected abstract String getDriverName();
 
-    public abstract String getTableNames();
-
     /**
      * 获取连接
      *

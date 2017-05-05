@@ -19,11 +19,6 @@ public class OracleHelper extends DBHelper {
     }
 
     @Override
-    public String getTableNames() {
-        return "SELECT table_name FROM user_tables";
-    }
-
-    @Override
     protected String getDriverName() {
         return DRIVER_NAME;
     }
