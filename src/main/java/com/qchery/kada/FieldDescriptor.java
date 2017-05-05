@@ -6,28 +6,39 @@ package com.qchery.kada;
  * @date 2016年5月15日 - 下午9:27:38
  */
 public class FieldDescriptor {
-    private String type;        // 类型
-    private String fieldName;   // 属性名
+    /**
+     * 包含全路径的类型
+     */
+    private String type;
+    /**
+     * 不包含全路径的类型
+     */
+    private String simpleType;
+    /**
+     * 属性名
+     */
+    private String fieldName;
 
     public FieldDescriptor(String type, String fieldName) {
         this.type = type;
         this.fieldName = fieldName;
+        if (type.contains(".")) {
+            simpleType = type.substring(type.lastIndexOf(".") + 1, type.length());
+        } else {
+            simpleType = type;
+        }
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getFieldName() {
         return fieldName;
     }
 
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
+    public String getSimpleType() {
+        return simpleType;
     }
 
     @Override

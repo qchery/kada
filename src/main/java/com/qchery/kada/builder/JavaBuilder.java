@@ -21,35 +21,45 @@ public class JavaBuilder implements FileBuilder {
         List<MappingItem> mappingItems = mapping.getMappingItems();
         return String.format("package %s;\n\n"
                 + "%s/** %s */"
-                + "public class %s {\n"
+                + "public class %s implements Serializable {\n"
                 + "%s"
-                + "}", mapping.getPackageName(), getImportDeclare(mappingItems), mapping.getTableComment(), mapping.getClassName(), getMainContent(mapping));
+                + "}", mapping.getPackageName(), declareImports(mappingItems), mapping.getTableComment(), mapping.getClassName(), getMainContent(mapping));
     }
 
     protected String getMainContent(Mapping mapping) {
         List<MappingItem> mappingItems = mapping.getMappingItems();
-        StringBuilder fields = new StringBuilder();
+        StringBuilder fields = declareFileds(mappingItems);
+        StringBuilder setGetMethods = declareSetGetMethods(mappingItems);
+        StringBuilder toStringMethod = declareToString(mapping, mappingItems);
+        return fields.append(setGetMethods).append(toStringMethod).toString();
+    }
+
+    private StringBuilder declareSetGetMethods(List<MappingItem> mappingItems) {
         StringBuilder methods = new StringBuilder();
         for (MappingItem mappingItem : mappingItems) {
-            String javaType = mappingItem.getJavaType();
-            if (javaType.contains(".")) {
-                javaType = javaType.substring(javaType.lastIndexOf(".") + 1, javaType.length());
-            }
+            String javaType = mappingItem.getSimpleJavaType();
             String fieldName = mappingItem.getFieldName();
             String fcuFieldName = StringUtil.upperFirstChar(fieldName);
-            fields.append(delcareField(javaType, fieldName, mappingItem.getComment()));
-            methods.append(delcareGetMethod(javaType, fieldName, fcuFieldName));
-            methods.append(declareSetMethod(javaType, fieldName, fcuFieldName));
+            methods.append(formatGetMethod(javaType, fieldName, fcuFieldName));
+            methods.append(formatSetMethod(javaType, fieldName, fcuFieldName));
         }
+        return methods;
+    }
 
-        StringBuilder toStringMethod = declareToString(mapping, mappingItems);
-
-        return fields.append(methods).append(toStringMethod).toString();
+    private StringBuilder declareFileds(List<MappingItem> mappingItems) {
+        StringBuilder fields = new StringBuilder();
+        for (MappingItem mappingItem : mappingItems) {
+            String fieldName = mappingItem.getFieldName();
+            fields.append("/** ").append(mappingItem.getComment())
+                    .append(" */ private ").append(mappingItem.getSimpleJavaType())
+                    .append(" ").append(fieldName).append(";\n");
+        }
+        return fields;
     }
 
     private StringBuilder declareToString(Mapping mapping, List<MappingItem> mappingItems) {
         StringBuilder toStringMethod = new StringBuilder("@Override\npublic String toString() {\n" +
-                "return \"").append(mapping.getClassName()).append("[\"");
+                "return \"").append(mapping.getClassName()).append(" [\"");
         for (int i = 0; i < mappingItems.size(); i++) {
             MappingItem mappingItem = mappingItems.get(i);
             toStringMethod.append("+").append("\"")
@@ -65,55 +75,39 @@ public class JavaBuilder implements FileBuilder {
         return toStringMethod;
     }
 
-    /**
-     * 获取字段声明
-     *
-     * @param javaType  数据类型
-     * @param fieldName 字段名
-     * @param comment   注释
-     * @return 字段声明
-     */
-    private String delcareField(String javaType, String fieldName, String comment) {
-        return String.format("/** %s */ private %s %s;\n", comment, javaType, fieldName);
-    }
-
-    private String declareSetMethod(String javaType, String fieldName,
-                                    String fcuFieldName) {
+    private String formatSetMethod(String javaType, String fieldName,
+                                   String fcuFieldName) {
         String setMethod = String.format("public void set%s(%s %s) {\n"
                 + "    this.%s = %s;\n"
                 + "}\n", fcuFieldName, javaType, fieldName, fieldName, fieldName);
         return setMethod;
     }
 
-    private String delcareGetMethod(String javaType, String fieldName,
-                                    String fcuFieldName) {
+    private String formatGetMethod(String javaType, String fieldName,
+                                   String fcuFieldName) {
         String getMethod = String.format("public %s get%s() {\n"
                 + "    return this.%s;\n"
                 + "}\n", javaType, fcuFieldName, fieldName);
         return getMethod;
     }
 
-    private String getImportDeclare(List<MappingItem> mappingItems) {
-        StringBuilder importDelcare = new StringBuilder();
+    private StringBuilder declareImports(List<MappingItem> mappingItems) {
+        StringBuilder imports = new StringBuilder();
         Set<String> importSet = new HashSet<>();
-        for (MappingItem fieldDescriptor : mappingItems) {
-            String type = fieldDescriptor.getJavaType();
-            if (type.contains(".") && !importSet.contains(type)) {
+        for (MappingItem mappingItem : mappingItems) {
+            String type = mappingItem.getJavaType();
+
+            if (!mappingItem.getJavaType().equals(mappingItem.getSimpleJavaType())) {
                 importSet.add(type);
             }
         }
 
+        importSet.add("java.io.Serializable");
         for (String importType : importSet) {
-            importDelcare.append("import ");
-            importDelcare.append(importType);
-            importDelcare.append(";\n");
+            imports.append("import ").append(importType).append(";\n");
         }
 
-        if (importDelcare.length() > 0) {
-            importDelcare.append("\n");
-        }
-
-        return importDelcare.toString();
+        return imports;
     }
 
     @Override

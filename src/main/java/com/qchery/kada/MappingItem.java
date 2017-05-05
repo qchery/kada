@@ -58,4 +58,7 @@ public class MappingItem {
         return columnDescriptor.getComment();
     }
 
+    public String getSimpleJavaType() {
+        return fieldDescriptor.getSimpleType();
+    }
 }
