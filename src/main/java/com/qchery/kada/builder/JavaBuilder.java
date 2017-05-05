@@ -16,7 +16,18 @@ import java.util.Set;
  */
 public class JavaBuilder implements FileBuilder {
 
-    protected String getMainContent(List<MappingItem> mappingItems) {
+    @Override
+    public String getContent(Mapping mapping) {
+        List<MappingItem> mappingItems = mapping.getMappingItems();
+        return String.format("package %s;\n\n"
+                + "%s/** %s */"
+                + "public class %s {\n"
+                + "%s"
+                + "}", mapping.getPackageName(), getImportDeclare(mappingItems), mapping.getTableComment(), mapping.getClassName(), getMainContent(mapping));
+    }
+
+    protected String getMainContent(Mapping mapping) {
+        List<MappingItem> mappingItems = mapping.getMappingItems();
         StringBuilder fields = new StringBuilder();
         StringBuilder methods = new StringBuilder();
         for (MappingItem mappingItem : mappingItems) {
@@ -31,7 +42,27 @@ public class JavaBuilder implements FileBuilder {
             methods.append(declareSetMethod(javaType, fieldName, fcuFieldName));
         }
 
-        return fields.append(methods).toString();
+        StringBuilder toStringMethod = declareToString(mapping, mappingItems);
+
+        return fields.append(methods).append(toStringMethod).toString();
+    }
+
+    private StringBuilder declareToString(Mapping mapping, List<MappingItem> mappingItems) {
+        StringBuilder toStringMethod = new StringBuilder("@Override\npublic String toString() {\n" +
+                "return \"").append(mapping.getClassName()).append("[\"");
+        for (int i = 0; i < mappingItems.size(); i++) {
+            MappingItem mappingItem = mappingItems.get(i);
+            toStringMethod.append("+").append("\"")
+                    .append(mappingItem.getFieldName()).append(" = \"+")
+                    .append(mappingItem.getFieldName()).append("+ \"");
+            if (i == mappingItems.size() - 1) {
+                toStringMethod.append("]\";");
+            } else {
+                toStringMethod.append(",\"\n");
+            }
+        }
+        toStringMethod.append("}");
+        return toStringMethod;
     }
 
     /**
@@ -60,16 +91,6 @@ public class JavaBuilder implements FileBuilder {
                 + "    return this.%s;\n"
                 + "}\n", javaType, fcuFieldName, fieldName);
         return getMethod;
-    }
-
-    @Override
-    public String getContent(Mapping mapping) {
-        List<MappingItem> mappingItems = mapping.getMappingItems();
-        return String.format("package %s;\n\n"
-                + "%s/** %s */"
-                + "public class %s {\n"
-                + "%s"
-                + "}", mapping.getPackageName(), getImportDeclare(mappingItems), mapping.getTableComment(), mapping.getClassName(), getMainContent(mappingItems));
     }
 
     private String getImportDeclare(List<MappingItem> mappingItems) {
