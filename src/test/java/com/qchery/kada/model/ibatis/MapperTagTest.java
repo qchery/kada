@@ -16,12 +16,12 @@ public class MapperTagTest {
 
     private MapperTag createMapper() {
         MapperTag mapperTag = new MapperTag("cn.richinfo.cmail.antispam.dao.AsHoneypotDao");
-        ResultMap resultMap = new ResultMap("FullResultMap", "asHoneypot");
-        Result id = new Result("honeypotId", "honeypot_id");
-        Result result = new Result("emailAddr", "email_addr");
-        resultMap.addId(id);
-        resultMap.addResult(result);
-        mapperTag.setResultMap(resultMap);
+        ResultMapTag resultMapTag = new ResultMapTag("FullResultMap", "asHoneypot");
+        ResultTag id = new ResultTag("honeypotId", "honeypot_id");
+        ResultTag resultTag = new ResultTag("emailAddr", "email_addr");
+        resultMapTag.addId(id);
+        resultMapTag.addResult(resultTag);
+        mapperTag.setResultMapTag(resultMapTag);
         return mapperTag;
     }
 

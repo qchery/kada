@@ -4,14 +4,14 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("result")
-public class Result {
+public class ResultTag {
 
     @XStreamAsAttribute
     private String property;
     @XStreamAsAttribute
     private String column;
 
-    public Result(String property, String column) {
+    public ResultTag(String property, String column) {
         super();
         this.property = property;
         this.column = column;

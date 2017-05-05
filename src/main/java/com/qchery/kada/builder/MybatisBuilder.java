@@ -29,29 +29,29 @@ public class MybatisBuilder implements FileBuilder {
         MapperTag mapperTag = new MapperTag(String.format("%s.%sDao",
                 mapping.getPackageName(), mapping.getClassName()));
         List<MappingItem> mappingItems = mapping.getMappingItems();
-        mapperTag.setResultMap(getResultMap(mapping, mappingItems));
-        mapperTag.setInserts(Collections.singletonList(getInsert(mapping, mappingItems)));
+        mapperTag.setResultMapTag(getResultMap(mapping, mappingItems));
+        mapperTag.setInsertTags(Collections.singletonList(getInsert(mapping, mappingItems)));
         String content = XMLUtil.toXML(mapperTag);
         content = "<?xml version=\"1.0\" encoding=\"" + mapping.getCharset().name() + "\" ?>\n" +
                 "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n" + content;
         return content;
     }
 
-    private ResultMap getResultMap(Mapping mapping, List<MappingItem> mappingItems) {
-        ResultMap resultMap = new ResultMap("FullResultMap",
+    private ResultMapTag getResultMap(Mapping mapping, List<MappingItem> mappingItems) {
+        ResultMapTag resultMapTag = new ResultMapTag("FullResultMap",
                 StringUtil.lowerFirstChar(mapping.getClassName()));
         for (MappingItem mappingItem : mappingItems) {
-            Result result = new Result(mappingItem.getFieldName(), mappingItem.getColumnName());
+            ResultTag resultTag = new ResultTag(mappingItem.getFieldName(), mappingItem.getColumnName());
             if (mappingItem.isPK()) {
-                resultMap.addId(result);
+                resultMapTag.addId(resultTag);
             } else {
-                resultMap.addResult(result);
+                resultMapTag.addResult(resultTag);
             }
         }
-        return resultMap;
+        return resultMapTag;
     }
 
-    private Insert getInsert(Mapping mapping, List<MappingItem> mappingItems) {
+    private InsertTag getInsert(Mapping mapping, List<MappingItem> mappingItems) {
         StringBuilder insertContentBuilder = new StringBuilder("\ninsert into ").append(mapping.getTableName()).append("(");
         StringBuilder valuesBuilder = new StringBuilder();
         for (int i = 0; i < mappingItems.size(); i++) {
@@ -66,10 +66,10 @@ public class MybatisBuilder implements FileBuilder {
                 valuesBuilder.append("\n)\n");
             }
         }
-        Insert insert = new Insert();
-        insert.setId("insert");
-        insert.setContent(insertContentBuilder.append(valuesBuilder).toString());
-        return insert;
+        InsertTag insertTag = new InsertTag();
+        insertTag.setId("insert");
+        insertTag.setContent(insertContentBuilder.append(valuesBuilder).toString());
+        return insertTag;
     }
 
     @Override

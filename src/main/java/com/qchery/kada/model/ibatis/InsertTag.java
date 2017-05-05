@@ -10,7 +10,7 @@ import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
  */
 @XStreamConverter(value = ToAttributedValueConverter.class, strings = {"content"})
 @XStreamAlias("insert")
-public class Insert {
+public class InsertTag {
 
     private String id;
     private String content;

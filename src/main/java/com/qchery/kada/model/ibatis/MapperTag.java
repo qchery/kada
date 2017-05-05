@@ -13,10 +13,10 @@ public class MapperTag {
     private String namespace;
     
     @XStreamAlias("resultMap")
-    private ResultMap resultMap;
+    private ResultMapTag resultMapTag;
 
     @XStreamImplicit
-    private List<Insert> inserts;
+    private List<InsertTag> insertTags;
 
     public MapperTag(String namespace) {
         super();
@@ -31,20 +31,20 @@ public class MapperTag {
         this.namespace = namespace;
     }
 
-    public ResultMap getResultMap() {
-        return resultMap;
+    public ResultMapTag getResultMapTag() {
+        return resultMapTag;
     }
 
-    public void setResultMap(ResultMap resultMap) {
-        this.resultMap = resultMap;
+    public void setResultMapTag(ResultMapTag resultMapTag) {
+        this.resultMapTag = resultMapTag;
     }
 
-    public List<Insert> getInserts() {
-        return inserts;
+    public List<InsertTag> getInsertTags() {
+        return insertTags;
     }
 
-    public void setInserts(List<Insert> inserts) {
-        this.inserts = inserts;
+    public void setInsertTags(List<InsertTag> insertTags) {
+        this.insertTags = insertTags;
     }
 
 }

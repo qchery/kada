@@ -9,7 +9,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
-public class ResultMap {
+public class ResultMapTag {
 
     @XStreamAlias("id")
     @XStreamAsAttribute
@@ -19,12 +19,12 @@ public class ResultMap {
     private String type;
 
     @XStreamImplicit(itemFieldName = "id")
-    private Set<Result> ids = new HashSet<>();
+    private Set<ResultTag> ids = new HashSet<>();
 
     @XStreamImplicit
-    private List<Result> results = new ArrayList<>();
+    private List<ResultTag> resultTags = new ArrayList<>();
 
-    public ResultMap(String mapperId, String type) {
+    public ResultMapTag(String mapperId, String type) {
         super();
         this.mapperId = mapperId;
         this.type = type;
@@ -42,19 +42,19 @@ public class ResultMap {
         this.type = type;
     }
 
-    public List<Result> getResults() {
-        return results;
+    public List<ResultTag> getResultTags() {
+        return resultTags;
     }
 
-    public void addResult(Result result) {
-        this.results.add(result);
+    public void addResult(ResultTag resultTag) {
+        this.resultTags.add(resultTag);
     }
 
-    public Set<Result> getIds() {
+    public Set<ResultTag> getIds() {
         return this.ids;
     }
 
-    public void addId(Result result) {
-        this.ids.add(result);
+    public void addId(ResultTag resultTag) {
+        this.ids.add(resultTag);
     }
 }
