@@ -2,6 +2,7 @@ package com.qchery.kada;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class JavaOrmer {
         ClassDescriptor classDescriptor = new ClassDescriptor();
         classDescriptor.setPackageName(clazz.getPackage().getName());
         classDescriptor.setClassName(className);
+        classDescriptor.setCharset(Charset.forName("utf-8"));
         TableDescriptor tableDescriptor = new TableDescriptor(convertor.toTableName(className));
 
         List<MappingItem> mappingItems = new ArrayList<>();
