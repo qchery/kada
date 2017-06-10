@@ -37,7 +37,7 @@ public class DefaultDBScanner implements DBScanner {
                 tableDescriptors.add(tableDescriptor);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("msg={}", " 扫描表元数据失败", e);
         } finally {
             DbUtils.closeQuietly(resultSet);
         }

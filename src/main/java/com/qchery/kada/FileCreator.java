@@ -30,20 +30,22 @@ public class FileCreator {
         }
     }
 
-    private static File newFile(String fileName, String packagePath) {
+    private static File newFile(String fileName, String packagePath) throws IOException {
 
         File destDir = new File(getFileStorageDir(packagePath));
         if (!destDir.exists()) {
-            destDir.mkdirs();
+            boolean mkdirs = destDir.mkdirs();
+            if (!mkdirs) {
+                logger.warn("msg={} | path={}", "路径创建失败", destDir.getAbsolutePath());
+            }
         }
 
         File destFile = new File(destDir.getAbsolutePath() + File.separatorChar + fileName);
-        try {
-            if (!destFile.exists()) {
-                destFile.createNewFile();
+        if (!destFile.exists()) {
+            boolean flag = destFile.createNewFile();
+            if (!flag) {
+                logger.warn("msg={} | fileStorePath={}", "文件创建失败", destFile.getAbsolutePath());
             }
-        } catch (IOException e) {
-            logger.error("msg={}", "文件创建失败!请检查文件路径!", e);
         }
         return destFile;
     }

@@ -8,27 +8,19 @@ import org.junit.Test;
 import java.io.IOException;
 
 public class JavaOrmerTest {
-    
+
     @Test
-    public void toIbatis() {
+    public void toIbatis() throws IOException {
         FileBuilder fileBuilder = new MybatisBuilder();
         JavaOrmer javaOrmer = new JavaOrmer(fileBuilder);
-        try {
-            javaOrmer.generateFile(ClassDescriptor.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        javaOrmer.generateFile(ClassDescriptor.class);
     }
-    
+
     @Test
-    public void toHibernate() {
+    public void toHibernate() throws IOException {
         FileBuilder fileBuilder = new HibernateBuilder();
         JavaOrmer javaOrmer = new JavaOrmer(fileBuilder);
-        try {
-            javaOrmer.generateFile(ClassDescriptor.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        javaOrmer.generateFile(ClassDescriptor.class);
     }
-    
+
 }

@@ -1,5 +1,9 @@
 package com.qchery.kada.db;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.rmi.runtime.Log;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,6 +11,8 @@ import java.sql.SQLException;
 public abstract class DBHelper {
 
     ConnectParam connectParam;
+
+    private Logger logger = LoggerFactory.getLogger(DBHelper.class);
 
     DBHelper(ConnectParam connectParam) {
         this.connectParam = connectParam;
@@ -40,7 +46,8 @@ public abstract class DBHelper {
         try {
             Class.forName(getDriverName());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.error("msg={} | driverName={}", "驱动类配置错误", getDriverName());
+            throw new IllegalArgumentException("驱动类配置错误");
         }
         return DriverManager.getConnection(url, connectParam.getUserName(), connectParam.getPassword());
     }

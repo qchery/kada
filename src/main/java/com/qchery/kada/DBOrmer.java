@@ -10,6 +10,8 @@ import com.qchery.kada.filter.TableNameFilter;
 import com.qchery.kada.scanner.DBScanner;
 import com.qchery.kada.scanner.DefaultDBScanner;
 import org.apache.commons.dbutils.DbUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -34,6 +36,8 @@ public class DBOrmer {
     private DBScanner dbScanner = new DefaultDBScanner();
     private Charset fileCharset;
     private String packageName;
+
+    private Logger logger = LoggerFactory.getLogger(DBOrmer.class);
 
     private DBOrmer() {
     }
@@ -60,8 +64,8 @@ public class DBOrmer {
                 generateFile(conn, tableDescriptor);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            logger.error("msg={}", "数据库链接获取失败", e);
         } finally {
             DbUtils.closeQuietly(conn);
         }
@@ -78,7 +82,7 @@ public class DBOrmer {
             conn = dbHelper.getConnection();
             generateFile(conn, new TableDescriptor(tableName));
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("msg={}", "数据库链接获取失败", e);
         } finally {
             DbUtils.closeQuietly(conn);
         }
@@ -107,7 +111,7 @@ public class DBOrmer {
 
             FileCreator.createFile(fileBuilder, mapping);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("msg={}", "文件生成失败", e);
         }
     }
 
