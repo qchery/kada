@@ -1,7 +1,5 @@
 package com.qchery.kada.convertor;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,51 +17,31 @@ import java.util.Set;
 public class IgnorePrefixNameConvertor extends DefaultNameConvertor {
 
     /**
-     * 前缀
-     */
-    private String suffix;
-    /**
      * 不需要进行截取的前缀集合
      */
-    private Set<String> excludeSuffixes = new HashSet<>();
+    private Set<String> excludePrefixes = new HashSet<>();
 
     @Override
-    public String toClassName(String tableName) {
-        int separatorIndex = tableName.indexOf(getSeparator().charAt(0));
-        String suffix = tableName.substring(0, separatorIndex);
+    public String toClassName(String realTableName) {
+        int separatorIndex = realTableName.indexOf(getSeparator().charAt(0));
+        String tablePrefix = realTableName.substring(0, separatorIndex);
 
-        String realTableName = null;
-        for (String excludeSuffix : excludeSuffixes) {
-            if (excludeSuffix.equals(suffix)) {
-                realTableName = tableName;
+        String tableName = null;
+        for (String excludePrefix : excludePrefixes) {
+            if (excludePrefix.equals(tablePrefix)) {
+                tableName = realTableName;
+                break;
             }
         }
-        if (null == realTableName) {
-            realTableName = tableName.substring(separatorIndex + 1);
+        if (null == tableName) {
+            tableName = realTableName.substring(separatorIndex + 1);
         }
 
-        return super.toClassName(realTableName);
-    }
-
-    @Override
-    public String toTableName(String className) {
-        String tableName = super.toTableName(className);
-        if (StringUtils.isNotBlank(suffix)) {
-            tableName = suffix + getSeparator() + tableName;
-        }
-        return tableName;
-    }
-
-    public String getSuffix() {
-        return suffix;
-    }
-
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
+        return super.toClassName(tableName);
     }
 
     public IgnorePrefixNameConvertor excludeSuffix(String suffix) {
-        this.excludeSuffixes.add(suffix);
+        this.excludePrefixes.add(suffix);
         return this;
     }
 }
