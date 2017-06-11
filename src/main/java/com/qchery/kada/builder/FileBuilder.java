@@ -15,7 +15,7 @@ public interface FileBuilder {
     /**
      * 根据类名获取文件名
      *
-     * @param className
+     * @param className 类名
      * @return {@link String}
      */
     String getFileName(String className);

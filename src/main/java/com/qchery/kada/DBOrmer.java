@@ -18,7 +18,6 @@ import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -52,12 +51,7 @@ public class DBOrmer {
             List<TableDescriptor> tableDescriptors = dbScanner.scannerTables(conn);
 
             if (tableNameFilter != null) {
-                Iterator<TableDescriptor> iterator = tableDescriptors.iterator();
-                while (iterator.hasNext()) {
-                    if (!tableNameFilter.accept(iterator.next().getTableName())) {
-                        iterator.remove();
-                    }
-                }
+                tableDescriptors.removeIf(tableDescriptor -> !tableNameFilter.accept(tableDescriptor.getTableName()));
             }
 
             for (TableDescriptor tableDescriptor : tableDescriptors) {
