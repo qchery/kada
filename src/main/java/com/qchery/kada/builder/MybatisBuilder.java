@@ -1,5 +1,6 @@
 package com.qchery.kada.builder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class MybatisBuilder implements FileBuilder {
         List<MappingItem> mappingItems = mapping.getMappingItems();
         mapperTag.setResultMapTag(getResultMap(mapping, mappingItems));
         mapperTag.setInsertTags(Collections.singletonList(getInsert(mapping, mappingItems)));
+        mapperTag.setUpdateTags(Collections.singletonList(getUpdate(mapping, mappingItems)));
         String content = XMLUtil.toXML(mapperTag);
         content = "<?xml version=\"1.0\" encoding=\"" + mapping.getCharset().name() + "\" ?>\n" +
                 "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n" + content;
@@ -70,6 +72,46 @@ public class MybatisBuilder implements FileBuilder {
         insertTag.setId("insert");
         insertTag.setContent(insertContentBuilder.append(valuesBuilder).toString());
         return insertTag;
+    }
+
+    private UpdateTag getUpdate(Mapping mapping, List<MappingItem> mappingItems) {
+        UpdateTag updateTag = new UpdateTag();
+        updateTag.setId("updateSelective");
+        updateTag.setPrefix("UPDATE " + mapping.getTableName());
+        SetTag setTag = new SetTag();
+        ArrayList<IfTag> ifTags = new ArrayList<>();
+        for (int i = 0; i < mappingItems.size(); i++) {
+            MappingItem item = mappingItems.get(i);
+            IfTag ifTag = new IfTag();
+            ifTag.setTest("null != " + item.getFieldName());
+            String content = item.getColumnName() + " = #{" + item.getFieldName() + "}";
+            if (i != mappingItems.size() - 1) {
+                content += ",";
+            }
+            ifTag.setContent(content);
+            ifTags.add(ifTag);
+        }
+        setTag.setIfTags(ifTags);
+        updateTag.setSetTag(setTag);
+
+        StringBuilder whereBuilder = new StringBuilder("WHERE ");
+        boolean isFirstPk = true;
+        for (MappingItem item : mappingItems) {
+            if (item.isPK()) {
+                if (!isFirstPk) {
+                    whereBuilder.append(" AND ");
+                } else {
+                    isFirstPk = false;
+                }
+                whereBuilder.append(item.getColumnName());
+                whereBuilder.append(" = #{");
+                whereBuilder.append(item.getFieldName());
+                whereBuilder.append("}");
+            }
+        }
+        updateTag.setSuffix(whereBuilder.toString());
+
+        return updateTag;
     }
 
     @Override

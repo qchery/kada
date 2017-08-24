@@ -4,6 +4,9 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class MapperTagTest {
 
     @Test
@@ -19,10 +22,35 @@ public class MapperTagTest {
         ResultMapTag resultMapTag = new ResultMapTag("FullResultMap", "asHoneypot");
         ResultTag id = new ResultTag("honeypotId", "honeypot_id");
         ResultTag resultTag = new ResultTag("emailAddr", "email_addr");
+
+        InsertTag insertTag = new InsertTag();
+        insertTag.setContent("insert into sys_user (id, name) values (#{id}, #{name})");
+        insertTag.setId("insert");
+        mapperTag.setInsertTags(Collections.singletonList(insertTag));
+
+        UpdateTag updateTag =new UpdateTag();
+        updateTag.setId("update");
+        updateTag.setPrefix("update sys_user");
+        updateTag.setSuffix("where id = #{id}");
+        SetTag setTag = new SetTag();
+        ArrayList<IfTag> ifTags = new ArrayList<>();
+        ifTags.add(getIfTag("name = #{name},", "name != null"));
+        ifTags.add(getIfTag("name = #{name},", "name != null"));
+        setTag.setIfTags(ifTags);
+        updateTag.setSetTag(setTag);
+        mapperTag.setUpdateTags(Collections.singletonList(updateTag));
+
         resultMapTag.addId(id);
         resultMapTag.addResult(resultTag);
         mapperTag.setResultMapTag(resultMapTag);
         return mapperTag;
+    }
+
+    private IfTag getIfTag(String content, String test) {
+        IfTag ifTag = new IfTag();
+        ifTag.setContent(content);
+        ifTag.setTest(test);
+        return ifTag;
     }
 
 }

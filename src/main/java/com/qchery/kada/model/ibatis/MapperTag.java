@@ -18,6 +18,9 @@ public class MapperTag {
     @XStreamImplicit
     private List<InsertTag> insertTags;
 
+    @XStreamImplicit
+    private List<UpdateTag> updateTags;
+
     public MapperTag(String namespace) {
         super();
         this.namespace = namespace;
@@ -47,4 +50,11 @@ public class MapperTag {
         this.insertTags = insertTags;
     }
 
+    public List<UpdateTag> getUpdateTags() {
+        return updateTags;
+    }
+
+    public void setUpdateTags(List<UpdateTag> updateTags) {
+        this.updateTags = updateTags;
+    }
 }
