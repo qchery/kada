@@ -32,7 +32,7 @@ public class MybatisBuilder implements FileBuilder {
         List<MappingItem> mappingItems = mapping.getMappingItems();
         mapperTag.setResultMapTag(getResultMap(mapping, mappingItems));
         mapperTag.setInsertTags(Collections.singletonList(getInsert(mapping, mappingItems)));
-        mapperTag.setUpdateTags(Collections.singletonList(getUpdate(mapping, mappingItems)));
+        mapperTag.setUpdateTags(Collections.singletonList(getUpdateSelective(mapping, mappingItems)));
         String content = XMLUtil.toXML(mapperTag);
         content = "<?xml version=\"1.0\" encoding=\"" + mapping.getCharset().name() + "\" ?>\n" +
                 "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n" + content;
@@ -74,7 +74,7 @@ public class MybatisBuilder implements FileBuilder {
         return insertTag;
     }
 
-    private UpdateTag getUpdate(Mapping mapping, List<MappingItem> mappingItems) {
+    private UpdateTag getUpdateSelective(Mapping mapping, List<MappingItem> mappingItems) {
         UpdateTag updateTag = new UpdateTag();
         updateTag.setId("updateSelective");
         updateTag.setPrefix("UPDATE " + mapping.getTableName());
