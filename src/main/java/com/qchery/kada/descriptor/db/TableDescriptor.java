@@ -1,4 +1,4 @@
-package com.qchery.kada;
+package com.qchery.kada.descriptor.db;
 
 import java.util.ArrayList;
 import java.util.List;

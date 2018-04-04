@@ -1,7 +1,7 @@
 package com.qchery.kada.scanner;
 
-import com.qchery.kada.ColumnDescriptor;
-import com.qchery.kada.TableDescriptor;
+import com.qchery.kada.descriptor.db.ColumnDescriptor;
+import com.qchery.kada.descriptor.db.TableDescriptor;
 import com.qchery.kada.db.ConnectParam;
 import com.qchery.kada.db.DBHelperFactory;
 import org.junit.Test;

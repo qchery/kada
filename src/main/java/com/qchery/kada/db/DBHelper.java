@@ -2,7 +2,6 @@ package com.qchery.kada.db;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.rmi.runtime.Log;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -39,7 +38,7 @@ public abstract class DBHelper {
      * 获取连接
      *
      * @return 数据库连接
-     * @throws SQLException
+     * @throws SQLException 获取数据库异常
      */
     public Connection getConnection() throws SQLException {
         String url = getLink(connectParam.getHost(), connectParam.getPort(), connectParam.getDbName());

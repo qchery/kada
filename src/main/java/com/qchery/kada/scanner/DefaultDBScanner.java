@@ -1,8 +1,8 @@
 package com.qchery.kada.scanner;
 
-import com.qchery.kada.ColumnDescriptor;
+import com.qchery.kada.descriptor.db.ColumnDescriptor;
 import com.qchery.kada.DBOrmer;
-import com.qchery.kada.TableDescriptor;
+import com.qchery.kada.descriptor.db.TableDescriptor;
 import org.apache.commons.dbutils.DbUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

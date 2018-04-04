@@ -1,4 +1,4 @@
-package com.qchery.kada;
+package com.qchery.kada.descriptor.db;
 
 /**
  * @author Chery

@@ -1,5 +1,8 @@
 package com.qchery.kada;
 
+import com.qchery.kada.descriptor.db.TableDescriptor;
+import com.qchery.kada.descriptor.java.ClassDescriptor;
+
 import java.nio.charset.Charset;
 import java.util.List;
 

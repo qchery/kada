@@ -3,6 +3,7 @@ package com.qchery.kada;
 import com.qchery.kada.builder.FileBuilder;
 import com.qchery.kada.builder.HibernateBuilder;
 import com.qchery.kada.builder.MybatisBuilder;
+import com.qchery.kada.descriptor.java.ClassDescriptor;
 import org.junit.Test;
 
 import java.io.IOException;

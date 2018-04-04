@@ -1,4 +1,4 @@
-package com.qchery.kada;
+package com.qchery.kada.descriptor.java;
 
 /**
  * @author Chery

@@ -1,6 +1,6 @@
 package com.qchery.kada.db;
 
-import com.qchery.kada.TypeDescriptor;
+import com.qchery.kada.descriptor.java.TypeDescriptor;
 
 import java.sql.Types;
 import java.util.HashMap;

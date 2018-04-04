@@ -1,5 +1,8 @@
 package com.qchery.kada;
 
+import com.qchery.kada.descriptor.db.ColumnDescriptor;
+import com.qchery.kada.descriptor.java.FieldDescriptor;
+
 /**
  * @author Chery
  * @date 2017/5/4 - 下午11:21

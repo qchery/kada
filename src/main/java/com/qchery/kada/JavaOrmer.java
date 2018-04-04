@@ -3,6 +3,11 @@ package com.qchery.kada;
 import com.qchery.kada.builder.FileBuilder;
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
+import com.qchery.kada.descriptor.db.ColumnDescriptor;
+import com.qchery.kada.descriptor.db.TableDescriptor;
+import com.qchery.kada.descriptor.java.ClassDescriptor;
+import com.qchery.kada.descriptor.java.FieldDescriptor;
+import com.qchery.kada.descriptor.java.TypeDescriptor;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

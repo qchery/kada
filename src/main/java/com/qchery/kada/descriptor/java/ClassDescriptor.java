@@ -1,4 +1,4 @@
-package com.qchery.kada;
+package com.qchery.kada.descriptor.java;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
