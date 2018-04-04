@@ -10,9 +10,16 @@ public class TypeDescriptor {
 
     private String typeName;
 
+    private boolean primitive;
+
     public TypeDescriptor(String packageName, String typeName) {
         this.packageName = packageName;
         this.typeName = typeName;
+    }
+
+    public TypeDescriptor(String packageName, String typeName, boolean primitive) {
+        this(packageName, typeName);
+        this.primitive = primitive;
     }
 
     public String getPackageName() {
@@ -31,11 +38,20 @@ public class TypeDescriptor {
         this.typeName = typeName;
     }
 
+    public boolean isPrimitive() {
+        return primitive;
+    }
+
+    public void setPrimitive(boolean primitive) {
+        this.primitive = primitive;
+    }
+
     @Override
     public String toString() {
         return "TypeDescriptor{" +
                 "packageName='" + packageName + '\'' +
                 ", typeName='" + typeName + '\'' +
+                ", primitive=" + primitive +
                 '}';
     }
 }

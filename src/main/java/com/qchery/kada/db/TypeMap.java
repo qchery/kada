@@ -15,31 +15,31 @@ import java.util.Map;
 public class TypeMap {
     private static Map<Integer, TypeDescriptor> typeCache = new HashMap<>();
 
-    public static final TypeDescriptor STRING = new TypeDescriptor("java.lang", "String");
+    public static final TypeDescriptor STRING = new TypeDescriptor("java.lang", "String", true);
 
-    public static final TypeDescriptor LONG = new TypeDescriptor("java.lang", "Long");
+    public static final TypeDescriptor LONG = new TypeDescriptor("java.lang", "Long", true);
 
     public static final TypeDescriptor BYTE_ARRAY = new TypeDescriptor("java.lang", "Byte[]");
 
-    public static final TypeDescriptor BOOLEAN = new TypeDescriptor("java.lang", "Boolean");
+    public static final TypeDescriptor BOOLEAN = new TypeDescriptor("java.lang", "Boolean", true);
 
     public static final TypeDescriptor DATE = new TypeDescriptor("java.util", "Date");
 
     public static final TypeDescriptor BIG_DECIMAL = new TypeDescriptor("java.math", "BigDecimal");
 
-    public static final TypeDescriptor DOUBLE = new TypeDescriptor("java.lang", "Double");
+    public static final TypeDescriptor DOUBLE = new TypeDescriptor("java.lang", "Double", true);
 
-    public static final TypeDescriptor FLOAT = new TypeDescriptor("java.lang", "Float");
+    public static final TypeDescriptor FLOAT = new TypeDescriptor("java.lang", "Float", true);
 
-    public static final TypeDescriptor INTEGER = new TypeDescriptor("java.lang", "Integer");
+    public static final TypeDescriptor INTEGER = new TypeDescriptor("java.lang", "Integer", true);
 
     public static final TypeDescriptor OBJECT = new TypeDescriptor("java.lang", "Object");
 
-    public static final TypeDescriptor SHORT = new TypeDescriptor("java.lang", "Short");
+    public static final TypeDescriptor SHORT = new TypeDescriptor("java.lang", "Short", true);
 
     public static final TypeDescriptor TIME = new TypeDescriptor("java.sql", "Time");
 
-    public static final TypeDescriptor BYTE = new TypeDescriptor("java.lang", "Byte");
+    public static final TypeDescriptor BYTE = new TypeDescriptor("java.lang", "Byte", true);
 
     static {
         typeCache.put(Types.BIGINT, LONG);
