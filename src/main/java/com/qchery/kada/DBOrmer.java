@@ -91,9 +91,9 @@ public class DBOrmer {
         try {
             List<ColumnDescriptor> columnDescriptors = dbScanner.scannerColumns(conn, tableDescriptor.getTableName());
             tableDescriptor.addAll(columnDescriptors);
-            ClassDescriptor classDescriptor = new ClassDescriptor();
             String className = nameConvertor.toClassName(tableDescriptor.getTableName());
-            classDescriptor.setTypeDescriptor(new TypeDescriptor(packageName, className));
+            TypeDescriptor typeDescriptor = new TypeDescriptor(packageName, className);
+            ClassDescriptor classDescriptor = new ClassDescriptor(typeDescriptor);
 
             ArrayList<MappingItem> mappingItems = new ArrayList<>();
             for (ColumnDescriptor columnDescriptor : tableDescriptor.getColumnDescriptors()) {

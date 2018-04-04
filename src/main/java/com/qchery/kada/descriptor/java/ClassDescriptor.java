@@ -14,7 +14,7 @@ public class ClassDescriptor {
      */
     private List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
 
-    public void setTypeDescriptor(TypeDescriptor typeDescriptor) {
+    public ClassDescriptor(TypeDescriptor typeDescriptor) {
         this.typeDescriptor = typeDescriptor;
     }
 

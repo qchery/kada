@@ -42,8 +42,8 @@ public class JavaOrmer {
      */
     public void generateFile(Class<?> clazz) throws IOException {
         String className = clazz.getSimpleName();
-        ClassDescriptor classDescriptor = new ClassDescriptor();
-        classDescriptor.setTypeDescriptor(new TypeDescriptor(clazz.getPackage().getName(), className));
+        TypeDescriptor classTypeDescriptor = new TypeDescriptor(clazz.getPackage().getName(), className);
+        ClassDescriptor classDescriptor = new ClassDescriptor(classTypeDescriptor);
         TableDescriptor tableDescriptor = new TableDescriptor(convertor.toTableName(className));
 
         List<MappingItem> mappingItems = new ArrayList<>();
