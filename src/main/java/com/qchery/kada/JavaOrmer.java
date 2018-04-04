@@ -1,14 +1,14 @@
 package com.qchery.kada;
 
+import com.qchery.kada.builder.FileBuilder;
+import com.qchery.kada.convertor.DefaultNameConvertor;
+import com.qchery.kada.convertor.NameConvertor;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.qchery.kada.builder.FileBuilder;
-import com.qchery.kada.convertor.DefaultNameConvertor;
-import com.qchery.kada.convertor.NameConvertor;
 
 /**
  * Java 对象生成 orm 配置
@@ -18,7 +18,7 @@ import com.qchery.kada.convertor.NameConvertor;
  */
 public class JavaOrmer {
 
-    private FileBuilder fileBuilder = null;
+    private FileBuilder fileBuilder;
     private NameConvertor convertor = new DefaultNameConvertor();
 
     public JavaOrmer(FileBuilder fileBuilder) {
@@ -32,8 +32,8 @@ public class JavaOrmer {
     /**
      * 将POJO对象的字段转换成对应的XML格式
      *
-     * @param clazz
-     * @throws IOException
+     * @param clazz 类型字节码
+     * @throws IOException 操作文件时，可能会出现异常
      */
     public void generateFile(Class<?> clazz) throws IOException {
         String className = clazz.getSimpleName();
@@ -47,7 +47,9 @@ public class JavaOrmer {
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
             String fieldName = field.getName();
-            FieldDescriptor fieldDescriptor = new FieldDescriptor(field.getType().getName(), fieldName);
+            Class<?> fieldType = field.getType();
+            TypeDescriptor typeDescriptor = new TypeDescriptor(fieldType.getPackage().getName(), fieldType.getSimpleName());
+            FieldDescriptor fieldDescriptor = new FieldDescriptor(typeDescriptor, fieldName);
 
             ColumnDescriptor columnDescriptor = new ColumnDescriptor();
             columnDescriptor.setColumnName(convertor.toColumnName(fieldName));

@@ -1,44 +1,73 @@
 package com.qchery.kada.db;
 
+import com.qchery.kada.TypeDescriptor;
+
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * sql 、 Java 数据类型匹配
+ *
  * @author Chery
  * @date 2016年5月15日 - 下午7:55:53
  */
 public class TypeMap {
-    private static Map<Integer, String> typeCache = new HashMap<>();
-    
+    private static Map<Integer, TypeDescriptor> typeCache = new HashMap<>();
+
+    public static final TypeDescriptor STRING = new TypeDescriptor("java.lang", "String");
+
+    public static final TypeDescriptor LONG = new TypeDescriptor("java.lang", "Long");
+
+    public static final TypeDescriptor BYTE_ARRAY = new TypeDescriptor("java.lang", "Byte[]");
+
+    public static final TypeDescriptor BOOLEAN = new TypeDescriptor("java.lang", "Boolean");
+
+    public static final TypeDescriptor DATE = new TypeDescriptor("java.util", "Date");
+
+    public static final TypeDescriptor BIG_DECIMAL = new TypeDescriptor("java.math", "BigDecimal");
+
+    public static final TypeDescriptor DOUBLE = new TypeDescriptor("java.lang", "Double");
+
+    public static final TypeDescriptor FLOAT = new TypeDescriptor("java.lang", "Float");
+
+    public static final TypeDescriptor INTEGER = new TypeDescriptor("java.lang", "Integer");
+
+    public static final TypeDescriptor OBJECT = new TypeDescriptor("java.lang", "Object");
+
+    public static final TypeDescriptor SHORT = new TypeDescriptor("java.lang", "Short");
+
+    public static final TypeDescriptor TIME = new TypeDescriptor("java.sql", "Time");
+
+    public static final TypeDescriptor BYTE = new TypeDescriptor("java.lang", "Byte");
+
     static {
-        typeCache.put(Types.BIGINT, "long");
-        typeCache.put(Types.BINARY, "byte[]");
-        typeCache.put(Types.BIT, "Boolean");
-        typeCache.put(Types.BLOB, "byte[]");
-        typeCache.put(Types.CHAR, "String");
-        typeCache.put(Types.CLOB, "String");
-        typeCache.put(Types.DATE, "java.util.Date");
-        typeCache.put(Types.DECIMAL, "java.math.BigDecimal");
-        typeCache.put(Types.DOUBLE, "double");
-        typeCache.put(Types.FLOAT, "double");
-        typeCache.put(Types.INTEGER, "int");
-        typeCache.put(Types.JAVA_OBJECT, "java.lang.Object");
-        typeCache.put(Types.LONGVARBINARY, "byte[]");
-        typeCache.put(Types.LONGVARCHAR, "String");
-        typeCache.put(Types.NUMERIC, "java.math.BigDecimal");
-        typeCache.put(Types.OTHER, "java.lang.Object");
-        typeCache.put(Types.REAL, "float");
-        typeCache.put(Types.SMALLINT, "short");
-        typeCache.put(Types.TIME, "java.sql.Time");
-        typeCache.put(Types.TIMESTAMP, "java.util.Date");
-        typeCache.put(Types.TINYINT, "byte");
-        typeCache.put(Types.VARBINARY, "byte[]");
-        typeCache.put(Types.VARCHAR, "String");
+        typeCache.put(Types.BIGINT, LONG);
+        typeCache.put(Types.BINARY, BYTE_ARRAY);
+        typeCache.put(Types.BIT, BOOLEAN);
+        typeCache.put(Types.BLOB, BYTE_ARRAY);
+        typeCache.put(Types.CHAR, STRING);
+        typeCache.put(Types.CLOB, STRING);
+        typeCache.put(Types.DATE, DATE);
+        typeCache.put(Types.DECIMAL, BIG_DECIMAL);
+        typeCache.put(Types.DOUBLE, DOUBLE);
+        typeCache.put(Types.FLOAT, FLOAT);
+        typeCache.put(Types.INTEGER, INTEGER);
+        typeCache.put(Types.JAVA_OBJECT, OBJECT);
+        typeCache.put(Types.LONGVARBINARY, BYTE_ARRAY);
+        typeCache.put(Types.LONGVARCHAR, STRING);
+        typeCache.put(Types.NUMERIC, BIG_DECIMAL);
+        typeCache.put(Types.OTHER, OBJECT);
+        typeCache.put(Types.REAL, FLOAT);
+        typeCache.put(Types.SMALLINT, SHORT);
+        typeCache.put(Types.TIME, TIME);
+        typeCache.put(Types.TIMESTAMP, DATE);
+        typeCache.put(Types.TINYINT, BYTE);
+        typeCache.put(Types.VARBINARY, BYTE_ARRAY);
+        typeCache.put(Types.VARCHAR, STRING);
     }
-    
-    public static String getJavaType(int sqlType) {
+
+    public static TypeDescriptor getJavaType(int sqlType) {
         return typeCache.get(sqlType);
     }
 }
