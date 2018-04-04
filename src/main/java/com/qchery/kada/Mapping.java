@@ -12,6 +12,11 @@ import java.util.List;
  */
 public class Mapping {
 
+    /**
+     * 文件编码
+     */
+    private Charset charset;
+
     private ClassDescriptor classDescriptor;
 
     private TableDescriptor tableDescriptor;
@@ -21,6 +26,14 @@ public class Mapping {
     public Mapping(ClassDescriptor classDescriptor, TableDescriptor tableDescriptor) {
         this.classDescriptor = classDescriptor;
         this.tableDescriptor = tableDescriptor;
+    }
+
+    public void setCharset(Charset charset) {
+        this.charset = charset;
+    }
+
+    public Charset getCharset() {
+        return this.charset;
     }
 
     public ClassDescriptor getClassDescriptor() {
@@ -57,10 +70,6 @@ public class Mapping {
 
     public String getTableName() {
         return tableDescriptor.getTableName();
-    }
-
-    public Charset getCharset() {
-        return classDescriptor.getCharset();
     }
 
     public String getTableComment() {

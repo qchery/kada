@@ -44,7 +44,6 @@ public class JavaOrmer {
         String className = clazz.getSimpleName();
         ClassDescriptor classDescriptor = new ClassDescriptor();
         classDescriptor.setTypeDescriptor(new TypeDescriptor(clazz.getPackage().getName(), className));
-        classDescriptor.setCharset(Charset.forName("utf-8"));
         TableDescriptor tableDescriptor = new TableDescriptor(convertor.toTableName(className));
 
         List<MappingItem> mappingItems = new ArrayList<>();
@@ -65,6 +64,8 @@ public class JavaOrmer {
 
         Mapping mapping = new Mapping(classDescriptor, tableDescriptor);
         mapping.setMappingItems(mappingItems);
+        mapping.setCharset(Charset.forName("utf-8"));
+
         FileCreator.createFile(fileBuilder, mapping);
     }
 }

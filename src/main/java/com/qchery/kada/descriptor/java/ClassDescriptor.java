@@ -1,15 +1,10 @@
 package com.qchery.kada.descriptor.java;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClassDescriptor {
 
-    /**
-     * 文件编码
-     */
-    private Charset charset;
     /**
      * 类型声明
      */
@@ -18,14 +13,6 @@ public class ClassDescriptor {
      * 字段
      */
     private List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
-
-    public Charset getCharset() {
-        return charset;
-    }
-
-    public void setCharset(Charset charset) {
-        this.charset = charset;
-    }
 
     public void setTypeDescriptor(TypeDescriptor typeDescriptor) {
         this.typeDescriptor = typeDescriptor;

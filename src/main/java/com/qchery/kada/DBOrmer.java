@@ -103,10 +103,10 @@ public class DBOrmer {
                 classDescriptor.addFieldDescriptor(fieldDescriptor);
                 mappingItems.add(new MappingItem(fieldDescriptor, columnDescriptor));
             }
-            classDescriptor.setCharset(fileCharset);
 
             Mapping mapping = new Mapping(classDescriptor, tableDescriptor);
             mapping.setMappingItems(mappingItems);
+            mapping.setCharset(fileCharset);
 
             FileCreator.createFile(fileBuilder, mapping);
         } catch (IOException e) {
