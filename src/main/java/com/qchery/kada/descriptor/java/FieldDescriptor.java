@@ -11,14 +11,14 @@ public class FieldDescriptor {
     /**
      * 类型描述
      */
-    private TypeDescriptor typeDescriptor;
+    private ClassDescriptor classDescriptor;
     /**
      * 属性名
      */
     private String fieldName;
 
     public FieldDescriptor(TypeDescriptor typeDescriptor, String fieldName) {
-        this.typeDescriptor = typeDescriptor;
+        this.classDescriptor = new ClassDescriptor(typeDescriptor);
         this.fieldName = fieldName;
     }
 
@@ -26,7 +26,7 @@ public class FieldDescriptor {
      * 包含全路径的类型
      */
     public String getType() {
-        return typeDescriptor.getPackageName() + "." + typeDescriptor.getTypeName();
+        return classDescriptor.getPackageName() + "." + classDescriptor.getClassName();
     }
 
     public String getFieldName() {
@@ -37,13 +37,13 @@ public class FieldDescriptor {
      * 不包含全路径的类型
      */
     public String getSimpleType() {
-        return typeDescriptor.getTypeName();
+        return classDescriptor.getClassName();
     }
 
     @Override
     public String toString() {
         return "FieldDescriptor{" +
-                "typeDescriptor=" + typeDescriptor +
+                "classDescriptor=" + classDescriptor +
                 ", fieldName='" + fieldName + '\'' +
                 '}';
     }
