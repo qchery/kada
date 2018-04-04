@@ -6,13 +6,17 @@ import java.util.List;
 
 public class ClassDescriptor {
 
-    // 文件编码
+    /**
+     * 文件编码
+     */
     private Charset charset;
-    // 包名
-    private String packageName;
-    // 类名
-    private String className;
-    // 字段
+    /**
+     * 类型声明
+     */
+    private TypeDescriptor typeDescriptor;
+    /**
+     * 字段
+     */
     private List<FieldDescriptor> fieldDescriptors = new ArrayList<>();
 
     public Charset getCharset() {
@@ -23,20 +27,16 @@ public class ClassDescriptor {
         this.charset = charset;
     }
 
-    public String getPackageName() {
-        return packageName;
+    public void setTypeDescriptor(TypeDescriptor typeDescriptor) {
+        this.typeDescriptor = typeDescriptor;
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+    public String getPackageName() {
+        return typeDescriptor.getPackageName();
     }
 
     public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
+        return typeDescriptor.getTypeName();
     }
 
     public List<FieldDescriptor> getFieldDescriptors() {

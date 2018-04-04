@@ -38,8 +38,7 @@ public class JavaOrmer {
     public void generateFile(Class<?> clazz) throws IOException {
         String className = clazz.getSimpleName();
         ClassDescriptor classDescriptor = new ClassDescriptor();
-        classDescriptor.setPackageName(clazz.getPackage().getName());
-        classDescriptor.setClassName(className);
+        classDescriptor.setTypeDescriptor(new TypeDescriptor(clazz.getPackage().getName(), className));
         classDescriptor.setCharset(Charset.forName("utf-8"));
         TableDescriptor tableDescriptor = new TableDescriptor(convertor.toTableName(className));
 
