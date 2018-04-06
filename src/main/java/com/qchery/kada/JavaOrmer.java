@@ -8,7 +8,6 @@ import com.qchery.kada.descriptor.db.TableDescriptor;
 import com.qchery.kada.descriptor.file.KadaFileDescriptor;
 import com.qchery.kada.descriptor.java.ClassDescriptor;
 import com.qchery.kada.descriptor.java.FieldDescriptor;
-import com.qchery.kada.descriptor.java.TypeDescriptor;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -42,24 +41,19 @@ public class JavaOrmer {
      * @throws IOException 操作文件时，可能会出现异常
      */
     public void generateFile(Class<?> clazz) throws IOException {
-        String className = clazz.getSimpleName();
-        TypeDescriptor classTypeDescriptor = new TypeDescriptor(clazz.getPackage().getName(), className);
-        ClassDescriptor classDescriptor = new ClassDescriptor(classTypeDescriptor);
-        TableDescriptor tableDescriptor = new TableDescriptor(convertor.toTableName(className));
+        ClassDescriptor classDescriptor = ClassDescriptor.of(clazz);
+        TableDescriptor tableDescriptor = new TableDescriptor(convertor.toTableName(clazz.getSimpleName()));
 
         List<MappingItem> mappingItems = new ArrayList<>();
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
-            String fieldName = field.getName();
-            Class<?> fieldType = field.getType();
-            TypeDescriptor typeDescriptor = new TypeDescriptor(fieldType.getPackage().getName(), fieldType.getSimpleName());
-            FieldDescriptor fieldDescriptor = new FieldDescriptor(typeDescriptor, fieldName);
-
             ColumnDescriptor columnDescriptor = new ColumnDescriptor();
-            columnDescriptor.setColumnName(convertor.toColumnName(fieldName));
-
+            columnDescriptor.setColumnName(convertor.toColumnName(field.getName()));
             tableDescriptor.addColumnDescriptor(columnDescriptor);
+
+            FieldDescriptor fieldDescriptor = new FieldDescriptor(field);
             classDescriptor.addFieldDescriptor(fieldDescriptor);
+
             mappingItems.add(new MappingItem(fieldDescriptor, columnDescriptor));
         }
 

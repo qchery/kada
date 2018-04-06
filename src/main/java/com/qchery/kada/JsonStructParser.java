@@ -30,11 +30,11 @@ public class JsonStructParser {
     private IClassDescriptor parseClassDescriptor(String packageName, String className, JsonElement rootElement) {
         IClassDescriptor classDescriptor = null;
         if (rootElement.isJsonPrimitive() || rootElement.isJsonNull()) {
-            classDescriptor = new ClassDescriptor(TypeDescriptor.STRING);
+            classDescriptor = ClassDescriptor.of(TypeDescriptor.STRING);
         } else if (rootElement.isJsonArray()) {
             classDescriptor = parseListClassDescriptor(packageName, className, rootElement);
         } else if (rootElement.isJsonObject()) {
-            classDescriptor = new ClassDescriptor(new TypeDescriptor(packageName, className));
+            classDescriptor = ClassDescriptor.of(packageName, className);
             JsonObject jsonObject = rootElement.getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
                 FieldDescriptor fieldDescriptor = parseFieldDescriptor(packageName, entry.getKey(), entry.getValue());
@@ -55,15 +55,15 @@ public class JsonStructParser {
 
     private GenericClassDescriptor parseListClassDescriptor(String packageName, String typeName, JsonElement jsonElement) {
         JsonArray jsonArray = jsonElement.getAsJsonArray();
-        IClassDescriptor genericClassDescriptor = null;
+        IClassDescriptor innerClass = null;
         if (jsonArray.size() > 0) {
             JsonElement arrayElement = jsonArray.get(0);
             if (arrayElement != null) {
-                genericClassDescriptor = parseClassDescriptor(packageName, typeName, arrayElement);
+                innerClass = parseClassDescriptor(packageName, typeName, arrayElement);
             }
         }
         GenericClassDescriptor classDescriptor = new GenericClassDescriptor(new TypeDescriptor(PKG_JAVA_UTIL, "List"));
-        classDescriptor.setInnerClass(genericClassDescriptor);
+        classDescriptor.setInnerClass(innerClass);
         return classDescriptor;
     }
 

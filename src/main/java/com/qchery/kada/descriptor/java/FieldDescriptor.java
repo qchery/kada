@@ -1,5 +1,7 @@
 package com.qchery.kada.descriptor.java;
 
+import java.lang.reflect.Field;
+
 /**
  * 生成Item的关键字
  *
@@ -17,9 +19,8 @@ public class FieldDescriptor {
      */
     private String fieldName;
 
-    public FieldDescriptor(TypeDescriptor typeDescriptor, String fieldName) {
-        this.classDescriptor = new ClassDescriptor(typeDescriptor);
-        this.fieldName = fieldName;
+    public FieldDescriptor(Field field) {
+        this(ClassDescriptor.of(field.getType()), field.getName());
     }
 
     public FieldDescriptor(IClassDescriptor classDescriptor, String fieldName) {

@@ -14,7 +14,21 @@ public class ClassDescriptor implements IClassDescriptor {
      */
     private List<FieldDescriptor> fieldDescriptors;
 
-    public ClassDescriptor(TypeDescriptor typeDescriptor) {
+    public static ClassDescriptor of(String packageName, String typeName) {
+        return of(new TypeDescriptor(packageName, typeName));
+    }
+
+    public static ClassDescriptor of(TypeDescriptor typeDescriptor) {
+        return new ClassDescriptor(typeDescriptor);
+    }
+
+    public static ClassDescriptor of(Class<?> clazz) {
+        String packageName = clazz.getPackage().getName();
+        String simpleName = clazz.getSimpleName();
+        return of(new TypeDescriptor(packageName, simpleName));
+    }
+
+    protected ClassDescriptor(TypeDescriptor typeDescriptor) {
         this.typeDescriptor = typeDescriptor;
         // 当类型不为基础类型时，分配字段列表
         if (!typeDescriptor.isPrimitive()) {
