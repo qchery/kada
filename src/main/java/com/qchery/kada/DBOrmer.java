@@ -7,7 +7,6 @@ import com.qchery.kada.db.DBHelper;
 import com.qchery.kada.db.TypeMap;
 import com.qchery.kada.descriptor.db.ColumnInfo;
 import com.qchery.kada.descriptor.db.TableInfo;
-import com.qchery.kada.descriptor.file.FileInfo;
 import com.qchery.kada.descriptor.java.ClassInfo;
 import com.qchery.kada.descriptor.java.FieldInfo;
 import com.qchery.kada.descriptor.java.TypeInfo;
@@ -90,36 +89,32 @@ public class DBOrmer {
 
     private void generateFile(Connection conn, TableInfo tableInfo) {
         try {
-            List<ColumnInfo> columnInfos = dbScanner.scannerColumns(conn, tableInfo.getTableName());
-            tableInfo.addAll(columnInfos);
-            String className = nameConvertor.toClassName(tableInfo.getTableName());
-            ClassInfo classInfo = ClassInfo.of(packageName, className);
-
-            ArrayList<MappingItem> mappingItems = new ArrayList<>();
-            for (ColumnInfo columnInfo : tableInfo.getColumnInfos()) {
-                TypeInfo javaType = TypeMap.getJavaType(columnInfo.getDbType());
-                String fieldName = nameConvertor.toFieldName(columnInfo.getColumnName());
-                FieldInfo fieldInfo = new FieldInfo(ClassInfo.of(javaType), fieldName);
-                classInfo.addFieldInfo(fieldInfo);
-                mappingItems.add(new MappingItem(fieldInfo, columnInfo));
-            }
-
-            Mapping mapping = new Mapping(classInfo, tableInfo);
-            mapping.setMappingItems(mappingItems);
-            mapping.setCharset(fileCharset);
-
-            FileCreator.createFile(getFileInfo(mapping));
+            Mapping mapping = getMapping(conn, tableInfo);
+            FileCreator.createFile(fileBuilder.getFileInfo(mapping));
         } catch (IOException e) {
             logger.error("msg={}", "文件生成失败", e);
         }
     }
 
-    private FileInfo getFileInfo(Mapping mapping) {
-        String content = fileBuilder.getContent(mapping);
-        String fileName = fileBuilder.getFileName(mapping.getClassName());
-        String packagePath = mapping.getPackageName().replaceAll("\\.", "/");
-        Charset charset = mapping.getCharset();
-        return new FileInfo(packagePath, fileName, content, charset);
+    private Mapping getMapping(Connection conn, TableInfo tableInfo) {
+        List<ColumnInfo> columnInfos = dbScanner.scannerColumns(conn, tableInfo.getTableName());
+        tableInfo.addAll(columnInfos);
+        String className = nameConvertor.toClassName(tableInfo.getTableName());
+        ClassInfo classInfo = ClassInfo.of(packageName, className);
+
+        ArrayList<MappingItem> mappingItems = new ArrayList<>();
+        for (ColumnInfo columnInfo : tableInfo.getColumnInfos()) {
+            TypeInfo javaType = TypeMap.getJavaType(columnInfo.getDbType());
+            String fieldName = nameConvertor.toFieldName(columnInfo.getColumnName());
+            FieldInfo fieldInfo = new FieldInfo(ClassInfo.of(javaType), fieldName);
+            classInfo.addFieldInfo(fieldInfo);
+            mappingItems.add(new MappingItem(fieldInfo, columnInfo));
+        }
+
+        Mapping mapping = new Mapping(classInfo, tableInfo);
+        mapping.setMappingItems(mappingItems);
+        mapping.setCharset(fileCharset);
+        return mapping;
     }
 
     public static class DBOrmerBuilder {

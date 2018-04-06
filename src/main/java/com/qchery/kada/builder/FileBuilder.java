@@ -1,8 +1,9 @@
 package com.qchery.kada.builder;
 
 import com.qchery.kada.Mapping;
+import com.qchery.kada.descriptor.file.FileInfo;
 
-import java.sql.SQLException;
+import java.nio.charset.Charset;
 
 /**
  * 文件建造器
@@ -25,8 +26,15 @@ public interface FileBuilder {
      *
      * @param mapping 类与表的映射
      * @return {@link String}
-     * @throws SQLException
      */
     String getContent(Mapping mapping);
+
+    default FileInfo getFileInfo(Mapping mapping) {
+        String content = getContent(mapping);
+        String fileName = getFileName(mapping.getClassName());
+        String packagePath = mapping.getPackageName().replaceAll("\\.", "/");
+        Charset charset = mapping.getCharset();
+        return new FileInfo(packagePath, fileName, content, charset);
+    }
 
 }

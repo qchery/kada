@@ -5,7 +5,6 @@ import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.descriptor.db.ColumnInfo;
 import com.qchery.kada.descriptor.db.TableInfo;
-import com.qchery.kada.descriptor.file.FileInfo;
 import com.qchery.kada.descriptor.java.ClassInfo;
 import com.qchery.kada.descriptor.java.FieldInfo;
 
@@ -41,6 +40,11 @@ public class JavaOrmer {
      * @throws IOException 操作文件时，可能会出现异常
      */
     public void generateFile(Class<?> clazz) throws IOException {
+        Mapping mapping = getMapping(clazz);
+        FileCreator.createFile(fileBuilder.getFileInfo(mapping));
+    }
+
+    private Mapping getMapping(Class<?> clazz) {
         ClassInfo classInfo = ClassInfo.of(clazz);
         TableInfo tableInfo = new TableInfo(convertor.toTableName(clazz.getSimpleName()));
 
@@ -60,15 +64,7 @@ public class JavaOrmer {
         Mapping mapping = new Mapping(classInfo, tableInfo);
         mapping.setMappingItems(mappingItems);
         mapping.setCharset(Charset.forName("utf-8"));
-
-        FileCreator.createFile(getFileInfo(mapping));
+        return mapping;
     }
 
-    private FileInfo getFileInfo(Mapping mapping) {
-        String content = fileBuilder.getContent(mapping);
-        String fileName = fileBuilder.getFileName(mapping.getClassName());
-        String packagePath = mapping.getPackageName().replaceAll("\\.", "/");
-        Charset charset = mapping.getCharset();
-        return new FileInfo(packagePath, fileName, content, charset);
-    }
 }
