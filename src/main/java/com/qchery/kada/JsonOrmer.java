@@ -1,6 +1,7 @@
 package com.qchery.kada;
 
 import com.qchery.kada.convertor.DefaultNameConvertor;
+import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.descriptor.file.KadaFileDescriptor;
 import com.qchery.kada.descriptor.java.FieldDescriptor;
 import com.qchery.kada.descriptor.java.GenericClassDescriptor;
@@ -22,8 +23,17 @@ public class JsonOrmer {
 
     private Logger logger = LoggerFactory.getLogger(JsonOrmer.class);
 
+    private NameConvertor nameConvertor;
+
+    public JsonOrmer() {
+        this.nameConvertor = new DefaultNameConvertor();
+    }
+
+    public JsonOrmer(NameConvertor nameConvertor) {
+        this.nameConvertor = nameConvertor;
+    }
+
     public void generateFile(String packageName, String className, String json) {
-        DefaultNameConvertor nameConvertor = new DefaultNameConvertor();
         IClassDescriptor classDescriptor = new JsonStructParser(nameConvertor).parse(packageName, className, json);
         generateFile(classDescriptor);
     }
