@@ -31,7 +31,7 @@ public class FieldDescriptor {
      * 包含全路径的类型
      */
     public String getType() {
-        return classDescriptor.getPackageName() + "." + classDescriptor.getClassName();
+        return classDescriptor.getType();
     }
 
     public String getFieldName() {
@@ -47,6 +47,10 @@ public class FieldDescriptor {
 
     public boolean isNormal() {
         return classDescriptor != null;
+    }
+
+    public IClassDescriptor getClassDescriptor() {
+        return classDescriptor;
     }
 
     @Override

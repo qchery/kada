@@ -48,4 +48,9 @@ public class ClassDescriptor implements IClassDescriptor {
         this.fieldDescriptors.add(fieldDescriptor);
     }
 
+    @Override
+    public boolean isPrimitive() {
+        return typeDescriptor.isPrimitive();
+    }
+
 }

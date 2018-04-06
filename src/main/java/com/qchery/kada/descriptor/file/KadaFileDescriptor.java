@@ -19,6 +19,7 @@ public class KadaFileDescriptor {
         this.packagePath = packagePath;
         this.fileName = fileName;
         this.content = content;
+        this.charset = Charset.forName("UTF-8");
     }
 
     public KadaFileDescriptor(String packagePath, String fileName, String content, Charset charset) {

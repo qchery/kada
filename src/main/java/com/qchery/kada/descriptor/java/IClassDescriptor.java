@@ -35,4 +35,17 @@ public interface IClassDescriptor {
      */
     void addFieldDescriptor(FieldDescriptor fieldDescriptor);
 
+    /**
+     * 是否为基础类型
+     *
+     * @return 是否为基础类型
+     */
+    boolean isPrimitive();
+
+    /**
+     * 包含全路径的类型
+     */
+    default String getType() {
+        return getPackageName() + "." + getClassName();
+    }
 }
