@@ -5,6 +5,7 @@ import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.descriptor.db.ColumnDescriptor;
 import com.qchery.kada.descriptor.db.TableDescriptor;
+import com.qchery.kada.descriptor.file.KadaFileDescriptor;
 import com.qchery.kada.descriptor.java.ClassDescriptor;
 import com.qchery.kada.descriptor.java.FieldDescriptor;
 import com.qchery.kada.descriptor.java.TypeDescriptor;
@@ -66,6 +67,14 @@ public class JavaOrmer {
         mapping.setMappingItems(mappingItems);
         mapping.setCharset(Charset.forName("utf-8"));
 
-        FileCreator.createFile(fileBuilder, mapping);
+        FileCreator.createFile(getKadaFileDescriptor(mapping));
+    }
+
+    private KadaFileDescriptor getKadaFileDescriptor(Mapping mapping) {
+        String content = fileBuilder.getContent(mapping);
+        String fileName = fileBuilder.getFileName(mapping.getClassName());
+        String packagePath = mapping.getPackageName().replaceAll("\\.", "/");
+        Charset charset = mapping.getCharset();
+        return new KadaFileDescriptor(packagePath, fileName, content, charset);
     }
 }

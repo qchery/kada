@@ -1,6 +1,6 @@
 package com.qchery.kada;
 
-import com.qchery.kada.builder.FileBuilder;
+import com.qchery.kada.descriptor.file.KadaFileDescriptor;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +19,12 @@ public class FileCreator {
 
     private static Logger logger = LoggerFactory.getLogger(FileCreator.class);
 
-    public static void createFile(FileBuilder fileBuilder, Mapping mapping)
+    public static void createFile(KadaFileDescriptor descriptor)
             throws IOException {
 
-        String content = fileBuilder.getContent(mapping);
-        String packagePath = mapping.getPackageName().replaceAll("\\.", "/");
-        File file = newFile(fileBuilder.getFileName(mapping.getClassName()), packagePath);
+        File file = newFile(descriptor.getFileName(), descriptor.getPackagePath());
         try (FileOutputStream output = new FileOutputStream(file)) {
-            IOUtils.write(content, output, mapping.getCharset());
+            IOUtils.write(descriptor.getContent(), output, descriptor.getCharset());
         }
     }
 

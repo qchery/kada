@@ -7,6 +7,7 @@ import com.qchery.kada.db.DBHelper;
 import com.qchery.kada.db.TypeMap;
 import com.qchery.kada.descriptor.db.ColumnDescriptor;
 import com.qchery.kada.descriptor.db.TableDescriptor;
+import com.qchery.kada.descriptor.file.KadaFileDescriptor;
 import com.qchery.kada.descriptor.java.ClassDescriptor;
 import com.qchery.kada.descriptor.java.FieldDescriptor;
 import com.qchery.kada.descriptor.java.TypeDescriptor;
@@ -108,10 +109,18 @@ public class DBOrmer {
             mapping.setMappingItems(mappingItems);
             mapping.setCharset(fileCharset);
 
-            FileCreator.createFile(fileBuilder, mapping);
+            FileCreator.createFile(getKadaFileDescriptor(mapping));
         } catch (IOException e) {
             logger.error("msg={}", "文件生成失败", e);
         }
+    }
+
+    private KadaFileDescriptor getKadaFileDescriptor(Mapping mapping) {
+        String content = fileBuilder.getContent(mapping);
+        String fileName = fileBuilder.getFileName(mapping.getClassName());
+        String packagePath = mapping.getPackageName().replaceAll("\\.", "/");
+        Charset charset = mapping.getCharset();
+        return new KadaFileDescriptor(packagePath, fileName, content, charset);
     }
 
     public static class DBOrmerBuilder {
