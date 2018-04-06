@@ -5,12 +5,12 @@ import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.db.DBHelper;
 import com.qchery.kada.db.TypeMap;
-import com.qchery.kada.descriptor.db.ColumnDescriptor;
-import com.qchery.kada.descriptor.db.TableDescriptor;
-import com.qchery.kada.descriptor.file.KadaFileDescriptor;
-import com.qchery.kada.descriptor.java.ClassDescriptor;
-import com.qchery.kada.descriptor.java.FieldDescriptor;
-import com.qchery.kada.descriptor.java.TypeDescriptor;
+import com.qchery.kada.descriptor.db.ColumnInfo;
+import com.qchery.kada.descriptor.db.TableInfo;
+import com.qchery.kada.descriptor.file.FileInfo;
+import com.qchery.kada.descriptor.java.ClassInfo;
+import com.qchery.kada.descriptor.java.FieldInfo;
+import com.qchery.kada.descriptor.java.TypeInfo;
 import com.qchery.kada.exception.ConfigException;
 import com.qchery.kada.filter.TableNameFilter;
 import com.qchery.kada.scanner.DBScanner;
@@ -54,14 +54,14 @@ public class DBOrmer {
         Connection conn = null;
         try {
             conn = dbHelper.getConnection();
-            List<TableDescriptor> tableDescriptors = dbScanner.scannerTables(conn);
+            List<TableInfo> tableInfos = dbScanner.scannerTables(conn);
 
             if (tableNameFilter != null) {
-                tableDescriptors.removeIf(tableDescriptor -> !tableNameFilter.accept(tableDescriptor.getTableName()));
+                tableInfos.removeIf(tableInfo -> !tableNameFilter.accept(tableInfo.getTableName()));
             }
 
-            for (TableDescriptor tableDescriptor : tableDescriptors) {
-                generateFile(conn, tableDescriptor);
+            for (TableInfo tableInfo : tableInfos) {
+                generateFile(conn, tableInfo);
             }
 
         } catch (SQLException e) {
@@ -80,7 +80,7 @@ public class DBOrmer {
         Connection conn = null;
         try {
             conn = dbHelper.getConnection();
-            generateFile(conn, new TableDescriptor(tableName));
+            generateFile(conn, new TableInfo(tableName));
         } catch (SQLException e) {
             logger.error("msg={}", "数据库链接获取失败", e);
         } finally {
@@ -88,38 +88,38 @@ public class DBOrmer {
         }
     }
 
-    private void generateFile(Connection conn, TableDescriptor tableDescriptor) {
+    private void generateFile(Connection conn, TableInfo tableInfo) {
         try {
-            List<ColumnDescriptor> columnDescriptors = dbScanner.scannerColumns(conn, tableDescriptor.getTableName());
-            tableDescriptor.addAll(columnDescriptors);
-            String className = nameConvertor.toClassName(tableDescriptor.getTableName());
-            ClassDescriptor classDescriptor = ClassDescriptor.of(packageName, className);
+            List<ColumnInfo> columnInfos = dbScanner.scannerColumns(conn, tableInfo.getTableName());
+            tableInfo.addAll(columnInfos);
+            String className = nameConvertor.toClassName(tableInfo.getTableName());
+            ClassInfo classInfo = ClassInfo.of(packageName, className);
 
             ArrayList<MappingItem> mappingItems = new ArrayList<>();
-            for (ColumnDescriptor columnDescriptor : tableDescriptor.getColumnDescriptors()) {
-                TypeDescriptor javaType = TypeMap.getJavaType(columnDescriptor.getDbType());
-                String fieldName = nameConvertor.toFieldName(columnDescriptor.getColumnName());
-                FieldDescriptor fieldDescriptor = new FieldDescriptor(ClassDescriptor.of(javaType), fieldName);
-                classDescriptor.addFieldDescriptor(fieldDescriptor);
-                mappingItems.add(new MappingItem(fieldDescriptor, columnDescriptor));
+            for (ColumnInfo columnInfo : tableInfo.getColumnInfos()) {
+                TypeInfo javaType = TypeMap.getJavaType(columnInfo.getDbType());
+                String fieldName = nameConvertor.toFieldName(columnInfo.getColumnName());
+                FieldInfo fieldInfo = new FieldInfo(ClassInfo.of(javaType), fieldName);
+                classInfo.addFieldInfo(fieldInfo);
+                mappingItems.add(new MappingItem(fieldInfo, columnInfo));
             }
 
-            Mapping mapping = new Mapping(classDescriptor, tableDescriptor);
+            Mapping mapping = new Mapping(classInfo, tableInfo);
             mapping.setMappingItems(mappingItems);
             mapping.setCharset(fileCharset);
 
-            FileCreator.createFile(getKadaFileDescriptor(mapping));
+            FileCreator.createFile(getFileInfo(mapping));
         } catch (IOException e) {
             logger.error("msg={}", "文件生成失败", e);
         }
     }
 
-    private KadaFileDescriptor getKadaFileDescriptor(Mapping mapping) {
+    private FileInfo getFileInfo(Mapping mapping) {
         String content = fileBuilder.getContent(mapping);
         String fileName = fileBuilder.getFileName(mapping.getClassName());
         String packagePath = mapping.getPackageName().replaceAll("\\.", "/");
         Charset charset = mapping.getCharset();
-        return new KadaFileDescriptor(packagePath, fileName, content, charset);
+        return new FileInfo(packagePath, fileName, content, charset);
     }
 
     public static class DBOrmerBuilder {

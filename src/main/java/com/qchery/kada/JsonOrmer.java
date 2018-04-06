@@ -2,10 +2,10 @@ package com.qchery.kada;
 
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
-import com.qchery.kada.descriptor.file.KadaFileDescriptor;
-import com.qchery.kada.descriptor.java.FieldDescriptor;
-import com.qchery.kada.descriptor.java.GenericClassDescriptor;
-import com.qchery.kada.descriptor.java.IClassDescriptor;
+import com.qchery.kada.descriptor.file.FileInfo;
+import com.qchery.kada.descriptor.java.FieldInfo;
+import com.qchery.kada.descriptor.java.GenericClassInfo;
+import com.qchery.kada.descriptor.java.IClassInfo;
 import com.qchery.kada.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,55 +34,55 @@ public class JsonOrmer {
     }
 
     public void generateFile(String packageName, String className, String json) {
-        IClassDescriptor classDescriptor = new JsonStructParser(nameConvertor).parse(packageName, className, json);
-        generateFile(classDescriptor);
+        IClassInfo classInfo = new JsonStructParser(nameConvertor).parse(packageName, className, json);
+        generateFile(classInfo);
     }
 
-    private void generateFile(IClassDescriptor classDescriptor) {
+    private void generateFile(IClassInfo classInfo) {
         // 生成泛型类包含的内部类对象
-        if (classDescriptor instanceof GenericClassDescriptor) {
-            GenericClassDescriptor genericClassDescriptor = (GenericClassDescriptor) classDescriptor;
-            generateFile(genericClassDescriptor.getInnerClass());
+        if (classInfo instanceof GenericClassInfo) {
+            GenericClassInfo genericClassInfo = (GenericClassInfo) classInfo;
+            generateFile(genericClassInfo.getInnerClass());
         }
 
         // 为类的所有字段生成类文件
-        if (!classDescriptor.isPrimitive()) {
-            for (FieldDescriptor fieldDescriptor : classDescriptor.getFieldDescriptors()) {
-                generateFile(fieldDescriptor.getClassDescriptor());
+        if (!classInfo.isPrimitive()) {
+            for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
+                generateFile(fieldInfo.getClassInfo());
             }
         }
 
-        if (!isClassExist(classDescriptor)) {
-            logger.info("msg={} | javaType={}", "生成类文件", classDescriptor.getType());
+        if (!isClassExist(classInfo)) {
+            logger.info("msg={} | javaType={}", "生成类文件", classInfo.getType());
             // 生成类文件
             try {
-                FileCreator.createFile(kadaFileDescriptor(classDescriptor));
+                FileCreator.createFile(getFileInfo(classInfo));
             } catch (IOException e) {
                 logger.error("msg={}", "文件生成失败", e);
             }
         }
     }
 
-    private KadaFileDescriptor kadaFileDescriptor(IClassDescriptor classDescriptor) {
-        String packagePath = classDescriptor.getPackageName().replaceAll("\\.", "/");
-        String fileName = classDescriptor.getClassName() + ".java";
+    private FileInfo getFileInfo(IClassInfo classInfo) {
+        String packagePath = classInfo.getPackageName().replaceAll("\\.", "/");
+        String fileName = classInfo.getClassName() + ".java";
         String content = String.format("package %s;\n\n%s"
                         + "public class %s implements Serializable {\n%s}",
-                classDescriptor.getPackageName(), declareImports(classDescriptor),
-                classDescriptor.getClassName(), getMainContent(classDescriptor));
-        return new KadaFileDescriptor(packagePath, fileName, content);
+                classInfo.getPackageName(), declareImports(classInfo),
+                classInfo.getClassName(), getMainContent(classInfo));
+        return new FileInfo(packagePath, fileName, content);
     }
 
-    private String getMainContent(IClassDescriptor classDescriptor) {
-        StringBuilder fields = declareFileds(classDescriptor);
-        StringBuilder setGetMethods = declareSetGetMethods(classDescriptor);
-        StringBuilder toStringMethod = declareToString(classDescriptor);
+    private String getMainContent(IClassInfo classInfo) {
+        StringBuilder fields = declareFileds(classInfo);
+        StringBuilder setGetMethods = declareSetGetMethods(classInfo);
+        StringBuilder toStringMethod = declareToString(classInfo);
         return fields.append(setGetMethods).append(toStringMethod).toString();
     }
 
-    private StringBuilder declareSetGetMethods(IClassDescriptor classDescriptor) {
+    private StringBuilder declareSetGetMethods(IClassInfo classInfo) {
         StringBuilder methods = new StringBuilder();
-        for (FieldDescriptor descriptor : classDescriptor.getFieldDescriptors()) {
+        for (FieldInfo descriptor : classInfo.getFieldInfos()) {
             String javaType = getGenericSimpleType(descriptor);
             String fieldName = descriptor.getFieldName();
             String fcuFieldName = StringUtil.upperFirstChar(fieldName);
@@ -108,16 +108,16 @@ public class JsonOrmer {
         return getMethod;
     }
 
-    private StringBuilder declareToString(IClassDescriptor classDescriptor) {
+    private StringBuilder declareToString(IClassInfo classInfo) {
         StringBuilder toStringMethod = new StringBuilder("@Override\npublic String toString() {\n" +
-                "return \"").append(classDescriptor.getClassName()).append(" [\"");
-        List<FieldDescriptor> fieldDescriptors = classDescriptor.getFieldDescriptors();
-        for (int i = 0; i < fieldDescriptors.size(); i++) {
-            FieldDescriptor descriptor = fieldDescriptors.get(i);
+                "return \"").append(classInfo.getClassName()).append(" [\"");
+        List<FieldInfo> fieldInfos = classInfo.getFieldInfos();
+        for (int i = 0; i < fieldInfos.size(); i++) {
+            FieldInfo descriptor = fieldInfos.get(i);
             toStringMethod.append("+").append("\"")
                     .append(descriptor.getFieldName()).append(" = \"+")
                     .append(descriptor.getFieldName()).append("+ \"");
-            if (i == fieldDescriptors.size() - 1) {
+            if (i == fieldInfos.size() - 1) {
                 toStringMethod.append("]\";");
             } else {
                 toStringMethod.append(",\"\n");
@@ -127,30 +127,30 @@ public class JsonOrmer {
         return toStringMethod;
     }
 
-    private StringBuilder declareFileds(IClassDescriptor classDescriptor) {
+    private StringBuilder declareFileds(IClassInfo classInfo) {
         StringBuilder fields = new StringBuilder();
-        for (FieldDescriptor descriptor : classDescriptor.getFieldDescriptors()) {
+        for (FieldInfo descriptor : classInfo.getFieldInfos()) {
             fields.append("private ").append(getGenericSimpleType(descriptor))
                     .append(" ").append(descriptor.getFieldName()).append(";\n");
         }
         return fields;
     }
 
-    private String getGenericSimpleType(FieldDescriptor descriptor) {
+    private String getGenericSimpleType(FieldInfo descriptor) {
         String simpleType = descriptor.getSimpleType();
         // 拼接泛型类型
-        IClassDescriptor fieldClassDescriptor = descriptor.getClassDescriptor();
-        if (fieldClassDescriptor instanceof GenericClassDescriptor) {
-            String innerClassName = ((GenericClassDescriptor) fieldClassDescriptor).getInnerClass().getClassName();
+        IClassInfo fieldClassInfo = descriptor.getClassInfo();
+        if (fieldClassInfo instanceof GenericClassInfo) {
+            String innerClassName = ((GenericClassInfo) fieldClassInfo).getInnerClass().getClassName();
             simpleType = simpleType + "<" + innerClassName + ">";
         }
         return simpleType;
     }
 
-    private String declareImports(IClassDescriptor classDescriptor) {
+    private String declareImports(IClassInfo classInfo) {
         Set<String> importSet = new HashSet<>();
-        for (FieldDescriptor fieldDescriptor : classDescriptor.getFieldDescriptors()) {
-            importSet.add(fieldDescriptor.getType());
+        for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
+            importSet.add(fieldInfo.getType());
         }
         importSet.add("java.io.Serializable");
 
@@ -162,10 +162,10 @@ public class JsonOrmer {
         return imports.toString();
     }
 
-    private boolean isClassExist(IClassDescriptor classDescriptor) {
+    private boolean isClassExist(IClassInfo classInfo) {
         boolean classExist = true;
         try {
-            Class.forName(classDescriptor.getType());
+            Class.forName(classInfo.getType());
         } catch (ClassNotFoundException e) {
             classExist = false;
         }

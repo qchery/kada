@@ -8,21 +8,21 @@ import java.nio.charset.Charset;
  * @author Chery
  * @date 2018/4/6 12:17
  */
-public class KadaFileDescriptor {
+public class FileInfo {
 
     private String packagePath;
     private String fileName;
     private String content;
     private Charset charset;
 
-    public KadaFileDescriptor(String packagePath, String fileName, String content) {
+    public FileInfo(String packagePath, String fileName, String content) {
         this.packagePath = packagePath;
         this.fileName = fileName;
         this.content = content;
         this.charset = Charset.forName("UTF-8");
     }
 
-    public KadaFileDescriptor(String packagePath, String fileName, String content, Charset charset) {
+    public FileInfo(String packagePath, String fileName, String content, Charset charset) {
         this(packagePath, fileName, content);
         this.charset = charset;
     }

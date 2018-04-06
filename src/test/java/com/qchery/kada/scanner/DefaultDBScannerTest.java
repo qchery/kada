@@ -1,7 +1,7 @@
 package com.qchery.kada.scanner;
 
-import com.qchery.kada.descriptor.db.ColumnDescriptor;
-import com.qchery.kada.descriptor.db.TableDescriptor;
+import com.qchery.kada.descriptor.db.ColumnInfo;
+import com.qchery.kada.descriptor.db.TableInfo;
 import com.qchery.kada.db.ConnectParam;
 import com.qchery.kada.db.DBHelperFactory;
 import org.junit.Test;
@@ -19,8 +19,8 @@ public class DefaultDBScannerTest {
         ConnectParam.ConnectParamBuilder connectParamBuilder = new ConnectParam.ConnectParamBuilder();
         ConnectParam connectParam = connectParamBuilder.databaseName("innereval")
                 .host("172.30.3.112").userName("innerevaldata").password("1*mysql").build();
-        List<TableDescriptor> tableDescriptors = new DefaultDBScanner().scannerTables(dbHelperFactory.getDbHelper(connectParam).getConnection());
-        System.out.println(tableDescriptors);
+        List<TableInfo> tableInfos = new DefaultDBScanner().scannerTables(dbHelperFactory.getDbHelper(connectParam).getConnection());
+        System.out.println(tableInfos);
     }
 
     @Test
@@ -29,8 +29,8 @@ public class DefaultDBScannerTest {
         ConnectParam.ConnectParamBuilder connectParamBuilder = new ConnectParam.ConnectParamBuilder();
         ConnectParam connectParam = connectParamBuilder.databaseName("jeesite")
                 .userName("root").password("123456").build();
-        List<ColumnDescriptor> columnDescriptors = new DefaultDBScanner().scannerColumns(dbHelperFactory.getDbHelper(connectParam).getConnection(), "sys_user");
-        System.out.println(columnDescriptors);
+        List<ColumnInfo> columnInfos = new DefaultDBScanner().scannerColumns(dbHelperFactory.getDbHelper(connectParam).getConnection(), "sys_user");
+        System.out.println(columnInfos);
     }
 
 }

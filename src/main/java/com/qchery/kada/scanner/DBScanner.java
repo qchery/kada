@@ -1,7 +1,7 @@
 package com.qchery.kada.scanner;
 
-import com.qchery.kada.descriptor.db.ColumnDescriptor;
-import com.qchery.kada.descriptor.db.TableDescriptor;
+import com.qchery.kada.descriptor.db.ColumnInfo;
+import com.qchery.kada.descriptor.db.TableInfo;
 
 import java.sql.Connection;
 import java.util.List;
@@ -18,7 +18,7 @@ public interface DBScanner {
      * @param conn 链接
      * @return 所有表描述
      */
-    List<TableDescriptor> scannerTables(Connection conn);
+    List<TableInfo> scannerTables(Connection conn);
 
     /**
      * 扫描数据库，获取所有子项组合
@@ -27,6 +27,6 @@ public interface DBScanner {
      * @param tableName 表名
      * @return {@link List}
      */
-    List<ColumnDescriptor> scannerColumns(Connection conn, String tableName);
+    List<ColumnInfo> scannerColumns(Connection conn, String tableName);
 
 }

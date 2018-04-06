@@ -1,7 +1,7 @@
 package com.qchery.kada;
 
-import com.qchery.kada.descriptor.db.ColumnDescriptor;
-import com.qchery.kada.descriptor.java.FieldDescriptor;
+import com.qchery.kada.descriptor.db.ColumnInfo;
+import com.qchery.kada.descriptor.java.FieldInfo;
 
 /**
  * @author Chery
@@ -9,59 +9,59 @@ import com.qchery.kada.descriptor.java.FieldDescriptor;
  */
 public class MappingItem {
 
-    private FieldDescriptor fieldDescriptor;
-    private ColumnDescriptor columnDescriptor;
+    private FieldInfo fieldInfo;
+    private ColumnInfo columnInfo;
 
-    public MappingItem(FieldDescriptor fieldDescriptor, ColumnDescriptor columnDescriptor) {
-        this.fieldDescriptor = fieldDescriptor;
-        this.columnDescriptor = columnDescriptor;
+    public MappingItem(FieldInfo fieldInfo, ColumnInfo columnInfo) {
+        this.fieldInfo = fieldInfo;
+        this.columnInfo = columnInfo;
     }
 
-    public FieldDescriptor getFieldDescriptor() {
-        return fieldDescriptor;
+    public FieldInfo getFieldInfo() {
+        return fieldInfo;
     }
 
-    public void setFieldDescriptor(FieldDescriptor fieldDescriptor) {
-        this.fieldDescriptor = fieldDescriptor;
+    public void setFieldInfo(FieldInfo fieldInfo) {
+        this.fieldInfo = fieldInfo;
     }
 
-    public ColumnDescriptor getColumnDescriptor() {
-        return columnDescriptor;
+    public ColumnInfo getColumnInfo() {
+        return columnInfo;
     }
 
-    public void setColumnDescriptor(ColumnDescriptor columnDescriptor) {
-        this.columnDescriptor = columnDescriptor;
+    public void setColumnInfo(ColumnInfo columnInfo) {
+        this.columnInfo = columnInfo;
     }
 
     public String getJavaType() {
-        return fieldDescriptor.getType();
+        return fieldInfo.getType();
     }
 
     public String getFieldName() {
-        return fieldDescriptor.getFieldName();
+        return fieldInfo.getFieldName();
     }
 
     public boolean isPK() {
-        return columnDescriptor.isPrimaryKey();
+        return columnInfo.isPrimaryKey();
     }
 
     public String getColumnName() {
-        return columnDescriptor.getColumnName();
+        return columnInfo.getColumnName();
     }
 
     public int getLength() {
-        return columnDescriptor.getLength();
+        return columnInfo.getLength();
     }
 
     public boolean isNotNull() {
-        return columnDescriptor.isNotNull();
+        return columnInfo.isNotNull();
     }
 
     public String getComment() {
-        return columnDescriptor.getComment();
+        return columnInfo.getComment();
     }
 
     public String getSimpleJavaType() {
-        return fieldDescriptor.getSimpleType();
+        return fieldInfo.getSimpleType();
     }
 }

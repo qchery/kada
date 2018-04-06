@@ -1,8 +1,8 @@
 package com.qchery.kada.scanner;
 
-import com.qchery.kada.descriptor.db.ColumnDescriptor;
+import com.qchery.kada.descriptor.db.ColumnInfo;
 import com.qchery.kada.DBOrmer;
-import com.qchery.kada.descriptor.db.TableDescriptor;
+import com.qchery.kada.descriptor.db.TableInfo;
 import org.apache.commons.dbutils.DbUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,30 +25,30 @@ public class DefaultDBScanner implements DBScanner {
     private Logger logger = LoggerFactory.getLogger(DBOrmer.class);
 
     @Override
-    public List<TableDescriptor> scannerTables(Connection conn) {
-        List<TableDescriptor> tableDescriptors = new ArrayList<>();
+    public List<TableInfo> scannerTables(Connection conn) {
+        List<TableInfo> tableInfos = new ArrayList<>();
         ResultSet resultSet = null;
         try {
             DatabaseMetaData databaseMetaData = conn.getMetaData();
             resultSet = databaseMetaData.getTables(conn.getCatalog(), getSchema(conn), "%", new String[]{"TABLE"});
             while (resultSet.next()) {
-                TableDescriptor tableDescriptor = new TableDescriptor(resultSet.getString("TABLE_NAME"));
-                tableDescriptor.setComment(resultSet.getString("REMARKS"));
-                tableDescriptors.add(tableDescriptor);
+                TableInfo tableInfo = new TableInfo(resultSet.getString("TABLE_NAME"));
+                tableInfo.setComment(resultSet.getString("REMARKS"));
+                tableInfos.add(tableInfo);
             }
         } catch (SQLException e) {
             logger.error("msg={}", " 扫描表元数据失败", e);
         } finally {
             DbUtils.closeQuietly(resultSet);
         }
-        return tableDescriptors;
+        return tableInfos;
     }
 
     @Override
-    public List<ColumnDescriptor> scannerColumns(Connection conn, String tableName) {
+    public List<ColumnInfo> scannerColumns(Connection conn, String tableName) {
 
         ResultSet columns = null;
-        List<ColumnDescriptor> columnDescriptors = new ArrayList<>();
+        List<ColumnInfo> columnInfos = new ArrayList<>();
         try {
             DatabaseMetaData databaseMetaData = conn.getMetaData();
 
@@ -58,31 +58,31 @@ public class DefaultDBScanner implements DBScanner {
             columns = databaseMetaData.getColumns(conn.getCatalog(), getSchema(conn), tableName, "%");
 
             while (columns.next()) {
-                ColumnDescriptor columnDescriptor = new ColumnDescriptor();
+                ColumnInfo columnInfo = new ColumnInfo();
 
                 // 名称
                 String columnName = columns.getString(COLUMN_NAME);
-                columnDescriptor.setColumnName(columnName);
+                columnInfo.setColumnName(columnName);
 
                 // 描述
                 String remarks = columns.getString("REMARKS");
                 if (remarks == null || remarks.equals("")) {
                     remarks = columnName;
                 }
-                columnDescriptor.setComment(remarks);
+                columnInfo.setComment(remarks);
 
                 // 数据类型
                 int dbType = columns.getInt("DATA_TYPE");
-                columnDescriptor.setDbType(dbType);
+                columnInfo.setDbType(dbType);
 
                 // 是否为空
-                columnDescriptor.setNotNull(DatabaseMetaData.columnNoNulls == columns.getInt("NULLABLE"));
+                columnInfo.setNotNull(DatabaseMetaData.columnNoNulls == columns.getInt("NULLABLE"));
                 // 长度
-                columnDescriptor.setLength(columns.getInt("COLUMN_SIZE"));
+                columnInfo.setLength(columns.getInt("COLUMN_SIZE"));
                 // 主键
-                columnDescriptor.setPrimaryKey(isPrimaryKey(primaryKeys, columnName));
+                columnInfo.setPrimaryKey(isPrimaryKey(primaryKeys, columnName));
 
-                columnDescriptors.add(columnDescriptor);
+                columnInfos.add(columnInfo);
             }
 
         } catch (SQLException e) {
@@ -91,7 +91,7 @@ public class DefaultDBScanner implements DBScanner {
             DbUtils.closeQuietly(columns);
         }
 
-        return columnDescriptors;
+        return columnInfos;
     }
 
     /**

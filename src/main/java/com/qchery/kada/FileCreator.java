@@ -1,6 +1,6 @@
 package com.qchery.kada;
 
-import com.qchery.kada.descriptor.file.KadaFileDescriptor;
+import com.qchery.kada.descriptor.file.FileInfo;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class FileCreator {
 
     private static Logger logger = LoggerFactory.getLogger(FileCreator.class);
 
-    public static void createFile(KadaFileDescriptor descriptor)
+    public static void createFile(FileInfo descriptor)
             throws IOException {
 
         File file = newFile(descriptor.getFileName(), descriptor.getPackagePath());

@@ -6,7 +6,7 @@ import java.util.List;
  * @author Chery
  * @date 2018/4/6 10:46
  */
-public interface IClassDescriptor {
+public interface IClassInfo {
     /**
      * 获取包名
      *
@@ -26,14 +26,14 @@ public interface IClassDescriptor {
      *
      * @return 字段描述列表
      */
-    List<FieldDescriptor> getFieldDescriptors();
+    List<FieldInfo> getFieldInfos();
 
     /**
      * 添加字段描述
      *
-     * @param fieldDescriptor 字段描述
+     * @param fieldInfo 字段描述
      */
-    void addFieldDescriptor(FieldDescriptor fieldDescriptor);
+    void addFieldInfo(FieldInfo fieldInfo);
 
     /**
      * 是否为基础类型

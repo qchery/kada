@@ -8,23 +8,23 @@ import java.lang.reflect.Field;
  * @author Chery
  * @date 2016年5月15日 - 下午9:27:38
  */
-public class FieldDescriptor {
+public class FieldInfo {
 
     /**
      * 类型描述
      */
-    private IClassDescriptor classDescriptor;
+    private IClassInfo classInfo;
     /**
      * 属性名
      */
     private String fieldName;
 
-    public FieldDescriptor(Field field) {
-        this(ClassDescriptor.of(field.getType()), field.getName());
+    public FieldInfo(Field field) {
+        this(ClassInfo.of(field.getType()), field.getName());
     }
 
-    public FieldDescriptor(IClassDescriptor classDescriptor, String fieldName) {
-        this.classDescriptor = classDescriptor;
+    public FieldInfo(IClassInfo classInfo, String fieldName) {
+        this.classInfo = classInfo;
         this.fieldName = fieldName;
     }
 
@@ -32,7 +32,7 @@ public class FieldDescriptor {
      * 包含全路径的类型
      */
     public String getType() {
-        return classDescriptor.getType();
+        return classInfo.getType();
     }
 
     public String getFieldName() {
@@ -43,21 +43,21 @@ public class FieldDescriptor {
      * 不包含全路径的类型
      */
     public String getSimpleType() {
-        return classDescriptor.getClassName();
+        return classInfo.getClassName();
     }
 
     public boolean isNormal() {
-        return classDescriptor != null;
+        return classInfo != null;
     }
 
-    public IClassDescriptor getClassDescriptor() {
-        return classDescriptor;
+    public IClassInfo getClassInfo() {
+        return classInfo;
     }
 
     @Override
     public String toString() {
-        return "FieldDescriptor{" +
-                "classDescriptor=" + classDescriptor +
+        return "FieldInfo{" +
+                "classInfo=" + classInfo +
                 ", fieldName='" + fieldName + '\'' +
                 '}';
     }

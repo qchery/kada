@@ -3,11 +3,11 @@ package com.qchery.kada;
 import com.qchery.kada.builder.FileBuilder;
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
-import com.qchery.kada.descriptor.db.ColumnDescriptor;
-import com.qchery.kada.descriptor.db.TableDescriptor;
-import com.qchery.kada.descriptor.file.KadaFileDescriptor;
-import com.qchery.kada.descriptor.java.ClassDescriptor;
-import com.qchery.kada.descriptor.java.FieldDescriptor;
+import com.qchery.kada.descriptor.db.ColumnInfo;
+import com.qchery.kada.descriptor.db.TableInfo;
+import com.qchery.kada.descriptor.file.FileInfo;
+import com.qchery.kada.descriptor.java.ClassInfo;
+import com.qchery.kada.descriptor.java.FieldInfo;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -41,34 +41,34 @@ public class JavaOrmer {
      * @throws IOException 操作文件时，可能会出现异常
      */
     public void generateFile(Class<?> clazz) throws IOException {
-        ClassDescriptor classDescriptor = ClassDescriptor.of(clazz);
-        TableDescriptor tableDescriptor = new TableDescriptor(convertor.toTableName(clazz.getSimpleName()));
+        ClassInfo classInfo = ClassInfo.of(clazz);
+        TableInfo tableInfo = new TableInfo(convertor.toTableName(clazz.getSimpleName()));
 
         List<MappingItem> mappingItems = new ArrayList<>();
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
-            ColumnDescriptor columnDescriptor = new ColumnDescriptor();
-            columnDescriptor.setColumnName(convertor.toColumnName(field.getName()));
-            tableDescriptor.addColumnDescriptor(columnDescriptor);
+            ColumnInfo columnInfo = new ColumnInfo();
+            columnInfo.setColumnName(convertor.toColumnName(field.getName()));
+            tableInfo.addColumnInfo(columnInfo);
 
-            FieldDescriptor fieldDescriptor = new FieldDescriptor(field);
-            classDescriptor.addFieldDescriptor(fieldDescriptor);
+            FieldInfo fieldInfo = new FieldInfo(field);
+            classInfo.addFieldInfo(fieldInfo);
 
-            mappingItems.add(new MappingItem(fieldDescriptor, columnDescriptor));
+            mappingItems.add(new MappingItem(fieldInfo, columnInfo));
         }
 
-        Mapping mapping = new Mapping(classDescriptor, tableDescriptor);
+        Mapping mapping = new Mapping(classInfo, tableInfo);
         mapping.setMappingItems(mappingItems);
         mapping.setCharset(Charset.forName("utf-8"));
 
-        FileCreator.createFile(getKadaFileDescriptor(mapping));
+        FileCreator.createFile(getFileInfo(mapping));
     }
 
-    private KadaFileDescriptor getKadaFileDescriptor(Mapping mapping) {
+    private FileInfo getFileInfo(Mapping mapping) {
         String content = fileBuilder.getContent(mapping);
         String fileName = fileBuilder.getFileName(mapping.getClassName());
         String packagePath = mapping.getPackageName().replaceAll("\\.", "/");
         Charset charset = mapping.getCharset();
-        return new KadaFileDescriptor(packagePath, fileName, content, charset);
+        return new FileInfo(packagePath, fileName, content, charset);
     }
 }

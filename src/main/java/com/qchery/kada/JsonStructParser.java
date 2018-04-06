@@ -6,7 +6,7 @@ import com.qchery.kada.descriptor.java.*;
 
 import java.util.Map;
 
-import static com.qchery.kada.descriptor.java.TypeDescriptor.PKG_JAVA_UTIL;
+import static com.qchery.kada.descriptor.java.TypeInfo.PKG_JAVA_UTIL;
 
 /**
  * @author Chery
@@ -20,51 +20,51 @@ public class JsonStructParser {
         this.nameConvertor = nameConvertor;
     }
 
-    public IClassDescriptor parse(String packageName, String className, String json) {
+    public IClassInfo parse(String packageName, String className, String json) {
         JsonParser parser = new JsonParser();
         JsonElement jsonElement = parser.parse(json);
-        IClassDescriptor classDescriptor = parseClassDescriptor(packageName, className, jsonElement);
-        return classDescriptor;
+        IClassInfo classInfo = parseClassInfo(packageName, className, jsonElement);
+        return classInfo;
     }
 
-    private IClassDescriptor parseClassDescriptor(String packageName, String className, JsonElement rootElement) {
-        IClassDescriptor classDescriptor = null;
+    private IClassInfo parseClassInfo(String packageName, String className, JsonElement rootElement) {
+        IClassInfo classInfo = null;
         if (rootElement.isJsonPrimitive() || rootElement.isJsonNull()) {
-            classDescriptor = ClassDescriptor.of(TypeDescriptor.STRING);
+            classInfo = ClassInfo.of(TypeInfo.STRING);
         } else if (rootElement.isJsonArray()) {
-            classDescriptor = parseListClassDescriptor(packageName, className, rootElement);
+            classInfo = parseListClassInfo(packageName, className, rootElement);
         } else if (rootElement.isJsonObject()) {
-            classDescriptor = ClassDescriptor.of(packageName, className);
+            classInfo = ClassInfo.of(packageName, className);
             JsonObject jsonObject = rootElement.getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-                FieldDescriptor fieldDescriptor = parseFieldDescriptor(packageName, entry.getKey(), entry.getValue());
-                if (fieldDescriptor.isNormal()) {
-                    classDescriptor.addFieldDescriptor(fieldDescriptor);
+                FieldInfo fieldInfo = parseFieldInfo(packageName, entry.getKey(), entry.getValue());
+                if (fieldInfo.isNormal()) {
+                    classInfo.addFieldInfo(fieldInfo);
                 }
             }
         }
-        return classDescriptor;
+        return classInfo;
     }
 
-    private FieldDescriptor parseFieldDescriptor(String packageName, String entryKey, JsonElement rootElement) {
+    private FieldInfo parseFieldInfo(String packageName, String entryKey, JsonElement rootElement) {
         String fieldName = nameConvertor.toFieldName(entryKey);
         String className = nameConvertor.toClassName(entryKey);
-        IClassDescriptor classDescriptor = parseClassDescriptor(packageName, className, rootElement);
-        return new FieldDescriptor(classDescriptor, fieldName);
+        IClassInfo classInfo = parseClassInfo(packageName, className, rootElement);
+        return new FieldInfo(classInfo, fieldName);
     }
 
-    private GenericClassDescriptor parseListClassDescriptor(String packageName, String typeName, JsonElement jsonElement) {
+    private GenericClassInfo parseListClassInfo(String packageName, String typeName, JsonElement jsonElement) {
         JsonArray jsonArray = jsonElement.getAsJsonArray();
-        IClassDescriptor innerClass = null;
+        IClassInfo innerClass = null;
         if (jsonArray.size() > 0) {
             JsonElement arrayElement = jsonArray.get(0);
             if (arrayElement != null) {
-                innerClass = parseClassDescriptor(packageName, typeName, arrayElement);
+                innerClass = parseClassInfo(packageName, typeName, arrayElement);
             }
         }
-        GenericClassDescriptor classDescriptor = new GenericClassDescriptor(new TypeDescriptor(PKG_JAVA_UTIL, "List"));
-        classDescriptor.setInnerClass(innerClass);
-        return classDescriptor;
+        GenericClassInfo classInfo = new GenericClassInfo(new TypeInfo(PKG_JAVA_UTIL, "List"));
+        classInfo.setInnerClass(innerClass);
+        return classInfo;
     }
 
 }

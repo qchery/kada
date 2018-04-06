@@ -4,7 +4,7 @@ package com.qchery.kada.descriptor.db;
  * @author Chery
  * @date 2017/5/4 - 下午10:21
  */
-public class ColumnDescriptor {
+public class ColumnInfo {
 
     /**
      * 数据库字段类型
@@ -81,7 +81,7 @@ public class ColumnDescriptor {
 
     @Override
     public String toString() {
-        return "ColumnDescriptor{" +
+        return "ColumnInfo{" +
                 "dbType=" + dbType +
                 ", columnName='" + columnName + '\'' +
                 ", length=" + length +

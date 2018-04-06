@@ -7,13 +7,13 @@ import java.util.List;
  * @author Chery
  * @date 2017/5/4 - 下午10:20
  */
-public class TableDescriptor {
+public class TableInfo {
 
     private String tableName;
     private String comment;
-    private List<ColumnDescriptor> columnDescriptors = new ArrayList<>();
+    private List<ColumnInfo> columnInfos = new ArrayList<>();
 
-    public TableDescriptor(String tableName) {
+    public TableInfo(String tableName) {
         this.tableName = tableName;
     }
 
@@ -33,24 +33,24 @@ public class TableDescriptor {
         this.comment = comment;
     }
 
-    public List<ColumnDescriptor> getColumnDescriptors() {
-        return columnDescriptors;
+    public List<ColumnInfo> getColumnInfos() {
+        return columnInfos;
     }
 
-    public void addColumnDescriptor(ColumnDescriptor columnDescriptor) {
-        this.columnDescriptors.add(columnDescriptor);
+    public void addColumnInfo(ColumnInfo columnInfo) {
+        this.columnInfos.add(columnInfo);
     }
 
-    public void addAll(List<ColumnDescriptor> columnDescriptors) {
-        this.columnDescriptors.addAll(columnDescriptors);
+    public void addAll(List<ColumnInfo> columnInfos) {
+        this.columnInfos.addAll(columnInfos);
     }
 
     @Override
     public String toString() {
-        return "TableDescriptor{" +
+        return "TableInfo{" +
                 "tableName='" + tableName + '\'' +
                 ", comment='" + comment + '\'' +
-                ", columnDescriptors=" + columnDescriptors +
+                ", columnInfos=" + columnInfos +
                 '}';
     }
 }

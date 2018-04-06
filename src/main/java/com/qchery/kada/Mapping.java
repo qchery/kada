@@ -1,7 +1,7 @@
 package com.qchery.kada;
 
-import com.qchery.kada.descriptor.db.TableDescriptor;
-import com.qchery.kada.descriptor.java.ClassDescriptor;
+import com.qchery.kada.descriptor.db.TableInfo;
+import com.qchery.kada.descriptor.java.ClassInfo;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -17,15 +17,15 @@ public class Mapping {
      */
     private Charset charset;
 
-    private ClassDescriptor classDescriptor;
+    private ClassInfo classInfo;
 
-    private TableDescriptor tableDescriptor;
+    private TableInfo tableInfo;
 
     private List<MappingItem> mappingItems;
 
-    public Mapping(ClassDescriptor classDescriptor, TableDescriptor tableDescriptor) {
-        this.classDescriptor = classDescriptor;
-        this.tableDescriptor = tableDescriptor;
+    public Mapping(ClassInfo classInfo, TableInfo tableInfo) {
+        this.classInfo = classInfo;
+        this.tableInfo = tableInfo;
     }
 
     public void setCharset(Charset charset) {
@@ -36,20 +36,20 @@ public class Mapping {
         return this.charset;
     }
 
-    public ClassDescriptor getClassDescriptor() {
-        return classDescriptor;
+    public ClassInfo getClassInfo() {
+        return classInfo;
     }
 
-    public void setClassDescriptor(ClassDescriptor classDescriptor) {
-        this.classDescriptor = classDescriptor;
+    public void setClassInfo(ClassInfo classInfo) {
+        this.classInfo = classInfo;
     }
 
-    public TableDescriptor getTableDescriptor() {
-        return tableDescriptor;
+    public TableInfo getTableInfo() {
+        return tableInfo;
     }
 
-    public void setTableDescriptor(TableDescriptor tableDescriptor) {
-        this.tableDescriptor = tableDescriptor;
+    public void setTableInfo(TableInfo tableInfo) {
+        this.tableInfo = tableInfo;
     }
 
     public List<MappingItem> getMappingItems() {
@@ -61,21 +61,21 @@ public class Mapping {
     }
 
     public String getPackageName() {
-        return classDescriptor.getPackageName();
+        return classInfo.getPackageName();
     }
 
     public String getClassName() {
-        return classDescriptor.getClassName();
+        return classInfo.getClassName();
     }
 
     public String getTableName() {
-        return tableDescriptor.getTableName();
+        return tableInfo.getTableName();
     }
 
     public String getTableComment() {
-        String comment = tableDescriptor.getComment();
+        String comment = tableInfo.getComment();
         if (null == comment || "".equals(comment)) {
-            comment = tableDescriptor.getTableName();
+            comment = tableInfo.getTableName();
         }
         return comment;
     }
