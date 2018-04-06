@@ -3,7 +3,7 @@ package com.qchery.kada.descriptor.java;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassDescriptor {
+public class ClassDescriptor implements IClassDescriptor {
 
     /**
      * 类型声明
@@ -22,14 +22,17 @@ public class ClassDescriptor {
         }
     }
 
+    @Override
     public String getPackageName() {
         return typeDescriptor.getPackageName();
     }
 
+    @Override
     public String getClassName() {
         return typeDescriptor.getTypeName();
     }
 
+    @Override
     public List<FieldDescriptor> getFieldDescriptors() {
         if (typeDescriptor.isPrimitive()) {
             throw new RuntimeException("基础类型无字段描述");
@@ -37,6 +40,7 @@ public class ClassDescriptor {
         return fieldDescriptors;
     }
 
+    @Override
     public void addFieldDescriptor(FieldDescriptor fieldDescriptor) {
         if (typeDescriptor.isPrimitive()) {
             throw new RuntimeException("基础类型无字段描述");

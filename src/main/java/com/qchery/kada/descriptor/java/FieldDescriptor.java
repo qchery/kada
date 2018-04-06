@@ -11,7 +11,7 @@ public class FieldDescriptor {
     /**
      * 类型描述
      */
-    private ClassDescriptor classDescriptor;
+    private IClassDescriptor classDescriptor;
     /**
      * 属性名
      */
@@ -19,6 +19,11 @@ public class FieldDescriptor {
 
     public FieldDescriptor(TypeDescriptor typeDescriptor, String fieldName) {
         this.classDescriptor = new ClassDescriptor(typeDescriptor);
+        this.fieldName = fieldName;
+    }
+
+    public FieldDescriptor(IClassDescriptor classDescriptor, String fieldName) {
+        this.classDescriptor = classDescriptor;
         this.fieldName = fieldName;
     }
 
@@ -38,6 +43,10 @@ public class FieldDescriptor {
      */
     public String getSimpleType() {
         return classDescriptor.getClassName();
+    }
+
+    public boolean isNormal() {
+        return classDescriptor != null;
     }
 
     @Override

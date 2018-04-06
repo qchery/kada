@@ -1,0 +1,142 @@
+{
+  "gjj_data": [
+    {
+      "gjj_brief": {
+        "ID": "341204198812222218",
+        "name": "王飞",
+        "card": "",
+        "customer_id": "",
+        "deposit_amount": "1826",
+        "fb_deposit_amount": "",
+        "balance": "18425.91",
+        "fb_balance": "",
+        "once_balance": "",
+        "status": "",
+        "record_date": "",
+        "company": "霍山人民检察院",
+        "deposit_base": "7608.33",
+        "person_rate": "",
+        "company_rate": "",
+        "init_date": "",
+        "start_date": "",
+        "sex": "",
+        "email": "",
+        "phone": "",
+        "marriage": "",
+        "address": "",
+        "birthday": "",
+        "company_id": "3001020",
+        "person_deposit_amount": "",
+        "company_deposit_amount": "",
+        "deposit_rate": ""
+      },
+      "gjj_detail": [
+        {
+          "id": "ff372f05-9ff6-471a-88ae-50ef80adc085",
+          "gjj_type": "0",
+          "company": "",
+          "order_id": "",
+          "record_date": "2017-04-12",
+          "op_type": "2017-04[1]汇缴",
+          "record_month": "201704",
+          "amount": "1826.00",
+          "balance": "18425.91",
+          "remark": "2017-04[1]汇缴",
+          "comments": "",
+          "deposit_type": "",
+          "cont_flag": -1,
+          "back_cont_flag": -1
+        }
+      ],
+      "gjj_account_analyzed_data": {
+        "newest_account": 0,
+        "cont_last_times": -1,
+        "back_cont_last_times": -1,
+        "cont_max_times": -1,
+        "back_cont_max_times": -1,
+        "sum_times": -1,
+        "back_sum_times": -1
+      }
+    }
+  ],
+  "loan_data": [
+    {
+      "loan_brief": {
+        "name": "王飞",
+        "ID": "",
+        "con_no": "",
+        "status": "",
+        "credit": "320000.00",
+        "period": "240",
+        "rate": "",
+        "warning_rate": "",
+        "balance": "295152.08",
+        "fund": "",
+        "fund_date": "",
+        "bank": "",
+        "phone": "",
+        "address": "",
+        "start_date": "2015-03-19",
+        "end_date": "2035-03-19",
+        "record_date": "2017-05-27",
+        "due_amount": "",
+        "pay_principle": "",
+        "pay_interest": "",
+        "past_due": "",
+        "past_principle": "",
+        "past_interest": "",
+        "past_period": "",
+        "history_past_period": "",
+        "history_past_amount": "",
+        "assure_style": "",
+        "house_type": "",
+        "debit_account": "",
+        "left_period": ""
+      },
+      "loan_detail": [
+        {
+          "id": "924a6f5e-2256-4c64-bfc9-e13315173c8b",
+          "record_date": "2015-04-30",
+          "op_type": "个人贷款还款信息",
+          "record_month": "",
+          "principle": "872.47",
+          "interest": "1066.67",
+          "base": "1939.14",
+          "balance": "319127.53",
+          "bill_date": "2015-04-30",
+          "warning_interest": "",
+          "due_date": "",
+          "period": "",
+          "deposit_type": "",
+          "remark": "个人贷款还款信息",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "general_analyzed_data": {
+    "every_company_data": [
+      {
+        "company": "某某公司",
+        "cont_last_times": 0,
+        "back_cont_last_times": 0,
+        "cont_max_times": 0,
+        "back_cont_max_times": 0,
+        "sum_times": 0,
+        "back_sum_times": 0,
+        "start_month": "201606",
+        "end_month": "201808"
+      }
+    ],
+    "last_6months_pay_off": -1,
+    "last_6months_back_pay_off": -1,
+    "last_24months_sum_times": -1,
+    "last_24months_back_sum_times": -1,
+    "last_24months_company_quantity": -1,
+    "last_12months_has_extract": -1,
+    "last_12months_average": -1,
+    "last_24months_average": -1,
+    "start_date": "2017-03-07",
+    "end_date": "2017-11-07"
+  }
+}
