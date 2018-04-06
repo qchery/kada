@@ -73,7 +73,7 @@ public class JsonOrmer {
     private StringBuilder declareSetGetMethods(IClassDescriptor classDescriptor) {
         StringBuilder methods = new StringBuilder();
         for (FieldDescriptor descriptor : classDescriptor.getFieldDescriptors()) {
-            String javaType = descriptor.getSimpleType();
+            String javaType = getGenericSimpleType(descriptor);
             String fieldName = descriptor.getFieldName();
             String fcuFieldName = StringUtil.upperFirstChar(fieldName);
             methods.append(formatGetMethod(javaType, fieldName, fcuFieldName));
@@ -120,10 +120,21 @@ public class JsonOrmer {
     private StringBuilder declareFileds(IClassDescriptor classDescriptor) {
         StringBuilder fields = new StringBuilder();
         for (FieldDescriptor descriptor : classDescriptor.getFieldDescriptors()) {
-            fields.append("private ").append(descriptor.getSimpleType())
+            fields.append("private ").append(getGenericSimpleType(descriptor))
                     .append(" ").append(descriptor.getFieldName()).append(";\n");
         }
         return fields;
+    }
+
+    private String getGenericSimpleType(FieldDescriptor descriptor) {
+        String simpleType = descriptor.getSimpleType();
+        // 拼接泛型类型
+        IClassDescriptor fieldClassDescriptor = descriptor.getClassDescriptor();
+        if (fieldClassDescriptor instanceof GenericClassDescriptor) {
+            String innerClassName = ((GenericClassDescriptor) fieldClassDescriptor).getInnerClass().getClassName();
+            simpleType = simpleType + "<" + innerClassName + ">";
+        }
+        return simpleType;
     }
 
     private String declareImports(IClassDescriptor classDescriptor) {
