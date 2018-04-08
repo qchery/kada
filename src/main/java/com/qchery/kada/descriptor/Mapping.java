@@ -1,7 +1,7 @@
-package com.qchery.kada;
+package com.qchery.kada.descriptor;
 
 import com.qchery.kada.descriptor.db.TableInfo;
-import com.qchery.kada.descriptor.java.ClassInfo;
+import com.qchery.kada.descriptor.java.IClassInfo;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -17,13 +17,13 @@ public class Mapping {
      */
     private Charset charset;
 
-    private ClassInfo classInfo;
+    private IClassInfo classInfo;
 
     private TableInfo tableInfo;
 
     private List<MappingItem> mappingItems;
 
-    public Mapping(ClassInfo classInfo, TableInfo tableInfo) {
+    public Mapping(IClassInfo classInfo, TableInfo tableInfo) {
         this.classInfo = classInfo;
         this.tableInfo = tableInfo;
     }
@@ -36,11 +36,11 @@ public class Mapping {
         return this.charset;
     }
 
-    public ClassInfo getClassInfo() {
+    public IClassInfo getClassInfo() {
         return classInfo;
     }
 
-    public void setClassInfo(ClassInfo classInfo) {
+    public void setClassInfo(IClassInfo classInfo) {
         this.classInfo = classInfo;
     }
 

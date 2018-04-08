@@ -5,6 +5,8 @@ import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.db.DBHelper;
 import com.qchery.kada.db.TypeMap;
+import com.qchery.kada.descriptor.Mapping;
+import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.descriptor.db.ColumnInfo;
 import com.qchery.kada.descriptor.db.TableInfo;
 import com.qchery.kada.descriptor.java.ClassInfo;

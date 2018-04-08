@@ -1,4 +1,4 @@
-package com.qchery.kada;
+package com.qchery.kada.descriptor;
 
 import com.qchery.kada.descriptor.db.ColumnInfo;
 import com.qchery.kada.descriptor.java.FieldInfo;

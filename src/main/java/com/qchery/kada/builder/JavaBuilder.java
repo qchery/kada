@@ -1,7 +1,7 @@
 package com.qchery.kada.builder;
 
-import com.qchery.kada.Mapping;
-import com.qchery.kada.MappingItem;
+import com.qchery.kada.descriptor.Mapping;
+import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.utils.StringUtil;
 
 import java.util.HashSet;

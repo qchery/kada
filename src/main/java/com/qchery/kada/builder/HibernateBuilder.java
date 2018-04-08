@@ -1,7 +1,7 @@
 package com.qchery.kada.builder;
 
-import com.qchery.kada.Mapping;
-import com.qchery.kada.MappingItem;
+import com.qchery.kada.descriptor.Mapping;
+import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.model.hibernate.Clazz;
 import com.qchery.kada.model.hibernate.CompositeId;
 import com.qchery.kada.model.hibernate.HibernateMapping;

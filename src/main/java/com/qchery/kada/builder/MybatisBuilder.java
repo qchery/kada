@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.qchery.kada.*;
+import com.qchery.kada.descriptor.Mapping;
+import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.model.ibatis.*;
 import com.qchery.kada.utils.StringUtil;
 import com.qchery.kada.utils.XMLUtil;
