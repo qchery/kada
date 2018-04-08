@@ -8,7 +8,6 @@ import com.qchery.kada.descriptor.file.FileInfo;
 import com.qchery.kada.descriptor.java.FieldInfo;
 import com.qchery.kada.descriptor.java.GenericClassInfo;
 import com.qchery.kada.descriptor.java.IClassInfo;
-import com.qchery.kada.descriptor.java.TypeInfo;
 import com.qchery.kada.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,19 +28,6 @@ public class JsonOrmer {
     private NameConvertor nameConvertor;
 
     private AnnotationStrategy annotationStrategy;
-
-    private static Set<String> ignoreDependClasses = new HashSet<>();
-
-    static {
-        ignoreDependClasses.add(TypeInfo.STRING.getType());
-        ignoreDependClasses.add(TypeInfo.BYTE.getType());
-        ignoreDependClasses.add(TypeInfo.SHORT.getType());
-        ignoreDependClasses.add(TypeInfo.INTEGER.getType());
-        ignoreDependClasses.add(TypeInfo.LONG.getType());
-        ignoreDependClasses.add(TypeInfo.BOOLEAN.getType());
-        ignoreDependClasses.add(TypeInfo.FLOAT.getType());
-        ignoreDependClasses.add(TypeInfo.DOUBLE.getType());
-    }
 
     public JsonOrmer() {
         this.nameConvertor = new DefaultNameConvertor();
@@ -170,13 +156,12 @@ public class JsonOrmer {
     private String declareImports(IClassInfo classInfo) {
         Set<String> importSet = new HashSet<>();
         for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
-            importSet.add(fieldInfo.getType());
+            if (!fieldInfo.isPrimitive()) {
+                importSet.add(fieldInfo.getType());
+            }
         }
         importSet.add("java.io.Serializable");
         importSet.add(annotationStrategy.dependClass());
-
-        // 去除不必要的声明
-        importSet.removeAll(ignoreDependClasses);
 
         StringBuilder imports = new StringBuilder();
         for (String importType : importSet) {

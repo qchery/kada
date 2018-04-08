@@ -66,6 +66,10 @@ public class FieldInfo {
         this.annotationName = annotationName;
     }
 
+    public boolean isPrimitive() {
+        return this.classInfo.isPrimitive();
+    }
+
     @Override
     public String toString() {
         return "FieldInfo{" +
