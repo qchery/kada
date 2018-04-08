@@ -1,7 +1,7 @@
 package com.qchery.kada;
 
 import com.qchery.kada.builder.HibernateBuilder;
-import com.qchery.kada.builder.JavaBuilder;
+import com.qchery.kada.builder.java.JavaBuilder;
 import com.qchery.kada.builder.MybatisBuilder;
 import com.qchery.kada.convertor.IgnorePrefixNameConvertor;
 import com.qchery.kada.db.ConnectParam;

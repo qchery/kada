@@ -1,6 +1,9 @@
 package com.qchery.kada;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.descriptor.java.*;
 
@@ -50,7 +53,9 @@ public class JsonStructParser {
         String fieldName = nameConvertor.toFieldName(entryKey);
         String className = nameConvertor.toClassName(entryKey);
         IClassInfo classInfo = parseClassInfo(packageName, className, rootElement);
-        return new FieldInfo(classInfo, fieldName);
+        FieldInfo fieldInfo = new FieldInfo(classInfo, fieldName);
+        fieldInfo.setAnnotationName(entryKey);
+        return fieldInfo;
     }
 
     private GenericClassInfo parseListClassInfo(String packageName, String typeName, JsonElement jsonElement) {

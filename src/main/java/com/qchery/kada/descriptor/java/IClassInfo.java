@@ -45,7 +45,5 @@ public interface IClassInfo {
     /**
      * 包含全路径的类型
      */
-    default String getType() {
-        return getPackageName() + "." + getClassName();
-    }
+    String getType();
 }

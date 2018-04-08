@@ -1,5 +1,6 @@
-package com.qchery.kada.builder;
+package com.qchery.kada.builder.java;
 
+import com.qchery.kada.builder.FileBuilder;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.utils.StringUtil;

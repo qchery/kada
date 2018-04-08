@@ -1,11 +1,14 @@
 package com.qchery.kada;
 
+import com.qchery.kada.builder.java.AnnotationStrategy;
+import com.qchery.kada.builder.java.JacksonAnnotationStrategy;
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.descriptor.file.FileInfo;
 import com.qchery.kada.descriptor.java.FieldInfo;
 import com.qchery.kada.descriptor.java.GenericClassInfo;
 import com.qchery.kada.descriptor.java.IClassInfo;
+import com.qchery.kada.descriptor.java.TypeInfo;
 import com.qchery.kada.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +28,24 @@ public class JsonOrmer {
 
     private NameConvertor nameConvertor;
 
+    private AnnotationStrategy annotationStrategy;
+
+    private static Set<String> ignoreDependClasses = new HashSet<>();
+
+    static {
+        ignoreDependClasses.add(TypeInfo.STRING.getType());
+        ignoreDependClasses.add(TypeInfo.BYTE.getType());
+        ignoreDependClasses.add(TypeInfo.SHORT.getType());
+        ignoreDependClasses.add(TypeInfo.INTEGER.getType());
+        ignoreDependClasses.add(TypeInfo.LONG.getType());
+        ignoreDependClasses.add(TypeInfo.BOOLEAN.getType());
+        ignoreDependClasses.add(TypeInfo.FLOAT.getType());
+        ignoreDependClasses.add(TypeInfo.DOUBLE.getType());
+    }
+
     public JsonOrmer() {
         this.nameConvertor = new DefaultNameConvertor();
+        this.annotationStrategy = new JacksonAnnotationStrategy();
     }
 
     public JsonOrmer(NameConvertor nameConvertor) {
@@ -129,9 +148,10 @@ public class JsonOrmer {
 
     private StringBuilder declareFileds(IClassInfo classInfo) {
         StringBuilder fields = new StringBuilder();
-        for (FieldInfo descriptor : classInfo.getFieldInfos()) {
-            fields.append("private ").append(getGenericSimpleType(descriptor))
-                    .append(" ").append(descriptor.getFieldName()).append(";\n");
+        for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
+            fields.append(annotationStrategy.declareAnnotation(fieldInfo.getAnnotationName()))
+                    .append("private ").append(getGenericSimpleType(fieldInfo))
+                    .append(" ").append(fieldInfo.getFieldName()).append(";\n");
         }
         return fields;
     }
@@ -153,6 +173,10 @@ public class JsonOrmer {
             importSet.add(fieldInfo.getType());
         }
         importSet.add("java.io.Serializable");
+        importSet.add(annotationStrategy.dependClass());
+
+        // 去除不必要的声明
+        importSet.removeAll(ignoreDependClasses);
 
         StringBuilder imports = new StringBuilder();
         for (String importType : importSet) {
@@ -170,6 +194,10 @@ public class JsonOrmer {
             classExist = false;
         }
         return classExist;
+    }
+
+    public void setAnnotationStrategy(AnnotationStrategy annotationStrategy) {
+        this.annotationStrategy = annotationStrategy;
     }
 
 }

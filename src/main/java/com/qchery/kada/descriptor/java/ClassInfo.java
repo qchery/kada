@@ -67,4 +67,9 @@ public class ClassInfo implements IClassInfo {
         return typeInfo.isPrimitive();
     }
 
+    @Override
+    public String getType() {
+        return typeInfo.getType();
+    }
+
 }

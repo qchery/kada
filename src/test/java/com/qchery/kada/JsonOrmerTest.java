@@ -1,5 +1,6 @@
 package com.qchery.kada;
 
+import com.qchery.kada.builder.java.FastjsonAnnotationStrategy;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
@@ -17,6 +18,8 @@ public class JsonOrmerTest {
     public void generateFile() throws IOException {
         File file = new File(System.getProperty("user.dir") + "/src/test/resources/test.json");
         String json = FileUtils.readFileToString(file, Charset.forName("UTF-8"));
-        new JsonOrmer().generateFile("com.qchery", "User", json);
+        JsonOrmer jsonOrmer = new JsonOrmer();
+        jsonOrmer.setAnnotationStrategy(new FastjsonAnnotationStrategy());
+        jsonOrmer.generateFile("com.qchery", "User", json);
     }
 }

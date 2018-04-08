@@ -18,6 +18,10 @@ public class FieldInfo {
      * 属性名
      */
     private String fieldName;
+    /**
+     * 注解名称
+     */
+    private String annotationName;
 
     public FieldInfo(Field field) {
         this(ClassInfo.of(field.getType()), field.getName());
@@ -52,6 +56,14 @@ public class FieldInfo {
 
     public IClassInfo getClassInfo() {
         return classInfo;
+    }
+
+    public String getAnnotationName() {
+        return annotationName;
+    }
+
+    public void setAnnotationName(String annotationName) {
+        this.annotationName = annotationName;
     }
 
     @Override
