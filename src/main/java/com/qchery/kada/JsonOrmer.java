@@ -1,7 +1,6 @@
 package com.qchery.kada;
 
 import com.qchery.kada.builder.java.AnnotationStrategy;
-import com.qchery.kada.builder.java.JacksonAnnotationStrategy;
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.descriptor.file.FileInfo;
@@ -31,7 +30,6 @@ public class JsonOrmer {
 
     public JsonOrmer() {
         this.nameConvertor = new DefaultNameConvertor();
-        this.annotationStrategy = new JacksonAnnotationStrategy();
     }
 
     public JsonOrmer(NameConvertor nameConvertor) {
@@ -135,8 +133,10 @@ public class JsonOrmer {
     private StringBuilder declareFileds(IClassInfo classInfo) {
         StringBuilder fields = new StringBuilder();
         for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
-            fields.append(annotationStrategy.declareAnnotation(fieldInfo.getAnnotationName()))
-                    .append("private ").append(getGenericSimpleType(fieldInfo))
+            if (annotationStrategy != null) {
+                fields.append(annotationStrategy.declareAnnotation(fieldInfo.getAnnotationName()));
+            }
+            fields.append("private ").append(getGenericSimpleType(fieldInfo))
                     .append(" ").append(fieldInfo.getFieldName()).append(";\n");
         }
         return fields;
@@ -161,7 +161,9 @@ public class JsonOrmer {
             }
         }
         importSet.add("java.io.Serializable");
-        importSet.add(annotationStrategy.dependClass());
+        if (annotationStrategy != null) {
+            importSet.add(annotationStrategy.dependClass());
+        }
 
         StringBuilder imports = new StringBuilder();
         for (String importType : importSet) {
