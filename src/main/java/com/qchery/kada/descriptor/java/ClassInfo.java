@@ -1,7 +1,6 @@
 package com.qchery.kada.descriptor.java;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ClassInfo implements IClassInfo {
 
@@ -9,6 +8,10 @@ public class ClassInfo implements IClassInfo {
      * 类型声明
      */
     private TypeInfo typeInfo;
+    /**
+     * import 列表
+     */
+    private Set<String> importTypes;
     /**
      * 字段
      */
@@ -33,6 +36,7 @@ public class ClassInfo implements IClassInfo {
         // 当类型不为基础类型时，分配字段列表
         if (!typeInfo.isPrimitive()) {
             fieldInfos = new ArrayList<>();
+            importTypes = new HashSet<>();
         }
     }
 
@@ -60,6 +64,9 @@ public class ClassInfo implements IClassInfo {
             throw new RuntimeException("基础类型无字段描述");
         }
         this.fieldInfos.add(fieldInfo);
+        if (!fieldInfo.isPrimitive()) {
+            this.importTypes.add(fieldInfo.getType());
+        }
     }
 
     @Override
@@ -70,6 +77,11 @@ public class ClassInfo implements IClassInfo {
     @Override
     public String getType() {
         return typeInfo.getType();
+    }
+
+    @Override
+    public Set<String> getImportTypes() {
+        return this.importTypes;
     }
 
 }

@@ -1,5 +1,7 @@
 package com.qchery.kada.descriptor.java;
 
+import com.qchery.kada.utils.StringUtil;
+
 import java.lang.reflect.Field;
 
 /**
@@ -47,7 +49,11 @@ public class FieldInfo {
      * 不包含全路径的类型
      */
     public String getSimpleType() {
-        return classInfo.getClassName();
+        String className = classInfo.getClassName();
+        if (classInfo instanceof GenericClassInfo) {
+            className += String.format("<%s>", ((GenericClassInfo) classInfo).getInnerClass().getClassName());
+        }
+        return className;
     }
 
     public boolean isNormal() {
@@ -76,5 +82,9 @@ public class FieldInfo {
                 "classInfo=" + classInfo +
                 ", fieldName='" + fieldName + '\'' +
                 '}';
+    }
+
+    public String getFcuFieldName() {
+        return StringUtil.upperFirstChar(getFieldName());
     }
 }

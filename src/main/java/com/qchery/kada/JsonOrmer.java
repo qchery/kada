@@ -7,14 +7,12 @@ import com.qchery.kada.descriptor.file.FileInfo;
 import com.qchery.kada.descriptor.java.FieldInfo;
 import com.qchery.kada.descriptor.java.GenericClassInfo;
 import com.qchery.kada.descriptor.java.IClassInfo;
-import com.qchery.kada.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Chery
@@ -85,10 +83,10 @@ public class JsonOrmer {
 
     private StringBuilder declareSetGetMethods(IClassInfo classInfo) {
         StringBuilder methods = new StringBuilder();
-        for (FieldInfo descriptor : classInfo.getFieldInfos()) {
-            String javaType = getGenericSimpleType(descriptor);
-            String fieldName = descriptor.getFieldName();
-            String fcuFieldName = StringUtil.upperFirstChar(fieldName);
+        for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
+            String javaType = fieldInfo.getSimpleType();
+            String fcuFieldName = fieldInfo.getFcuFieldName();
+            String fieldName = fieldInfo.getFieldName();
             methods.append(formatGetMethod(javaType, fieldName, fcuFieldName));
             methods.append(formatSetMethod(javaType, fieldName, fcuFieldName));
         }
@@ -136,37 +134,21 @@ public class JsonOrmer {
             if (annotationStrategy != null) {
                 fields.append(annotationStrategy.declareAnnotation(fieldInfo.getAnnotationName()));
             }
-            fields.append("private ").append(getGenericSimpleType(fieldInfo))
+            fields.append("private ").append(fieldInfo.getSimpleType())
                     .append(" ").append(fieldInfo.getFieldName()).append(";\n");
         }
         return fields;
     }
 
-    private String getGenericSimpleType(FieldInfo descriptor) {
-        String simpleType = descriptor.getSimpleType();
-        // 拼接泛型类型
-        IClassInfo fieldClassInfo = descriptor.getClassInfo();
-        if (fieldClassInfo instanceof GenericClassInfo) {
-            String innerClassName = ((GenericClassInfo) fieldClassInfo).getInnerClass().getClassName();
-            simpleType = simpleType + "<" + innerClassName + ">";
-        }
-        return simpleType;
-    }
-
     private String declareImports(IClassInfo classInfo) {
-        Set<String> importSet = new HashSet<>();
-        for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
-            if (!fieldInfo.isPrimitive()) {
-                importSet.add(fieldInfo.getType());
-            }
-        }
-        importSet.add("java.io.Serializable");
-        if (annotationStrategy != null) {
-            importSet.add(annotationStrategy.dependClass());
-        }
 
         StringBuilder imports = new StringBuilder();
-        for (String importType : importSet) {
+        Collection<String> importTypes = classInfo.getImportTypes();
+        importTypes.add("java.io.Serializable");
+        if (annotationStrategy != null) {
+            importTypes.add(annotationStrategy.dependClass());
+        }
+        for (String importType : importTypes) {
             imports.append("import ").append(importType).append(";\n");
         }
 

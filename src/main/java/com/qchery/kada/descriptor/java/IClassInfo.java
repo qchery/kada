@@ -1,6 +1,7 @@
 package com.qchery.kada.descriptor.java;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Chery
@@ -46,4 +47,11 @@ public interface IClassInfo {
      * 包含全路径的类型
      */
     String getType();
+
+    /**
+     * 获取需要导入的类型
+     *
+     * @return 需要导入的类型
+     */
+    Set<String> getImportTypes();
 }
