@@ -1,9 +1,9 @@
 package com.qchery.kada;
 
-import com.qchery.kada.builder.java.AnnotationStrategy;
+import com.qchery.kada.builder.ClassInfoFileBuilder;
+import com.qchery.kada.builder.java.JavaClassInfoFileBuilder;
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
-import com.qchery.kada.descriptor.file.FileInfo;
 import com.qchery.kada.descriptor.java.FieldInfo;
 import com.qchery.kada.descriptor.java.GenericClassInfo;
 import com.qchery.kada.descriptor.java.IClassInfo;
@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Chery
@@ -24,14 +22,20 @@ public class JsonOrmer {
 
     private NameConvertor nameConvertor;
 
-    private AnnotationStrategy annotationStrategy;
+    private ClassInfoFileBuilder classInfoFileBuilder;
 
     public JsonOrmer() {
-        this.nameConvertor = new DefaultNameConvertor();
+        this(new JavaClassInfoFileBuilder());
     }
 
-    public JsonOrmer(NameConvertor nameConvertor) {
+    public JsonOrmer(ClassInfoFileBuilder classInfoFileBuilder) {
+        this.nameConvertor = new DefaultNameConvertor();
+        this.classInfoFileBuilder = classInfoFileBuilder;
+    }
+
+    public JsonOrmer(NameConvertor nameConvertor, ClassInfoFileBuilder classInfoFileBuilder) {
         this.nameConvertor = nameConvertor;
+        this.classInfoFileBuilder = classInfoFileBuilder;
     }
 
     public void generateFile(String packageName, String className, String json) {
@@ -57,102 +61,11 @@ public class JsonOrmer {
             logger.info("msg={} | javaType={}", "生成类文件", classInfo.getType());
             // 生成类文件
             try {
-                FileCreator.createFile(getFileInfo(classInfo));
+                FileCreator.createFile(classInfoFileBuilder.getFileInfo(classInfo));
             } catch (IOException e) {
                 logger.error("msg={}", "文件生成失败", e);
             }
         }
-    }
-
-    private FileInfo getFileInfo(IClassInfo classInfo) {
-        String packagePath = classInfo.getPackageName().replaceAll("\\.", "/");
-        String fileName = classInfo.getClassName() + ".java";
-        String content = String.format("package %s;\n\n%s"
-                        + "public class %s implements Serializable {\n%s}",
-                classInfo.getPackageName(), declareImports(classInfo),
-                classInfo.getClassName(), getMainContent(classInfo));
-        return new FileInfo(packagePath, fileName, content);
-    }
-
-    private String getMainContent(IClassInfo classInfo) {
-        StringBuilder fields = declareFileds(classInfo);
-        StringBuilder setGetMethods = declareSetGetMethods(classInfo);
-        StringBuilder toStringMethod = declareToString(classInfo);
-        return fields.append(setGetMethods).append(toStringMethod).toString();
-    }
-
-    private StringBuilder declareSetGetMethods(IClassInfo classInfo) {
-        StringBuilder methods = new StringBuilder();
-        for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
-            String javaType = fieldInfo.getSimpleType();
-            String fcuFieldName = fieldInfo.getFcuFieldName();
-            String fieldName = fieldInfo.getFieldName();
-            methods.append(formatGetMethod(javaType, fieldName, fcuFieldName));
-            methods.append(formatSetMethod(javaType, fieldName, fcuFieldName));
-        }
-        return methods;
-    }
-
-    private String formatSetMethod(String javaType, String fieldName,
-                                   String fcuFieldName) {
-        String setMethod = String.format("public void set%s(%s %s) {\n"
-                + "    this.%s = %s;\n"
-                + "}\n", fcuFieldName, javaType, fieldName, fieldName, fieldName);
-        return setMethod;
-    }
-
-    private String formatGetMethod(String javaType, String fieldName,
-                                   String fcuFieldName) {
-        String getMethod = String.format("public %s get%s() {\n"
-                + "    return this.%s;\n"
-                + "}\n", javaType, fcuFieldName, fieldName);
-        return getMethod;
-    }
-
-    private StringBuilder declareToString(IClassInfo classInfo) {
-        StringBuilder toStringMethod = new StringBuilder("@Override\npublic String toString() {\n" +
-                "return \"").append(classInfo.getClassName()).append(" [\"");
-        List<FieldInfo> fieldInfos = classInfo.getFieldInfos();
-        for (int i = 0; i < fieldInfos.size(); i++) {
-            FieldInfo descriptor = fieldInfos.get(i);
-            toStringMethod.append("+").append("\"")
-                    .append(descriptor.getFieldName()).append(" = \"+")
-                    .append(descriptor.getFieldName()).append("+ \"");
-            if (i == fieldInfos.size() - 1) {
-                toStringMethod.append("]\";");
-            } else {
-                toStringMethod.append(",\"\n");
-            }
-        }
-        toStringMethod.append("}");
-        return toStringMethod;
-    }
-
-    private StringBuilder declareFileds(IClassInfo classInfo) {
-        StringBuilder fields = new StringBuilder();
-        for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
-            if (annotationStrategy != null) {
-                fields.append(annotationStrategy.declareAnnotation(fieldInfo.getAnnotationName()));
-            }
-            fields.append("private ").append(fieldInfo.getSimpleType())
-                    .append(" ").append(fieldInfo.getFieldName()).append(";\n");
-        }
-        return fields;
-    }
-
-    private String declareImports(IClassInfo classInfo) {
-
-        StringBuilder imports = new StringBuilder();
-        Collection<String> importTypes = classInfo.getImportTypes();
-        importTypes.add("java.io.Serializable");
-        if (annotationStrategy != null) {
-            importTypes.add(annotationStrategy.dependClass());
-        }
-        for (String importType : importTypes) {
-            imports.append("import ").append(importType).append(";\n");
-        }
-
-        return imports.toString();
     }
 
     private boolean isClassExist(IClassInfo classInfo) {
@@ -163,10 +76,6 @@ public class JsonOrmer {
             classExist = false;
         }
         return classExist;
-    }
-
-    public void setAnnotationStrategy(AnnotationStrategy annotationStrategy) {
-        this.annotationStrategy = annotationStrategy;
     }
 
 }
