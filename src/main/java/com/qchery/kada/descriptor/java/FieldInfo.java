@@ -17,6 +17,10 @@ public class FieldInfo {
      */
     private IClassInfo classInfo;
     /**
+     * 注释
+     */
+    private String comment;
+    /**
      * 属性名
      */
     private String fieldName;
@@ -86,5 +90,13 @@ public class FieldInfo {
 
     public String getFcuFieldName() {
         return StringUtil.upperFirstChar(getFieldName());
+    }
+
+    public String getComment() {
+        return this.comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

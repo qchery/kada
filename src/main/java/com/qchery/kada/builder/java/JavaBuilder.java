@@ -2,12 +2,10 @@ package com.qchery.kada.builder.java;
 
 import com.qchery.kada.builder.FileBuilder;
 import com.qchery.kada.descriptor.Mapping;
-import com.qchery.kada.descriptor.MappingItem;
-import com.qchery.kada.utils.StringUtil;
+import com.qchery.kada.descriptor.java.FieldInfo;
+import com.qchery.kada.descriptor.java.IClassInfo;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * 映射生成Java类
@@ -19,54 +17,52 @@ public class JavaBuilder implements FileBuilder {
 
     @Override
     public String getContent(Mapping mapping) {
-        List<MappingItem> mappingItems = mapping.getMappingItems();
+        IClassInfo classInfo = mapping.getClassInfo();
         return String.format("package %s;\n\n"
-                + "%s/** %s */"
-                + "public class %s implements Serializable {\n"
-                + "%s"
-                + "}", mapping.getPackageName(), declareImports(mappingItems), mapping.getTableComment(), mapping.getClassName(), getMainContent(mapping));
+                        + "%s/** %s */"
+                        + "public class %s implements Serializable {\n"
+                        + "%s"
+                        + "}", classInfo.getPackageName(), declareImports(classInfo),
+                classInfo.getComment(), classInfo.getClassName(), getMainContent(classInfo));
     }
 
-    protected String getMainContent(Mapping mapping) {
-        List<MappingItem> mappingItems = mapping.getMappingItems();
-        StringBuilder fields = declareFileds(mappingItems);
-        StringBuilder setGetMethods = declareSetGetMethods(mappingItems);
-        StringBuilder toStringMethod = declareToString(mapping, mappingItems);
+    protected String getMainContent(IClassInfo classInfo) {
+        List<FieldInfo> fieldInfos = classInfo.getFieldInfos();
+        StringBuilder fields = declareFileds(fieldInfos);
+        StringBuilder setGetMethods = declareSetGetMethods(fieldInfos);
+        StringBuilder toStringMethod = declareToString(classInfo, fieldInfos);
         return fields.append(setGetMethods).append(toStringMethod).toString();
     }
 
-    private StringBuilder declareSetGetMethods(List<MappingItem> mappingItems) {
+    private StringBuilder declareSetGetMethods(List<FieldInfo> fieldInfos) {
         StringBuilder methods = new StringBuilder();
-        for (MappingItem mappingItem : mappingItems) {
-            String javaType = mappingItem.getSimpleJavaType();
-            String fieldName = mappingItem.getFieldName();
-            String fcuFieldName = StringUtil.upperFirstChar(fieldName);
-            methods.append(formatGetMethod(javaType, fieldName, fcuFieldName));
-            methods.append(formatSetMethod(javaType, fieldName, fcuFieldName));
+        for (FieldInfo fieldInfo : fieldInfos) {
+            methods.append(formatGetMethod(fieldInfo));
+            methods.append(formatSetMethod(fieldInfo));
         }
         return methods;
     }
 
-    private StringBuilder declareFileds(List<MappingItem> mappingItems) {
+    private StringBuilder declareFileds(List<FieldInfo> fieldInfos) {
         StringBuilder fields = new StringBuilder();
-        for (MappingItem mappingItem : mappingItems) {
-            String fieldName = mappingItem.getFieldName();
-            fields.append("/** ").append(mappingItem.getComment())
-                    .append(" */ private ").append(mappingItem.getSimpleJavaType())
+        for (FieldInfo fieldInfo : fieldInfos) {
+            String fieldName = fieldInfo.getFieldName();
+            fields.append("/** ").append(fieldInfo.getComment())
+                    .append(" */ private ").append(fieldInfo.getSimpleType())
                     .append(" ").append(fieldName).append(";\n");
         }
         return fields;
     }
 
-    private StringBuilder declareToString(Mapping mapping, List<MappingItem> mappingItems) {
+    private StringBuilder declareToString(IClassInfo classInfo, List<FieldInfo> fieldInfos) {
         StringBuilder toStringMethod = new StringBuilder("@Override\npublic String toString() {\n" +
-                "return \"").append(mapping.getClassName()).append(" [\"");
-        for (int i = 0; i < mappingItems.size(); i++) {
-            MappingItem mappingItem = mappingItems.get(i);
+                "return \"").append(classInfo.getClassName()).append(" [\"");
+        for (int i = 0; i < fieldInfos.size(); i++) {
+            FieldInfo fieldInfo = fieldInfos.get(i);
             toStringMethod.append("+").append("\"")
-                    .append(mappingItem.getFieldName()).append(" = \"+")
-                    .append(mappingItem.getFieldName()).append("+ \"");
-            if (i == mappingItems.size() - 1) {
+                    .append(fieldInfo.getFieldName()).append(" = \"+")
+                    .append(fieldInfo.getFieldName()).append("+ \"");
+            if (i == fieldInfos.size() - 1) {
                 toStringMethod.append("]\";");
             } else {
                 toStringMethod.append(",\"\n");
@@ -76,38 +72,28 @@ public class JavaBuilder implements FileBuilder {
         return toStringMethod;
     }
 
-    private String formatSetMethod(String javaType, String fieldName,
-                                   String fcuFieldName) {
+    private String formatSetMethod(FieldInfo fieldInfo) {
+        String fieldName = fieldInfo.getFieldName();
         String setMethod = String.format("public void set%s(%s %s) {\n"
-                + "    this.%s = %s;\n"
-                + "}\n", fcuFieldName, javaType, fieldName, fieldName, fieldName);
+                        + "    this.%s = %s;\n"
+                        + "}\n", fieldInfo.getFcuFieldName(),
+                fieldInfo.getSimpleType(), fieldName, fieldName, fieldName);
         return setMethod;
     }
 
-    private String formatGetMethod(String javaType, String fieldName,
-                                   String fcuFieldName) {
+    private String formatGetMethod(FieldInfo fieldInfo) {
         String getMethod = String.format("public %s get%s() {\n"
-                + "    return this.%s;\n"
-                + "}\n", javaType, fcuFieldName, fieldName);
+                        + "    return this.%s;\n"
+                        + "}\n", fieldInfo.getSimpleType(),
+                fieldInfo.getFcuFieldName(), fieldInfo.getFieldName());
         return getMethod;
     }
 
-    private StringBuilder declareImports(List<MappingItem> mappingItems) {
+    private StringBuilder declareImports(IClassInfo classInfo) {
         StringBuilder imports = new StringBuilder();
-        Set<String> importSet = new HashSet<>();
-        for (MappingItem mappingItem : mappingItems) {
-            String type = mappingItem.getJavaType();
-
-            if (!mappingItem.getJavaType().equals(mappingItem.getSimpleJavaType())) {
-                importSet.add(type);
-            }
-        }
-
-        importSet.add("java.io.Serializable");
-        for (String importType : importSet) {
+        for (String importType : classInfo.getImportTypes()) {
             imports.append("import ").append(importType).append(";\n");
         }
-
         return imports;
     }
 

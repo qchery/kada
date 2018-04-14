@@ -103,12 +103,14 @@ public class DBOrmer {
         tableInfo.addAll(columnInfos);
         String className = nameConvertor.toClassName(tableInfo.getTableName());
         ClassInfo classInfo = ClassInfo.of(packageName, className);
+        classInfo.setComment(tableInfo.getComment());
 
         ArrayList<MappingItem> mappingItems = new ArrayList<>();
         for (ColumnInfo columnInfo : tableInfo.getColumnInfos()) {
             TypeInfo javaType = TypeMap.getJavaType(columnInfo.getDbType());
             String fieldName = nameConvertor.toFieldName(columnInfo.getColumnName());
             FieldInfo fieldInfo = new FieldInfo(ClassInfo.of(javaType), fieldName);
+            fieldInfo.setComment(columnInfo.getComment());
             classInfo.addFieldInfo(fieldInfo);
             mappingItems.add(new MappingItem(fieldInfo, columnInfo));
         }

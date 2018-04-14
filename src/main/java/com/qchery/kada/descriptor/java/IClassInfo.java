@@ -9,6 +9,13 @@ import java.util.Set;
  */
 public interface IClassInfo {
     /**
+     * 获取类注释
+     *
+     * @return 类注释
+     */
+    String getComment();
+
+    /**
      * 获取包名
      *
      * @return 包名

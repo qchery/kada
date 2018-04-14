@@ -5,6 +5,10 @@ import java.util.*;
 public class ClassInfo implements IClassInfo {
 
     /**
+     * 类注释
+     */
+    private String comment;
+    /**
      * 类型声明
      */
     private TypeInfo typeInfo;
@@ -38,6 +42,15 @@ public class ClassInfo implements IClassInfo {
             fieldInfos = new ArrayList<>();
             importTypes = new HashSet<>();
         }
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    @Override
+    public String getComment() {
+        return this.comment;
     }
 
     @Override
