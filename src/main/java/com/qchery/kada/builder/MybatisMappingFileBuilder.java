@@ -16,7 +16,7 @@ import com.qchery.kada.utils.XMLUtil;
  * @author Chery
  * @date 2016年5月15日 - 下午9:24:22
  */
-public class MybatisBuilder implements FileBuilder {
+public class MybatisMappingFileBuilder implements MappingFileBuilder {
 
     /**
      * <mapper namespace="cn.chery.cmail.antispam.dao.AsHoneypotDao">

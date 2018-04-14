@@ -1,6 +1,6 @@
 package com.qchery.kada.builder.java;
 
-import com.qchery.kada.builder.FileBuilder;
+import com.qchery.kada.builder.MappingFileBuilder;
 import com.qchery.kada.descriptor.Mapping;
 
 /**
@@ -9,15 +9,15 @@ import com.qchery.kada.descriptor.Mapping;
  * @author Chery
  * @date 2016年5月15日 - 下午9:24:39
  */
-public class JavaBuilder implements FileBuilder {
+public class JavaMappingFileBuilder implements MappingFileBuilder {
 
     private JavaContentBuilder contentBuilder;
 
-    public JavaBuilder() {
+    public JavaMappingFileBuilder() {
         this.contentBuilder = new OriginalJavaContentBuilder();
     }
 
-    public JavaBuilder(JavaContentBuilder contentBuilder) {
+    public JavaMappingFileBuilder(JavaContentBuilder contentBuilder) {
         this.contentBuilder = contentBuilder;
     }
 

@@ -11,7 +11,7 @@ import java.nio.charset.Charset;
  * @author Chery
  * @date 2015年2月27日-下午4:17:17
  */
-public interface FileBuilder {
+public interface MappingFileBuilder {
 
     /**
      * 根据类名获取文件名

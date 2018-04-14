@@ -1,6 +1,6 @@
 package com.qchery.kada;
 
-import com.qchery.kada.builder.FileBuilder;
+import com.qchery.kada.builder.MappingFileBuilder;
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.descriptor.Mapping;
@@ -24,11 +24,11 @@ import java.util.List;
  */
 public class JavaOrmer {
 
-    private FileBuilder fileBuilder;
+    private MappingFileBuilder mappingFileBuilder;
     private NameConvertor convertor = new DefaultNameConvertor();
 
-    public JavaOrmer(FileBuilder fileBuilder) {
-        this.fileBuilder = fileBuilder;
+    public JavaOrmer(MappingFileBuilder mappingFileBuilder) {
+        this.mappingFileBuilder = mappingFileBuilder;
     }
 
     public void setConvertor(NameConvertor convertor) {
@@ -43,7 +43,7 @@ public class JavaOrmer {
      */
     public void generateFile(Class<?> clazz) throws IOException {
         Mapping mapping = getMapping(clazz);
-        FileCreator.createFile(fileBuilder.getFileInfo(mapping));
+        FileCreator.createFile(mappingFileBuilder.getFileInfo(mapping));
     }
 
     private Mapping getMapping(Class<?> clazz) {

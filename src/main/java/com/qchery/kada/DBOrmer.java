@@ -1,6 +1,6 @@
 package com.qchery.kada;
 
-import com.qchery.kada.builder.FileBuilder;
+import com.qchery.kada.builder.MappingFileBuilder;
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.db.DBHelper;
@@ -37,7 +37,7 @@ public class DBOrmer {
 
     private DBHelper dbHelper;    // 支持多数据库
     private NameConvertor nameConvertor;
-    private FileBuilder fileBuilder;
+    private MappingFileBuilder mappingFileBuilder;
     private TableNameFilter tableNameFilter;
     private DBScanner dbScanner = new DefaultDBScanner();
     private Charset fileCharset;
@@ -92,7 +92,7 @@ public class DBOrmer {
     private void generateFile(Connection conn, TableInfo tableInfo) {
         try {
             Mapping mapping = getMapping(conn, tableInfo);
-            FileCreator.createFile(fileBuilder.getFileInfo(mapping));
+            FileCreator.createFile(mappingFileBuilder.getFileInfo(mapping));
         } catch (IOException e) {
             logger.error("msg={}", "文件生成失败", e);
         }
@@ -126,19 +126,19 @@ public class DBOrmer {
         private static final String DEFAULT_PACKAGE_NAME = "com.qchery";
 
         private DBHelper dbHelper;
-        private FileBuilder fileBuilder;
+        private MappingFileBuilder mappingFileBuilder;
         private NameConvertor nameConvertor;
         private TableNameFilter tableNameFilter;
         private Charset charset;
         private String packageName;
 
         public DBOrmer build() {
-            if (null == dbHelper || null == fileBuilder) {
-                throw new ConfigException("dbHelper 与 FileBuilder 不能为空");
+            if (null == dbHelper || null == mappingFileBuilder) {
+                throw new ConfigException("dbHelper 与 MappingFileBuilder 不能为空");
             }
             DBOrmer dbOrmer = new DBOrmer();
             dbOrmer.dbHelper = dbHelper;
-            dbOrmer.fileBuilder = fileBuilder;
+            dbOrmer.mappingFileBuilder = mappingFileBuilder;
             dbOrmer.tableNameFilter = tableNameFilter;
 
             // 设置 NameConvertor
@@ -166,8 +166,8 @@ public class DBOrmer {
             return this;
         }
 
-        public DBOrmerBuilder fileBuilder(FileBuilder fileBuilder) {
-            this.fileBuilder = fileBuilder;
+        public DBOrmerBuilder fileBuilder(MappingFileBuilder mappingFileBuilder) {
+            this.mappingFileBuilder = mappingFileBuilder;
             return this;
         }
 
