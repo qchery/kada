@@ -1,4 +1,4 @@
-package com.qchery.kada.model.hibernate;
+package com.qchery.kada.builder.hibernate.model;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;

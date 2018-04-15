@@ -1,6 +1,6 @@
 package com.qchery.kada;
 
-import com.qchery.kada.builder.HibernateMappingFileBuilder;
+import com.qchery.kada.builder.hibernate.HibernateMappingFileBuilder;
 import com.qchery.kada.builder.java.JavaMappingFileBuilder;
 import com.qchery.kada.builder.mybatis.MybatisMappingFileBuilder;
 import com.qchery.kada.convertor.IgnorePrefixNameConvertor;

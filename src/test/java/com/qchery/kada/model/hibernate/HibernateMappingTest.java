@@ -1,5 +1,8 @@
 package com.qchery.kada.model.hibernate;
 
+import com.qchery.kada.builder.hibernate.model.Clazz;
+import com.qchery.kada.builder.hibernate.model.HibernateMapping;
+import com.qchery.kada.builder.hibernate.model.Property;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.junit.Test;

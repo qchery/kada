@@ -1,4 +1,4 @@
-package com.qchery.kada.model.ibatis;
+package com.qchery.kada.builder.mybatis.model;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;

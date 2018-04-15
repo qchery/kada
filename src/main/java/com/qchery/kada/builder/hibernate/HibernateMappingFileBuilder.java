@@ -1,11 +1,12 @@
-package com.qchery.kada.builder;
+package com.qchery.kada.builder.hibernate;
 
+import com.qchery.kada.builder.AbstractMappingFileBuilder;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
-import com.qchery.kada.model.hibernate.Clazz;
-import com.qchery.kada.model.hibernate.CompositeId;
-import com.qchery.kada.model.hibernate.HibernateMapping;
-import com.qchery.kada.model.hibernate.Property;
+import com.qchery.kada.builder.hibernate.model.Clazz;
+import com.qchery.kada.builder.hibernate.model.CompositeId;
+import com.qchery.kada.builder.hibernate.model.HibernateMapping;
+import com.qchery.kada.builder.hibernate.model.Property;
 import com.qchery.kada.utils.XMLUtil;
 
 import java.util.ArrayList;

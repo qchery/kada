@@ -1,6 +1,6 @@
-package com.qchery.kada.model.ibatis;
+package com.qchery.kada.builder.mybatis.model;
 
-import com.qchery.kada.model.ibatis.converter.UpdateTagConverter;
+import com.qchery.kada.builder.mybatis.model.converter.UpdateTagConverter;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;

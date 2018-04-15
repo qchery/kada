@@ -1,4 +1,4 @@
-package com.qchery.kada.model.hibernate;
+package com.qchery.kada.builder.hibernate.model;
 
 import java.util.ArrayList;
 import java.util.List;

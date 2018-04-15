@@ -1,6 +1,6 @@
-package com.qchery.kada.model.ibatis.converter;
+package com.qchery.kada.builder.mybatis.model.converter;
 
-import com.qchery.kada.model.ibatis.UpdateTag;
+import com.qchery.kada.builder.mybatis.model.UpdateTag;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;

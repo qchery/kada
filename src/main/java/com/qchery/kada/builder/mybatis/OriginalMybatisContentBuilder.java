@@ -1,8 +1,8 @@
 package com.qchery.kada.builder.mybatis;
 
+import com.qchery.kada.builder.mybatis.model.*;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
-import com.qchery.kada.model.ibatis.*;
 import com.qchery.kada.utils.XMLUtil;
 
 import java.util.ArrayList;

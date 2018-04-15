@@ -1,4 +1,4 @@
-package com.qchery.kada.model.ibatis;
+package com.qchery.kada.builder.mybatis.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;

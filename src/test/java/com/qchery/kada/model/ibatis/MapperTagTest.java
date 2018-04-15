@@ -1,5 +1,6 @@
 package com.qchery.kada.model.ibatis;
 
+import com.qchery.kada.builder.mybatis.model.*;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.junit.Test;
