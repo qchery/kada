@@ -19,18 +19,18 @@ public class FileCreator {
 
     private static Logger logger = LoggerFactory.getLogger(FileCreator.class);
 
-    public static void createFile(FileInfo fileInfo)
+    public static void createFile(String rootPath, FileInfo fileInfo)
             throws IOException {
 
-        File file = newFile(fileInfo.getFileName(), fileInfo.getPackagePath());
+        File file = newFile(rootPath, fileInfo);
         try (FileOutputStream output = new FileOutputStream(file)) {
             IOUtils.write(fileInfo.getContent(), output, fileInfo.getCharset());
         }
     }
 
-    private static File newFile(String fileName, String packagePath) throws IOException {
+    private static File newFile(String rootPath, FileInfo fileInfo) throws IOException {
 
-        File destDir = new File(getFileStorageDir(packagePath));
+        File destDir = new File(getFileStorageDir(rootPath, fileInfo.getPackagePath()));
         if (!destDir.exists()) {
             boolean mkdirs = destDir.mkdirs();
             if (!mkdirs) {
@@ -38,7 +38,9 @@ public class FileCreator {
             }
         }
 
-        File destFile = new File(destDir.getAbsolutePath() + File.separatorChar + fileName);
+        File destFile = new File(destDir.getAbsolutePath() + File.separatorChar + fileInfo.getFileName());
+        logger.debug("msg={} | fileStorePath={}", "创建文件", destFile.getAbsolutePath());
+
         if (!destFile.exists()) {
             boolean flag = destFile.createNewFile();
             if (!flag) {
@@ -48,17 +50,20 @@ public class FileCreator {
         return destFile;
     }
 
-    private static String getFileStorageDir(String packagePath) {
-        String resDir = packagePath;
+    private static String getFileStorageDir(String rootPath, String packagePath) {
+        String resourceDir = packagePath;
 
-        String srcPath = System.getProperty("user.dir") + File.separatorChar
-                + "src" + File.separatorChar;
-        if (null == resDir) {
-            return srcPath;
+        rootPath = appendSeparator(rootPath);
+        if (null == resourceDir) {
+            return rootPath;
         }
 
-        resDir = srcPath + resDir;
-        return resDir.endsWith("/") ? resDir : resDir + File.separatorChar;
+        resourceDir = rootPath + resourceDir;
+        return appendSeparator(resourceDir);
+    }
+
+    private static String appendSeparator(String resDir) {
+        return resDir.endsWith(File.separator) ? resDir : resDir + File.separatorChar;
     }
 
 }

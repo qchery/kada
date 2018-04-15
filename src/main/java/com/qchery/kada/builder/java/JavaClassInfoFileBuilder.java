@@ -15,7 +15,7 @@ public class JavaClassInfoFileBuilder implements ClassInfoFileBuilder {
     private JavaContentBuilder javaContentBuilder;
 
     public JavaClassInfoFileBuilder() {
-        this.javaContentBuilder = new OriginalJavaContentBuilder();
+        this.javaContentBuilder = new TemplateJavaContentBuilder();
     }
 
     public JavaClassInfoFileBuilder(JavaContentBuilder javaContentBuilder) {

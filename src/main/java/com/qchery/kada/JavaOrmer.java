@@ -25,7 +25,10 @@ public class JavaOrmer {
     private MappingFileBuilder mappingFileBuilder;
     private NameConvertor convertor = new DefaultNameConvertor();
 
-    public JavaOrmer(MappingFileBuilder mappingFileBuilder) {
+    private String rootPath;
+
+    public JavaOrmer(String rootPath, MappingFileBuilder mappingFileBuilder) {
+        this.rootPath = rootPath;
         this.mappingFileBuilder = mappingFileBuilder;
     }
 
@@ -41,7 +44,7 @@ public class JavaOrmer {
      */
     public void generateFile(Class<?> clazz) throws IOException {
         Mapping mapping = getMapping(clazz);
-        FileCreator.createFile(mappingFileBuilder.build(mapping));
+        FileCreator.createFile(rootPath, mappingFileBuilder.build(mapping));
     }
 
     private Mapping getMapping(Class<?> clazz) {

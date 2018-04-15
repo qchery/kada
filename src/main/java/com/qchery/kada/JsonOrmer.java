@@ -2,6 +2,8 @@ package com.qchery.kada;
 
 import com.qchery.kada.builder.ClassInfoFileBuilder;
 import com.qchery.kada.builder.java.JavaClassInfoFileBuilder;
+import com.qchery.kada.builder.java.JavaContentBuilder;
+import com.qchery.kada.builder.java.TemplateJavaContentBuilder;
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.descriptor.java.FieldInfo;
@@ -24,18 +26,20 @@ public class JsonOrmer {
 
     private ClassInfoFileBuilder classInfoFileBuilder;
 
-    public JsonOrmer() {
-        this(new JavaClassInfoFileBuilder());
+    private String rootPath;
+
+    public JsonOrmer(String rootPath) {
+        this(rootPath, new TemplateJavaContentBuilder());
     }
 
-    public JsonOrmer(ClassInfoFileBuilder classInfoFileBuilder) {
-        this.nameConvertor = new DefaultNameConvertor();
-        this.classInfoFileBuilder = classInfoFileBuilder;
+    public JsonOrmer(String rootPath, JavaContentBuilder javaContentBuilder) {
+        this(rootPath, javaContentBuilder, new DefaultNameConvertor());
     }
 
-    public JsonOrmer(NameConvertor nameConvertor, ClassInfoFileBuilder classInfoFileBuilder) {
+    public JsonOrmer(String rootPath, JavaContentBuilder javaContentBuilder, NameConvertor nameConvertor) {
+        this.rootPath = rootPath;
         this.nameConvertor = nameConvertor;
-        this.classInfoFileBuilder = classInfoFileBuilder;
+        this.classInfoFileBuilder = new JavaClassInfoFileBuilder(javaContentBuilder);
     }
 
     public void generateFile(String packageName, String className, String json) {
@@ -61,7 +65,7 @@ public class JsonOrmer {
             logger.info("msg={} | javaType={}", "生成类文件", classInfo.getType());
             // 生成类文件
             try {
-                FileCreator.createFile(classInfoFileBuilder.getFileInfo(classInfo));
+                FileCreator.createFile(rootPath, classInfoFileBuilder.getFileInfo(classInfo));
             } catch (IOException e) {
                 logger.error("msg={}", "文件生成失败", e);
             }

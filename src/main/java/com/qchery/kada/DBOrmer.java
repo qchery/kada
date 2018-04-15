@@ -41,6 +41,7 @@ public class DBOrmer {
     private DBScanner dbScanner = new DefaultDBScanner();
     private Charset fileCharset;
     private String packageName;
+    private String rootPath;
 
     private Logger logger = LoggerFactory.getLogger(DBOrmer.class);
 
@@ -91,7 +92,7 @@ public class DBOrmer {
     private void generateFile(Connection conn, TableInfo tableInfo) {
         try {
             Mapping mapping = getMapping(conn, tableInfo);
-            FileCreator.createFile(mappingFileBuilder.build(mapping));
+            FileCreator.createFile(rootPath, mappingFileBuilder.build(mapping));
         } catch (IOException e) {
             logger.error("msg={}", "文件生成失败", e);
         }
@@ -128,6 +129,7 @@ public class DBOrmer {
         private TableNameFilter tableNameFilter;
         private Charset charset;
         private String packageName;
+        private String rootPath;
 
         public DBOrmer build() {
             if (null == dbHelper || null == mappingFileBuilder) {
@@ -137,6 +139,12 @@ public class DBOrmer {
             dbOrmer.dbHelper = dbHelper;
             dbOrmer.mappingFileBuilder = mappingFileBuilder;
             dbOrmer.tableNameFilter = tableNameFilter;
+
+            // 设置文件生成根路径
+            if (rootPath == null) {
+                rootPath = System.getProperty("user.dir");
+            }
+            dbOrmer.rootPath = rootPath;
 
             // 设置 NameConvertor
             if (null == nameConvertor) {
@@ -185,6 +193,17 @@ public class DBOrmer {
 
         public DBOrmerBuilder tableNameFilter(TableNameFilter tableNameFilter) {
             this.tableNameFilter = tableNameFilter;
+            return this;
+        }
+
+        /**
+         * 源码生成根路径，若不设置，则默认为 {@see System.getProperty(" user.dir ")}
+         *
+         * @param rootPath 源码根路径，不包括包路径
+         * @return DBOrmerBuilder
+         */
+        public DBOrmerBuilder rootPath(String rootPath) {
+            this.rootPath = rootPath;
             return this;
         }
     }
