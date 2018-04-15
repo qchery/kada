@@ -1,33 +1,23 @@
-package com.qchery.kada.builder;
+package com.qchery.kada.builder.mybatis;
+
+import com.qchery.kada.descriptor.Mapping;
+import com.qchery.kada.descriptor.MappingItem;
+import com.qchery.kada.model.ibatis.*;
+import com.qchery.kada.utils.XMLUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.qchery.kada.descriptor.Mapping;
-import com.qchery.kada.descriptor.MappingItem;
-import com.qchery.kada.model.ibatis.*;
-import com.qchery.kada.utils.StringUtil;
-import com.qchery.kada.utils.XMLUtil;
-
 /**
- * Mybatis配置文件建造器
- *
  * @author Chery
- * @date 2016年5月15日 - 下午9:24:22
+ * @date 2018/4/15 11:11
+ * @see TemplateMybatisContentBuilder
  */
-public class MybatisMappingFileBuilder implements MappingFileBuilder {
-
-    /**
-     * <mapper namespace="cn.chery.cmail.antispam.dao.AsHoneypotDao">
-     *     <resultMap type="asHoneypot" id="FullResultMap">
-     *         <id property="honeypotId" column="honeypot_id"/>
-     *         <result property="emailAddr" column="email_addr"/>
-     *     </resultMap>
-     * </mapper>
-     */
+@Deprecated
+public class OriginalMybatisContentBuilder implements MybatisContentBuilder {
     @Override
-    public String getContent(Mapping mapping) {
+    public String build(Mapping mapping) {
         MapperTag mapperTag = new MapperTag(String.format("%s.%sDao",
                 mapping.getPackageName(), mapping.getClassName()));
         List<MappingItem> mappingItems = mapping.getMappingItems();
@@ -42,7 +32,7 @@ public class MybatisMappingFileBuilder implements MappingFileBuilder {
 
     private ResultMapTag getResultMap(Mapping mapping, List<MappingItem> mappingItems) {
         ResultMapTag resultMapTag = new ResultMapTag("FullResultMap",
-                StringUtil.lowerFirstChar(mapping.getClassName()));
+                mapping.getClassInfo().getType());
         for (MappingItem mappingItem : mappingItems) {
             ResultTag resultTag = new ResultTag(mappingItem.getFieldName(), mappingItem.getColumnName());
             if (mappingItem.isPK()) {
@@ -78,7 +68,7 @@ public class MybatisMappingFileBuilder implements MappingFileBuilder {
     private UpdateTag getUpdateSelective(Mapping mapping, List<MappingItem> mappingItems) {
         UpdateTag updateTag = new UpdateTag();
         updateTag.setId("updateSelective");
-        updateTag.setPrefix("UPDATE " + mapping.getTableName());
+        updateTag.setPrefix("UPDATE " + mapping.getTableName() + " SET ");
         SetTag setTag = new SetTag();
         ArrayList<IfTag> ifTags = new ArrayList<>();
         for (int i = 0; i < mappingItems.size(); i++) {
@@ -114,10 +104,4 @@ public class MybatisMappingFileBuilder implements MappingFileBuilder {
 
         return updateTag;
     }
-
-    @Override
-    public String getFileName(String className) {
-        return className + "Dao.xml";
-    }
-
 }

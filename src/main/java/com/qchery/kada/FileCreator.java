@@ -19,12 +19,12 @@ public class FileCreator {
 
     private static Logger logger = LoggerFactory.getLogger(FileCreator.class);
 
-    public static void createFile(FileInfo descriptor)
+    public static void createFile(FileInfo fileInfo)
             throws IOException {
 
-        File file = newFile(descriptor.getFileName(), descriptor.getPackagePath());
+        File file = newFile(fileInfo.getFileName(), fileInfo.getPackagePath());
         try (FileOutputStream output = new FileOutputStream(file)) {
-            IOUtils.write(descriptor.getContent(), output, descriptor.getCharset());
+            IOUtils.write(fileInfo.getContent(), output, fileInfo.getCharset());
         }
     }
 

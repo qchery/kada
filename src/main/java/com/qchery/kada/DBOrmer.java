@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,7 +91,7 @@ public class DBOrmer {
     private void generateFile(Connection conn, TableInfo tableInfo) {
         try {
             Mapping mapping = getMapping(conn, tableInfo);
-            FileCreator.createFile(mappingFileBuilder.getFileInfo(mapping));
+            FileCreator.createFile(mappingFileBuilder.build(mapping));
         } catch (IOException e) {
             logger.error("msg={}", "文件生成失败", e);
         }
@@ -104,19 +103,17 @@ public class DBOrmer {
         String className = nameConvertor.toClassName(tableInfo.getTableName());
         ClassInfo classInfo = ClassInfo.of(packageName, className);
         classInfo.setComment(tableInfo.getComment());
+        Mapping mapping = new Mapping(classInfo, tableInfo);
 
-        ArrayList<MappingItem> mappingItems = new ArrayList<>();
         for (ColumnInfo columnInfo : tableInfo.getColumnInfos()) {
             TypeInfo javaType = TypeMap.getJavaType(columnInfo.getDbType());
             String fieldName = nameConvertor.toFieldName(columnInfo.getColumnName());
             FieldInfo fieldInfo = new FieldInfo(ClassInfo.of(javaType), fieldName);
             fieldInfo.setComment(columnInfo.getComment());
             classInfo.addFieldInfo(fieldInfo);
-            mappingItems.add(new MappingItem(fieldInfo, columnInfo));
+            mapping.addMappingItem(new MappingItem(fieldInfo, columnInfo));
         }
 
-        Mapping mapping = new Mapping(classInfo, tableInfo);
-        mapping.setMappingItems(mappingItems);
         mapping.setCharset(fileCharset);
         return mapping;
     }

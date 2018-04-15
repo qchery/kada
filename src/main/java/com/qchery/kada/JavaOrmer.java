@@ -13,8 +13,6 @@ import com.qchery.kada.descriptor.java.FieldInfo;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Java 对象生成 orm 配置
@@ -43,14 +41,14 @@ public class JavaOrmer {
      */
     public void generateFile(Class<?> clazz) throws IOException {
         Mapping mapping = getMapping(clazz);
-        FileCreator.createFile(mappingFileBuilder.getFileInfo(mapping));
+        FileCreator.createFile(mappingFileBuilder.build(mapping));
     }
 
     private Mapping getMapping(Class<?> clazz) {
         ClassInfo classInfo = ClassInfo.of(clazz);
         TableInfo tableInfo = new TableInfo(convertor.toTableName(clazz.getSimpleName()));
+        Mapping mapping = new Mapping(classInfo, tableInfo);
 
-        List<MappingItem> mappingItems = new ArrayList<>();
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
             ColumnInfo columnInfo = new ColumnInfo();
@@ -60,11 +58,9 @@ public class JavaOrmer {
             FieldInfo fieldInfo = new FieldInfo(field);
             classInfo.addFieldInfo(fieldInfo);
 
-            mappingItems.add(new MappingItem(fieldInfo, columnInfo));
+            mapping.addMappingItem(new MappingItem(fieldInfo, columnInfo));
         }
 
-        Mapping mapping = new Mapping(classInfo, tableInfo);
-        mapping.setMappingItems(mappingItems);
         mapping.setCharset(Charset.forName("utf-8"));
         return mapping;
     }

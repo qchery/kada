@@ -4,6 +4,7 @@ import com.qchery.kada.descriptor.db.TableInfo;
 import com.qchery.kada.descriptor.java.IClassInfo;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,11 +22,20 @@ public class Mapping {
 
     private TableInfo tableInfo;
 
-    private List<MappingItem> mappingItems;
+    private List<MappingItem> mappingItems = new ArrayList<>();
+
+    private List<MappingItem> pkItems = new ArrayList<>();
 
     public Mapping(IClassInfo classInfo, TableInfo tableInfo) {
         this.classInfo = classInfo;
         this.tableInfo = tableInfo;
+    }
+
+    public void addMappingItem(MappingItem mappingItem) {
+        if (mappingItem.isPK()) {
+            pkItems.add(mappingItem);
+        }
+        mappingItems.add(mappingItem);
     }
 
     public void setCharset(Charset charset) {
@@ -56,8 +66,8 @@ public class Mapping {
         return mappingItems;
     }
 
-    public void setMappingItems(List<MappingItem> mappingItems) {
-        this.mappingItems = mappingItems;
+    public List<MappingItem> getPkItems() {
+        return pkItems;
     }
 
     public String getPackageName() {

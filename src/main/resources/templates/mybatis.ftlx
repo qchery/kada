@@ -1,0 +1,70 @@
+<#assign classInfo = mapping.classInfo>
+<#assign mappingItems = mapping.mappingItems>
+<#assign pkItems = mapping.pkItems>
+<?xml version="1.0" encoding="${mapping.charset}" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="${classInfo.packageName}.dao.${classInfo.className}Dao">
+    <resultMap id="FullResultMap" type="${classInfo.type}">
+    <#list mappingItems as mappingItem>
+        <#if mappingItem.PK>
+        <id property="${mappingItem.fieldName}" column="${mappingItem.columnName}"/>
+        <#else>
+        <result property="${mappingItem.fieldName}" column="${mappingItem.columnName}"/>
+        </#if>
+    </#list>
+    </resultMap>
+
+    <#macro valueTag mappingItem>${r'#{'}${mappingItem.fieldName}${r'}'}</#macro>
+    <#macro whereList pkItems>
+        <#if pkItems?size == 1>
+        WHERE ${pkItems?first.fieldName} = <@valueTag pkItems?first />
+        <#else>
+            <#list pkItems>
+        <where>
+            <#items as pkItem>
+            <if test="null != ${pkItem.fieldName}">
+                AND ${pkItem.columnName} = <@valueTag pkItem />
+            </if>
+            </#items>
+        </where>
+            </#list>
+        </#if>
+    </#macro>
+
+    <select id="getById" resultMap="FullResultMap">
+        SELECT
+        <#list mappingItems as mappingItem>
+            ${mappingItem.columnName}<#sep>, </#sep>
+        </#list>
+        FROM ${mapping.tableName}
+        <@whereList pkItems />
+    </select>
+
+    <insert id="insert">
+        insert into ${mapping.tableName} (
+        <#list mappingItems as mappingItem>
+            ${mappingItem.columnName}<#sep>,</#sep>
+        </#list>
+        ) values (
+        <#list mappingItems as mappingItem>
+            <@valueTag mappingItem /><#sep>,</#sep>
+        </#list>
+        )
+    </insert>
+
+    <#if pkItems?size < mappingItems?size>
+    <update id="updateSelective">
+        UPDATE ${mapping.tableName}
+        <set>
+        <#list mappingItems as mappingItem>
+            <#if !mappingItem.PK>
+            <if test="null != ${mappingItem.fieldName}">
+                ${mappingItem.columnName} = <@valueTag mappingItem /><#sep>,</#sep>
+            </if>
+            </#if>
+        </#list>
+        </set>
+        <@whereList pkItems />
+    </update>
+    </#if>
+</mapper>

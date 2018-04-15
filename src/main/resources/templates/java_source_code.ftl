@@ -1,6 +1,6 @@
 <#assign className = classInfo.className>
 <#assign fieldInfos = classInfo.fieldInfos>
-package ${classInfo.type};
+package ${classInfo.packageName};
 
 <#list classInfo.importTypes as importType>
 import ${importType};

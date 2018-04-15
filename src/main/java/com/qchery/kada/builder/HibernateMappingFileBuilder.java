@@ -18,7 +18,7 @@ import java.util.List;
  * @author Chery
  * @date 2016年5月15日 - 下午8:47:06
  */
-public class HibernateMappingFileBuilder implements MappingFileBuilder {
+public class HibernateMappingFileBuilder extends AbstractMappingFileBuilder {
 
     @Override
     public String getContent(Mapping mapping) {

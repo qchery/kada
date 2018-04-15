@@ -1,6 +1,6 @@
 package com.qchery.kada.builder.java;
 
-import com.qchery.kada.builder.MappingFileBuilder;
+import com.qchery.kada.builder.AbstractMappingFileBuilder;
 import com.qchery.kada.descriptor.Mapping;
 
 /**
@@ -9,7 +9,7 @@ import com.qchery.kada.descriptor.Mapping;
  * @author Chery
  * @date 2016年5月15日 - 下午9:24:39
  */
-public class JavaMappingFileBuilder implements MappingFileBuilder {
+public class JavaMappingFileBuilder extends AbstractMappingFileBuilder {
 
     private JavaContentBuilder contentBuilder;
 
