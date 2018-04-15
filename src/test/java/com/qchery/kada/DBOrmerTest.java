@@ -3,6 +3,7 @@ package com.qchery.kada;
 import com.qchery.kada.builder.HibernateMappingFileBuilder;
 import com.qchery.kada.builder.MybatisMappingFileBuilder;
 import com.qchery.kada.builder.java.JavaMappingFileBuilder;
+import com.qchery.kada.builder.java.TemplateJavaContentBuilder;
 import com.qchery.kada.convertor.IgnorePrefixNameConvertor;
 import com.qchery.kada.db.ConnectParam;
 import com.qchery.kada.db.DBHelperFactory;
@@ -35,7 +36,7 @@ public class DBOrmerTest {
         IgnorePrefixNameConvertor nameConvertor = new IgnorePrefixNameConvertor();
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
-                .fileBuilder(new JavaMappingFileBuilder()).packageName("com.qchery.kada")
+                .fileBuilder(new JavaMappingFileBuilder(new TemplateJavaContentBuilder())).packageName("com.qchery.kada")
                 .tableNameFilter(tableName -> tableName.startsWith("cms"))
                 .nameConvertor(nameConvertor).build();
         dbOrmer.generateFile();

@@ -1,8 +1,7 @@
 package com.qchery.kada;
 
-import com.qchery.kada.builder.java.JacksonAnnotationStrategy;
 import com.qchery.kada.builder.java.JavaClassInfoFileBuilder;
-import com.qchery.kada.builder.java.OriginalJavaContentBuilder;
+import com.qchery.kada.builder.java.TemplateJavaContentBuilder;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
@@ -20,9 +19,7 @@ public class JsonOrmerTest {
     public void generateFile() throws IOException {
         File file = new File(System.getProperty("user.dir") + "/src/test/resources/test.json");
         String json = FileUtils.readFileToString(file, Charset.forName("UTF-8"));
-        OriginalJavaContentBuilder contentBuilder = new OriginalJavaContentBuilder();
-        contentBuilder.setAnnotationStrategy(new JacksonAnnotationStrategy());
-        JsonOrmer jsonOrmer = new JsonOrmer(new JavaClassInfoFileBuilder(contentBuilder));
-        jsonOrmer.generateFile("com.qchery", "User", json);
+        JsonOrmer jsonOrmer = new JsonOrmer(new JavaClassInfoFileBuilder(new TemplateJavaContentBuilder()));
+        jsonOrmer.generateFile("com.qchery.kada", "User", json);
     }
 }
