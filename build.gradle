@@ -1,0 +1,33 @@
+group 'com.qchery'
+version '1.0.0'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+ext {
+    log4j2Version = "2.8"
+}
+
+repositories {
+    mavenLocal()
+    maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+}
+
+dependencies {
+    compile (
+            "org.apache.commons:commons-lang3:3.5",
+            "com.thoughtworks.xstream:xstream:1.4.9",
+            "mysql:mysql-connector-java:5.1.38",
+            "commons-dbutils:commons-dbutils:1.6",
+            "commons-io:commons-io:2.5",
+            "com.google.code.gson:gson:2.8.2",
+            "org.freemarker:freemarker:2.3.28",
+            "org.slf4j:slf4j-api:1.7.22",
+            "org.apache.logging.log4j:log4j-slf4j-impl:2.2",
+            "org.apache.logging.log4j:log4j-api:${log4j2Version}",
+            "org.apache.logging.log4j:log4j-core:${log4j2Version}"
+    )
+    testCompile (
+            "junit:junit:4.12"
+    )
+}
