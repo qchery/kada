@@ -1,3 +1,5 @@
+<#assign className = classInfo.className>
+<#assign fieldInfos = classInfo.fieldInfos>
 package ${classInfo.type};
 
 <#list classInfo.importTypes as importType>
@@ -6,13 +8,14 @@ import ${importType};
 import java.io.Serializable;
 
 /**
- * ${classInfo.comment!classInfo.className}
+ * ${classInfo.comment!className}
+ *
  * @author Chery
  * @date ${.now}
  */
-public class ${classInfo.className} implements Serializable {
+public class ${className} implements Serializable {
 
-<#list classInfo.fieldInfos as fieldInfo>
+<#list fieldInfos as fieldInfo>
     <#if fieldInfo.comment??>
     /**
      * ${fieldInfo.comment}
@@ -20,10 +23,11 @@ public class ${classInfo.className} implements Serializable {
     </#if>
     private ${fieldInfo.simpleType} ${fieldInfo.fieldName};
 </#list>
-<#list classInfo.fieldInfos as fieldInfo>
-    <#assign fieldName = fieldInfo.fieldName>
-    <#assign fcuFieldName = fieldInfo.fcuFieldName>
-    <#assign simpleType = fieldInfo.simpleType>
+<#macro genGetSet fieldInfos>
+<#list fieldInfos as fieldInfo>
+    <#local fieldName = fieldInfo.fieldName>
+    <#local fcuFieldName = fieldInfo.fcuFieldName>
+    <#local simpleType = fieldInfo.simpleType>
 
     public void set${fcuFieldName}(${simpleType} ${fieldName}) {
         this.${fieldName} = ${fieldName};
@@ -33,5 +37,15 @@ public class ${classInfo.className} implements Serializable {
         return this.${fieldName};
     }
 </#list>
+</#macro>
+<@genGetSet fieldInfos />
 
+    @Override
+    public String toString() {
+        return "${className} ["
+        <#list fieldInfos as fieldInfo>
+            + "<#if fieldInfo?index != 0>, </#if>${fieldInfo.fieldName} = " + ${fieldInfo.fieldName}
+        </#list>
+        + "]";
+    }
 }

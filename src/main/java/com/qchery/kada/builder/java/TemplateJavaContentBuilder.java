@@ -47,7 +47,7 @@ public class TemplateJavaContentBuilder implements JavaContentBuilder {
             template.process(hashMap, out);
             result = out.toString();
         } catch (IOException | TemplateException e) {
-            logger.error("msg=文件类型生成异常", e);
+            logger.error("msg=文件内容生成异常", e);
         }
         return result;
     }

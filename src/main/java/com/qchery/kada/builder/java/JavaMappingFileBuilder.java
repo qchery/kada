@@ -14,7 +14,7 @@ public class JavaMappingFileBuilder implements MappingFileBuilder {
     private JavaContentBuilder contentBuilder;
 
     public JavaMappingFileBuilder() {
-        this.contentBuilder = new OriginalJavaContentBuilder();
+        this.contentBuilder = new TemplateJavaContentBuilder();
     }
 
     public JavaMappingFileBuilder(JavaContentBuilder contentBuilder) {
