@@ -1,6 +1,7 @@
 package com.qchery.kada;
 
 import com.qchery.kada.builder.hibernate.HibernateMappingFileBuilder;
+import com.qchery.kada.builder.hibernate.OriginalHibernateContentBuilder;
 import com.qchery.kada.builder.java.JavaMappingFileBuilder;
 import com.qchery.kada.builder.java.TemplateJavaContentBuilder;
 import com.qchery.kada.builder.mybatis.MybatisMappingFileBuilder;
@@ -71,7 +72,7 @@ public class DBOrmerTest {
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
                 .nameConvertor(new IgnorePrefixNameConvertor())
-                .fileBuilder(new HibernateMappingFileBuilder())
+                .fileBuilder(new HibernateMappingFileBuilder(new OriginalHibernateContentBuilder()))
                 .build();
         dbOrmer.generateFile();
     }

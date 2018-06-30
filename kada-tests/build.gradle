@@ -1,7 +1,8 @@
 dependencies {
     compile (
             project(":kada-core"),
-            project(":kada-template")
+            project(":kada-template"),
+            project(":kada-original")
     )
 
     testCompile (

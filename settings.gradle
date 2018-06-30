@@ -2,4 +2,5 @@ rootProject.name = 'kada'
 include 'kada-core'
 include 'kada-template'
 include 'kada-tests'
+include 'kada-original'
 
