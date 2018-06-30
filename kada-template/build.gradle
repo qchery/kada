@@ -1,0 +1,6 @@
+dependencies {
+    compile (
+            project(":kada-core"),
+            "org.freemarker:freemarker:2.3.28",
+    )
+}

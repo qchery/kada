@@ -3,6 +3,7 @@ package com.qchery.kada;
 import com.qchery.kada.builder.MappingFileBuilder;
 import com.qchery.kada.builder.hibernate.HibernateMappingFileBuilder;
 import com.qchery.kada.builder.mybatis.MybatisMappingFileBuilder;
+import com.qchery.kada.builder.mybatis.TemplateMybatisContentBuilder;
 import com.qchery.kada.descriptor.java.ClassInfo;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class JavaOrmerTest {
 
     @Test
     public void toIbatis() throws IOException {
-        MappingFileBuilder mappingFileBuilder = new MybatisMappingFileBuilder();
+        MappingFileBuilder mappingFileBuilder = new MybatisMappingFileBuilder(new TemplateMybatisContentBuilder());
         JavaOrmer javaOrmer = new JavaOrmer(rootPath, mappingFileBuilder);
         javaOrmer.generateFile(ClassInfo.class);
     }

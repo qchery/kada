@@ -2,7 +2,9 @@ package com.qchery.kada;
 
 import com.qchery.kada.builder.hibernate.HibernateMappingFileBuilder;
 import com.qchery.kada.builder.java.JavaMappingFileBuilder;
+import com.qchery.kada.builder.java.TemplateJavaContentBuilder;
 import com.qchery.kada.builder.mybatis.MybatisMappingFileBuilder;
+import com.qchery.kada.builder.mybatis.TemplateMybatisContentBuilder;
 import com.qchery.kada.convertor.IgnorePrefixNameConvertor;
 import com.qchery.kada.db.ConnectParam;
 import com.qchery.kada.db.DBHelperFactory;
@@ -35,7 +37,7 @@ public class DBOrmerTest {
         IgnorePrefixNameConvertor nameConvertor = new IgnorePrefixNameConvertor();
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
-                .fileBuilder(new JavaMappingFileBuilder()).packageName("com.qchery.kada")
+                .fileBuilder(new JavaMappingFileBuilder(new TemplateJavaContentBuilder())).packageName("com.qchery.kada")
                 .tableNameFilter(tableName -> tableName.startsWith("cms"))
                 .nameConvertor(nameConvertor).build();
         dbOrmer.generateFile();
@@ -46,7 +48,7 @@ public class DBOrmerTest {
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(oracleConnectParam))
                 .nameConvertor(new IgnorePrefixNameConvertor())
-                .fileBuilder(new JavaMappingFileBuilder())
+                .fileBuilder(new JavaMappingFileBuilder(new TemplateJavaContentBuilder()))
                 .build();
         dbOrmer.generateFile("ph_credit_accountbaseinfo_py");
     }
@@ -57,7 +59,7 @@ public class DBOrmerTest {
         nameConvertor.excludeSuffix("ACT").excludeSuffix("gen");
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
-                .fileBuilder(new MybatisMappingFileBuilder()).packageName("com.qchery.kada")
+                .fileBuilder(new MybatisMappingFileBuilder(new TemplateMybatisContentBuilder())).packageName("com.qchery.kada")
                 .tableNameFilter(tableName -> tableName.startsWith("cms"))
                 .charset(Charset.forName("GBK"))
                 .nameConvertor(nameConvertor).build();

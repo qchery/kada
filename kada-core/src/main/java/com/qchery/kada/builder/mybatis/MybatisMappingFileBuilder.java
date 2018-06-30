@@ -15,10 +15,6 @@ public class MybatisMappingFileBuilder extends AbstractMappingFileBuilder {
 
     private MybatisContentBuilder mybatisContentBuilder;
 
-    public MybatisMappingFileBuilder() {
-        this.mybatisContentBuilder = new TemplateMybatisContentBuilder();
-    }
-
     public MybatisMappingFileBuilder(MybatisContentBuilder mybatisContentBuilder) {
         this.mybatisContentBuilder = mybatisContentBuilder;
     }

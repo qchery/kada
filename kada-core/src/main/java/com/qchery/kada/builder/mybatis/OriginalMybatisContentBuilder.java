@@ -12,9 +12,7 @@ import java.util.List;
 /**
  * @author Chery
  * @date 2018/4/15 11:11
- * @see TemplateMybatisContentBuilder
  */
-@Deprecated
 public class OriginalMybatisContentBuilder implements MybatisContentBuilder {
     @Override
     public String build(Mapping mapping) {

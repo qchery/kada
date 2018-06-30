@@ -3,7 +3,6 @@ package com.qchery.kada;
 import com.qchery.kada.builder.ClassInfoFileBuilder;
 import com.qchery.kada.builder.java.JavaClassInfoFileBuilder;
 import com.qchery.kada.builder.java.JavaContentBuilder;
-import com.qchery.kada.builder.java.TemplateJavaContentBuilder;
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.descriptor.java.FieldInfo;
@@ -27,10 +26,6 @@ public class JsonOrmer {
     private ClassInfoFileBuilder classInfoFileBuilder;
 
     private String rootPath;
-
-    public JsonOrmer(String rootPath) {
-        this(rootPath, new TemplateJavaContentBuilder());
-    }
 
     public JsonOrmer(String rootPath, JavaContentBuilder javaContentBuilder) {
         this(rootPath, javaContentBuilder, new DefaultNameConvertor());

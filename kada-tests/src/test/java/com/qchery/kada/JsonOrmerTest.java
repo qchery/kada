@@ -1,5 +1,6 @@
 package com.qchery.kada;
 
+import com.qchery.kada.builder.java.TemplateJavaContentBuilder;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
@@ -17,7 +18,7 @@ public class JsonOrmerTest {
     public void generateFile() throws IOException {
         String path = this.getClass().getResource("/test.json").getPath();
         String json = FileUtils.readFileToString(new File(path), Charset.forName("UTF-8"));
-        JsonOrmer jsonOrmer = new JsonOrmer(System.getProperty("user.dir"));
+        JsonOrmer jsonOrmer = new JsonOrmer(System.getProperty("user.dir"), new TemplateJavaContentBuilder());
         jsonOrmer.generateFile("com.qchery.kada", "User", json);
     }
 }

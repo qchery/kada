@@ -13,10 +13,6 @@ public class JavaMappingFileBuilder extends AbstractMappingFileBuilder {
 
     private JavaContentBuilder contentBuilder;
 
-    public JavaMappingFileBuilder() {
-        this.contentBuilder = new TemplateJavaContentBuilder();
-    }
-
     public JavaMappingFileBuilder(JavaContentBuilder contentBuilder) {
         this.contentBuilder = contentBuilder;
     }
