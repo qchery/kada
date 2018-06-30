@@ -2,7 +2,7 @@ package com.qchery.kada.builder.java;
 
 import com.qchery.kada.descriptor.java.FieldInfo;
 import com.qchery.kada.descriptor.java.IClassInfo;
-import org.apache.commons.lang3.StringUtils;
+import com.qchery.kada.utils.StringUtils;
 
 import java.util.Collection;
 import java.util.List;

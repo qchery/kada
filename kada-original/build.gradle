@@ -1,5 +1,6 @@
 dependencies {
     compile (
-            project(":kada-core")
+            project(":kada-core"),
+            "com.thoughtworks.xstream:xstream:1.4.9",
     )
 }

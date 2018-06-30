@@ -1,8 +1,7 @@
 package com.qchery.kada.convertor;
 
-import com.qchery.kada.utils.StringUtil;
 import com.qchery.kada.exception.ConfigException;
-import org.apache.commons.lang3.StringUtils;
+import com.qchery.kada.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +23,13 @@ public class DefaultNameConvertor implements NameConvertor {
     @Override
     public String toFieldName(String propName) {
         char separatorChar = getSeparator().charAt(0);
-        return StringUtil.lowerCamelCase(propName, separatorChar);
+        return StringUtils.lowerCamelCase(propName, separatorChar);
     }
 
     @Override
     public String toClassName(String tableName) {
         char separatorChar = getSeparator().charAt(0);
-        return StringUtil.upperCamelCase(tableName, separatorChar);
+        return StringUtils.upperCamelCase(tableName, separatorChar);
     }
 
     // --------------------- Java 转 Database Started ---------------------------

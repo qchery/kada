@@ -1,6 +1,6 @@
 package com.qchery.kada.descriptor.java;
 
-import com.qchery.kada.utils.StringUtil;
+import com.qchery.kada.utils.StringUtils;
 
 import java.lang.reflect.Field;
 
@@ -89,7 +89,7 @@ public class FieldInfo {
     }
 
     public String getFcuFieldName() {
-        return StringUtil.upperFirstChar(getFieldName());
+        return StringUtils.upperFirstChar(getFieldName());
     }
 
     public String getComment() {

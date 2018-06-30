@@ -1,0 +1,6 @@
+dependencies {
+    compile(
+            project(":kada-core"),
+            "com.google.code.gson:gson:2.8.2",
+    )
+}

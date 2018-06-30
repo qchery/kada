@@ -3,7 +3,7 @@ package com.qchery.kada.scanner;
 import com.qchery.kada.descriptor.db.ColumnInfo;
 import com.qchery.kada.DBOrmer;
 import com.qchery.kada.descriptor.db.TableInfo;
-import org.apache.commons.dbutils.DbUtils;
+import com.qchery.kada.utils.DbUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

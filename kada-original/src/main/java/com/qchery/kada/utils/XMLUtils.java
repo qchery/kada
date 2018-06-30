@@ -3,7 +3,7 @@ package com.qchery.kada.utils;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
-public class XMLUtil {
+public class XMLUtils {
 
     public static String toXML(Object obj) {
         XStream xstream = new XStream(new DomDriver("utf8"));

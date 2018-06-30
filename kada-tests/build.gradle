@@ -1,8 +1,17 @@
+ext {
+    log4j2Version = "2.8"
+}
+
 dependencies {
     compile (
             project(":kada-core"),
             project(":kada-template"),
-            project(":kada-original")
+            project(":kada-original"),
+            project(":kada-json"),
+            "mysql:mysql-connector-java:5.1.38",
+            "org.apache.logging.log4j:log4j-slf4j-impl:2.2",
+            "org.apache.logging.log4j:log4j-api:${log4j2Version}",
+            "org.apache.logging.log4j:log4j-core:${log4j2Version}"
     )
 
     testCompile (

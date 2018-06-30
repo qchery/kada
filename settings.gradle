@@ -3,4 +3,5 @@ include 'kada-core'
 include 'kada-template'
 include 'kada-tests'
 include 'kada-original'
+include 'kada-json'
 

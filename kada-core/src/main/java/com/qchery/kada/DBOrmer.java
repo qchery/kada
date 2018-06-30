@@ -16,7 +16,7 @@ import com.qchery.kada.exception.ConfigException;
 import com.qchery.kada.filter.TableNameFilter;
 import com.qchery.kada.scanner.DBScanner;
 import com.qchery.kada.scanner.DefaultDBScanner;
-import org.apache.commons.dbutils.DbUtils;
+import com.qchery.kada.utils.DbUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

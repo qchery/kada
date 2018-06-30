@@ -1,8 +1,6 @@
 package com.qchery.kada.utils;
 
-import org.apache.commons.lang3.StringUtils;
-
-public class StringUtil {
+public class StringUtils {
 
     /**
      * 大驼峰命名转换
@@ -55,7 +53,7 @@ public class StringUtil {
         }
 
         if (isFirstUpper) {
-            return StringUtil.upperFirstChar(builder.toString());
+            return StringUtils.upperFirstChar(builder.toString());
         } else {
             return builder.toString();
         }
@@ -63,13 +61,44 @@ public class StringUtil {
     }
 
     public static String upperFirstChar(String value) {
-        return StringUtils.upperCase(value.substring(0, 1)) +
+        return upperCase(value.substring(0, 1)) +
                 value.substring(1);
     }
 
     public static String lowerFirstChar(String value) {
-        return StringUtils.lowerCase(value.substring(0, 1)) +
+        return lowerCase(value.substring(0, 1)) +
                 value.substring(1);
+    }
+
+    public static String lowerCase(final String str) {
+        if (str == null) {
+            return null;
+        }
+        return str.toLowerCase();
+    }
+
+    public static String upperCase(final String str) {
+        if (str == null) {
+            return null;
+        }
+        return str.toUpperCase();
+    }
+
+    public static boolean isNotBlank(final CharSequence cs) {
+        return !isBlank(cs);
+    }
+
+    public static boolean isBlank(final CharSequence cs) {
+        int strLen;
+        if (cs == null || (strLen = cs.length()) == 0) {
+            return true;
+        }
+        for (int i = 0; i < strLen; i++) {
+            if (!Character.isWhitespace(cs.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

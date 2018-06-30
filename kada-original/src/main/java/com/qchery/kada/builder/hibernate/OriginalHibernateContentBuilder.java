@@ -6,7 +6,7 @@ import com.qchery.kada.builder.hibernate.model.HibernateMapping;
 import com.qchery.kada.builder.hibernate.model.Property;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
-import com.qchery.kada.utils.XMLUtil;
+import com.qchery.kada.utils.XMLUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -62,7 +62,7 @@ public class OriginalHibernateContentBuilder implements HibernateContentBuilder 
         }
         hibernateMapping.setClazz(clazz);
 
-        String content = XMLUtil.toXML(hibernateMapping);
+        String content = XMLUtils.toXML(hibernateMapping);
         content = "<?xmlversion=\"1.0\"encoding='" + mapping.getCharset().name() + "'?>\n\n" +
                 "<!DOCTYPE hibernate-hibernateMapping PUBLIC\n" +
                 "     \"-//Hibernate/Hibernate Mapping DTD 3.0//EN\"\n" +

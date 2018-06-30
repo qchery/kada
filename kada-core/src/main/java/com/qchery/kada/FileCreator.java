@@ -1,13 +1,11 @@
 package com.qchery.kada;
 
 import com.qchery.kada.descriptor.file.FileInfo;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
 
 /**
  * 文件生成器
@@ -24,7 +22,11 @@ public class FileCreator {
 
         File file = newFile(rootPath, fileInfo);
         try (FileOutputStream output = new FileOutputStream(file)) {
-            IOUtils.write(fileInfo.getContent(), output, fileInfo.getCharset());
+            Charset charset = fileInfo.getCharset();
+            if (charset == null) {
+                charset = Charset.defaultCharset();
+            }
+            output.write(fileInfo.getContent().getBytes(charset));
         }
     }
 

@@ -3,7 +3,7 @@ package com.qchery.kada.builder.mybatis;
 import com.qchery.kada.builder.mybatis.model.*;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
-import com.qchery.kada.utils.XMLUtil;
+import com.qchery.kada.utils.XMLUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +22,7 @@ public class OriginalMybatisContentBuilder implements MybatisContentBuilder {
         mapperTag.setResultMapTag(getResultMap(mapping, mappingItems));
         mapperTag.setInsertTags(Collections.singletonList(getInsert(mapping, mappingItems)));
         mapperTag.setUpdateTags(Collections.singletonList(getUpdateSelective(mapping, mappingItems)));
-        String content = XMLUtil.toXML(mapperTag);
+        String content = XMLUtils.toXML(mapperTag);
         content = "<?xml version=\"1.0\" encoding=\"" + mapping.getCharset().name() + "\" ?>\n" +
                 "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n" + content;
         return content;

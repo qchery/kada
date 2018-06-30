@@ -3,7 +3,7 @@ package com.qchery.kada;
 import com.google.gson.Gson;
 import com.qchery.kada.convertor.DefaultNameConvertor;
 import com.qchery.kada.descriptor.java.IClassInfo;
-import org.apache.commons.io.FileUtils;
+import com.qchery.kada.utils.FileUtils;
 import org.junit.Test;
 
 import java.io.File;

@@ -1,7 +1,7 @@
 package com.qchery.kada;
 
 import com.qchery.kada.builder.java.TemplateJavaContentBuilder;
-import org.apache.commons.io.FileUtils;
+import com.qchery.kada.utils.FileUtils;
 import org.junit.Test;
 
 import java.io.File;
