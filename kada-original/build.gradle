@@ -1,6 +1,6 @@
 dependencies {
     compile (
             project(":kada-core"),
-            "com.thoughtworks.xstream:xstream:1.4.9",
+            "org.dom4j:dom4j:2.1.0"
     )
 }

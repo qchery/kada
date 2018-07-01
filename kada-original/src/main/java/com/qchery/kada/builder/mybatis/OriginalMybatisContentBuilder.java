@@ -1,12 +1,13 @@
 package com.qchery.kada.builder.mybatis;
 
-import com.qchery.kada.builder.mybatis.model.*;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.utils.XMLUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -14,92 +15,125 @@ import java.util.List;
  * @date 2018/4/15 11:11
  */
 public class OriginalMybatisContentBuilder implements MybatisContentBuilder {
+
+    public static final String FULL_RESULT_MAP = "FullResultMap";
+
     @Override
     public String build(Mapping mapping) {
-        MapperTag mapperTag = new MapperTag(String.format("%s.%sDao",
-                mapping.getPackageName(), mapping.getClassName()));
+        Document document = DocumentHelper.createDocument();
+        document.setXMLEncoding(mapping.getCharset().name());
+        document.addDocType("mapper", "-//mybatis.org//DTD Mapper 3.0//EN",
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd");
+
+        Element mapperEle = document.addElement("mapper")
+                .addAttribute("namespace", mapping.getClassInfo().getType() + "Dao");
+
         List<MappingItem> mappingItems = mapping.getMappingItems();
-        mapperTag.setResultMapTag(getResultMap(mapping, mappingItems));
-        mapperTag.setInsertTags(Collections.singletonList(getInsert(mapping, mappingItems)));
-        mapperTag.setUpdateTags(Collections.singletonList(getUpdateSelective(mapping, mappingItems)));
-        String content = XMLUtils.toXML(mapperTag);
-        content = "<?xml version=\"1.0\" encoding=\"" + mapping.getCharset().name() + "\" ?>\n" +
-                "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n" + content;
-        return content;
-    }
 
-    private ResultMapTag getResultMap(Mapping mapping, List<MappingItem> mappingItems) {
-        ResultMapTag resultMapTag = new ResultMapTag("FullResultMap",
-                mapping.getClassInfo().getType());
-        for (MappingItem mappingItem : mappingItems) {
-            ResultTag resultTag = new ResultTag(mappingItem.getFieldName(), mappingItem.getColumnName());
-            if (mappingItem.isPK()) {
-                resultMapTag.addId(resultTag);
-            } else {
-                resultMapTag.addResult(resultTag);
-            }
-        }
-        return resultMapTag;
-    }
-
-    private InsertTag getInsert(Mapping mapping, List<MappingItem> mappingItems) {
-        StringBuilder insertContentBuilder = new StringBuilder("\ninsert into ").append(mapping.getTableName()).append("(");
-        StringBuilder valuesBuilder = new StringBuilder();
-        for (int i = 0; i < mappingItems.size(); i++) {
-            MappingItem mappingItem = mappingItems.get(i);
-            insertContentBuilder.append("\n").append(mappingItem.getColumnName());
-            valuesBuilder.append("\n#{").append(mappingItem.getFieldName()).append("}");
-            if (i != mappingItems.size() - 1) {
-                insertContentBuilder.append(",");
-                valuesBuilder.append(",");
-            } else {
-                insertContentBuilder.append("\n) values (");
-                valuesBuilder.append("\n)\n");
-            }
-        }
-        InsertTag insertTag = new InsertTag();
-        insertTag.setId("insert");
-        insertTag.setContent(insertContentBuilder.append(valuesBuilder).toString());
-        return insertTag;
-    }
-
-    private UpdateTag getUpdateSelective(Mapping mapping, List<MappingItem> mappingItems) {
-        UpdateTag updateTag = new UpdateTag();
-        updateTag.setId("updateSelective");
-        updateTag.setPrefix("UPDATE " + mapping.getTableName() + " SET ");
-        SetTag setTag = new SetTag();
-        ArrayList<IfTag> ifTags = new ArrayList<>();
-        for (int i = 0; i < mappingItems.size(); i++) {
-            MappingItem item = mappingItems.get(i);
-            IfTag ifTag = new IfTag();
-            ifTag.setTest("null != " + item.getFieldName());
-            String content = item.getColumnName() + " = #{" + item.getFieldName() + "}";
-            if (i != mappingItems.size() - 1) {
-                content += ",";
-            }
-            ifTag.setContent(content);
-            ifTags.add(ifTag);
-        }
-        setTag.setIfTags(ifTags);
-        updateTag.setSetTag(setTag);
-
-        StringBuilder whereBuilder = new StringBuilder("WHERE ");
-        boolean isFirstPk = true;
+        // 字段映射生成
+        Element resultMapEle = mapperEle.addElement("resultMap")
+                .addAttribute("id", FULL_RESULT_MAP)
+                .addAttribute("type", mapping.getClassInfo().getType());
         for (MappingItem item : mappingItems) {
+            Element propEle;
             if (item.isPK()) {
-                if (!isFirstPk) {
-                    whereBuilder.append(" AND ");
-                } else {
-                    isFirstPk = false;
-                }
-                whereBuilder.append(item.getColumnName());
-                whereBuilder.append(" = #{");
-                whereBuilder.append(item.getFieldName());
-                whereBuilder.append("}");
+                propEle = resultMapEle.addElement("id");
+            } else {
+                propEle = resultMapEle.addElement("result");
+            }
+            propEle.addAttribute("property", item.getFieldName())
+                    .addAttribute("column", item.getColumnName());
+        }
+
+        // select 方法生成
+        addSelect(mapperEle, mapping);
+        // insert 方法生成
+        addInsert(mapperEle, mapping);
+        // update 方法生成
+        addUpdate(mapperEle, mapping);
+
+        return XMLUtils.toXML(document);
+    }
+
+    private void addSelect(Element element, Mapping mapping) {
+        Element select = element.addElement("select")
+                .addAttribute("id", "getById")
+                .addAttribute("resultMap", FULL_RESULT_MAP);
+
+        List<MappingItem> mappingItems = mapping.getMappingItems();
+        StringBuilder builder = new StringBuilder("\nSELECT \n");
+        Iterator<MappingItem> iterator = mappingItems.iterator();
+        while (iterator.hasNext()) {
+            MappingItem item = iterator.next();
+            builder.append("  ").append(item.getColumnName());
+            if (iterator.hasNext()) {
+                builder.append(",");
+            }
+            builder.append("\n");
+        }
+        builder.append("FROM ").append(mapping.getTableName()).append(" ");
+
+        select.addText(builder.toString());
+        addWhere(select, mapping);
+    }
+
+    private void addWhere(Element element, Mapping mapping) {
+        List<MappingItem> pkItems = mapping.getPkItems();
+        if (pkItems.size() == 1) {
+            MappingItem item = pkItems.get(0);
+            element.addText("\nWHERE " + item.getColumnName() + " = #{" + item.getFieldName() + "}");
+        } else {
+            Element where = element.addElement("where");
+            for (MappingItem pkItem : pkItems) {
+                where.addElement("if").addAttribute("test", "null != " + pkItem.getFieldName())
+                        .addText("AND " + pkItem.getColumnName() + " = #{" + pkItem.getFieldName() + "}");
             }
         }
-        updateTag.setSuffix(whereBuilder.toString());
-
-        return updateTag;
     }
+
+    private void addInsert(Element element, Mapping mapping) {
+        StringBuilder builder = new StringBuilder("\nINSERT into ").append(mapping.getTableName())
+                .append(" (\n");
+        List<MappingItem> items = mapping.getMappingItems();
+        Iterator<MappingItem> iterator = items.iterator();
+        while (iterator.hasNext()) {
+            MappingItem item = iterator.next();
+            builder.append("  ").append(item.getColumnName());
+            if (iterator.hasNext()) {
+                builder.append(",");
+            }
+            builder.append("\n");
+        }
+        builder.append(") VALUES (\n");
+        Iterator<MappingItem> itemIterator = items.iterator();
+        while (itemIterator.hasNext()) {
+            MappingItem item = itemIterator.next();
+            builder.append("  #{").append(item.getFieldName()).append("}");
+            if (itemIterator.hasNext()) {
+                builder.append(",");
+            }
+            builder.append("\n");
+        }
+        builder.append(")\n");
+
+        element.addElement("insert").addAttribute("id", "insert").addText(builder.toString());
+    }
+
+    private void addUpdate(Element element, Mapping mapping) {
+        Element update = element.addElement("update").addAttribute("id", "updateSelective");
+        update.addText("\nUPDATE " + mapping.getTableName());
+        Element set = update.addElement("set");
+        List<MappingItem> items = mapping.getMappingItems();
+        Iterator<MappingItem> iterator = items.iterator();
+        while (iterator.hasNext()) {
+            MappingItem item = iterator.next();
+            Element ifEle = set.addElement("if").addAttribute("test", "null != " + item.getFieldName())
+                    .addText(item.getColumnName() + " = #{" + item.getFieldName() + "}");
+            if (iterator.hasNext()) {
+                ifEle.addText(",");
+            }
+        }
+        addWhere(update, mapping);
+    }
+
 }

@@ -5,7 +5,7 @@ import com.qchery.kada.builder.hibernate.OriginalHibernateContentBuilder;
 import com.qchery.kada.builder.java.JavaMappingFileBuilder;
 import com.qchery.kada.builder.java.TemplateJavaContentBuilder;
 import com.qchery.kada.builder.mybatis.MybatisMappingFileBuilder;
-import com.qchery.kada.builder.mybatis.TemplateMybatisContentBuilder;
+import com.qchery.kada.builder.mybatis.OriginalMybatisContentBuilder;
 import com.qchery.kada.convertor.IgnorePrefixNameConvertor;
 import com.qchery.kada.db.ConnectParam;
 import com.qchery.kada.db.DBHelperFactory;
@@ -60,8 +60,8 @@ public class DBOrmerTest {
         nameConvertor.excludeSuffix("ACT").excludeSuffix("gen");
         DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
-                .fileBuilder(new MybatisMappingFileBuilder(new TemplateMybatisContentBuilder())).packageName("com.qchery.kada")
-                .tableNameFilter(tableName -> tableName.startsWith("cms"))
+                .fileBuilder(new MybatisMappingFileBuilder(new OriginalMybatisContentBuilder())).packageName("com.qchery.kada")
+//                .tableNameFilter(tableName -> tableName.startsWith("cms"))
                 .charset(Charset.forName("GBK"))
                 .nameConvertor(nameConvertor).build();
         dbOrmer.generateFile();
