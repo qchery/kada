@@ -16,7 +16,7 @@ public class DefaultDBScannerTest {
     @Test
     public void scannerTables() throws Exception {
         DBHelperFactory dbHelperFactory = new DBHelperFactory();
-        ConnectParam.ConnectParamBuilder connectParamBuilder = new ConnectParam.ConnectParamBuilder();
+        ConnectParam.ConnectParamBuilder connectParamBuilder = ConnectParam.create();
         ConnectParam connectParam = connectParamBuilder.databaseName("innereval")
                 .host("172.30.3.112").userName("innerevaldata").password("1*mysql").build();
         List<TableInfo> tableInfos = new DefaultDBScanner().scannerTables(dbHelperFactory.getDbHelper(connectParam).getConnection());
@@ -26,7 +26,7 @@ public class DefaultDBScannerTest {
     @Test
     public void scannerTable() throws Exception {
         DBHelperFactory dbHelperFactory = new DBHelperFactory();
-        ConnectParam.ConnectParamBuilder connectParamBuilder = new ConnectParam.ConnectParamBuilder();
+        ConnectParam.ConnectParamBuilder connectParamBuilder = ConnectParam.create();
         ConnectParam connectParam = connectParamBuilder.databaseName("jeesite")
                 .userName("root").password("123456").build();
         List<ColumnInfo> columnInfos = new DefaultDBScanner().scannerColumns(dbHelperFactory.getDbHelper(connectParam).getConnection(), "sys_user");

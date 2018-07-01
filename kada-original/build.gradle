@@ -1,6 +1,7 @@
 dependencies {
     compile (
             project(":kada-core"),
-            "org.dom4j:dom4j:2.1.0"
+            "org.dom4j:dom4j:2.1.0",
+            "mysql:mysql-connector-java:5.1.46",
     )
 }

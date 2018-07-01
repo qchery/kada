@@ -45,6 +45,10 @@ public class DBOrmer {
 
     private Logger logger = LoggerFactory.getLogger(DBOrmer.class);
 
+    public static DBOrmerBuilder create() {
+        return new DBOrmerBuilder();
+    }
+
     private DBOrmer() {
     }
 
@@ -130,6 +134,9 @@ public class DBOrmer {
         private Charset charset;
         private String packageName;
         private String rootPath;
+
+        private DBOrmerBuilder() {
+        }
 
         public DBOrmer build() {
             if (null == dbHelper || null == mappingFileBuilder) {

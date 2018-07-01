@@ -25,7 +25,7 @@ public class DBOrmerTest {
     @Before
     public void init() {
         this.dbHelperFactory = new DBHelperFactory();
-        ConnectParam.ConnectParamBuilder connectParamBuilder = new ConnectParam.ConnectParamBuilder();
+        ConnectParam.ConnectParamBuilder connectParamBuilder = ConnectParam.create();
         mysqlConnectParam = connectParamBuilder.databaseName("jeesite")
                 .userName("root").password("123456").build();
         oracleConnectParam = connectParamBuilder.type(ORACLE)
@@ -36,7 +36,7 @@ public class DBOrmerTest {
     @Test
     public void testDbWithMysql() {
         IgnorePrefixNameConvertor nameConvertor = new IgnorePrefixNameConvertor();
-        DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
+        DBOrmer dbOrmer = DBOrmer.create()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
                 .fileBuilder(new JavaMappingFileBuilder(new TemplateJavaContentBuilder())).packageName("com.qchery.kada")
                 .tableNameFilter(tableName -> tableName.startsWith("cms"))
@@ -46,7 +46,7 @@ public class DBOrmerTest {
     
     @Test
     public void testDbWithOracle() {
-        DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
+        DBOrmer dbOrmer = DBOrmer.create()
                 .dbHelper(dbHelperFactory.getDbHelper(oracleConnectParam))
                 .nameConvertor(new IgnorePrefixNameConvertor())
                 .fileBuilder(new JavaMappingFileBuilder(new TemplateJavaContentBuilder()))
@@ -58,7 +58,7 @@ public class DBOrmerTest {
     public void testDbWithMybatisMysql() {
         IgnorePrefixNameConvertor nameConvertor = new IgnorePrefixNameConvertor();
         nameConvertor.excludeSuffix("ACT").excludeSuffix("gen");
-        DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
+        DBOrmer dbOrmer = DBOrmer.create()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
                 .fileBuilder(new MybatisMappingFileBuilder(new OriginalMybatisContentBuilder())).packageName("com.qchery.kada")
 //                .tableNameFilter(tableName -> tableName.startsWith("cms"))
@@ -69,7 +69,7 @@ public class DBOrmerTest {
     
     @Test
     public void testDbWithHibernateMysql() {
-        DBOrmer dbOrmer = new DBOrmer.DBOrmerBuilder()
+        DBOrmer dbOrmer = DBOrmer.create()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
                 .nameConvertor(new IgnorePrefixNameConvertor())
                 .fileBuilder(new HibernateMappingFileBuilder(new OriginalHibernateContentBuilder()))

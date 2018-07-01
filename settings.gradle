@@ -4,4 +4,5 @@ include 'kada-template'
 include 'kada-tests'
 include 'kada-original'
 include 'kada-json'
+include 'kada-gradle-plugin'
 

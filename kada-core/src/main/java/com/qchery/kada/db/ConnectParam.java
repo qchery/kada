@@ -12,14 +12,15 @@ public class ConnectParam {
     public static final String MYSQL = "mysql";
     public static final String ORACLE = "oracle";
 
-    private String type;        // 类型
-    private String host;        // 主机地址
+    private String type = MYSQL;        // 类型
+    private String host = "localhost";  // 主机地址
     private Integer port;       // 端口号
     private String dbName;      // 数据库名
     private String userName;    // 用户名
     private String password;    // 用户密码
 
-    private ConnectParam() {
+    public static ConnectParamBuilder create() {
+        return new ConnectParamBuilder();
     }
 
     public String getType() {
@@ -31,7 +32,17 @@ public class ConnectParam {
     }
 
     public Integer getPort() {
-        return port;
+        Integer resultPort = null;
+        if (null == port) {
+            if (MYSQL.equals(type)) {
+                resultPort = 3306;
+            } else if (ORACLE.equals(type)) {
+                resultPort = 1521;
+            }
+        } else {
+            resultPort = port;
+        }
+        return resultPort;
     }
 
     public String getDbName() {
@@ -54,26 +65,22 @@ public class ConnectParam {
         private String userName;    // 用户名
         private String password;    // 用户密码
 
+        private ConnectParamBuilder() {
+        }
+
         public ConnectParam build() {
             ConnectParam connectParam = new ConnectParam();
-            if (null == type) {
-                type = MYSQL;
+            if (null != type) {
+                connectParam.type = type;
             }
-            connectParam.type = type;
 
-            if (null == host) {
-                host = "localhost";
+            if (null != host) {
+                connectParam.host = host;
             }
-            connectParam.host = host;
 
-            if (null == port) {
-                if (MYSQL.equals(type)) {
-                    port = 3306;
-                } else if (ORACLE.equals(type)) {
-                    port = 1521;
-                }
+            if (port != null) {
+                connectParam.port = port;
             }
-            connectParam.port = port;
 
             if (null == dbName || null == userName || null == password) {
                 throw new ConfigException("数据库名、用户名、密码不能为空");
