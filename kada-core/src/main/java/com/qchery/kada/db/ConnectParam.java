@@ -15,8 +15,8 @@ public class ConnectParam {
     private String type = MYSQL;        // 类型
     private String host = "localhost";  // 主机地址
     private Integer port;       // 端口号
-    private String dbName;      // 数据库名
-    private String userName;    // 用户名
+    private String database;      // 数据库名
+    private String username;    // 用户名
     private String password;    // 用户密码
 
     public static ConnectParamBuilder create() {
@@ -45,12 +45,12 @@ public class ConnectParam {
         return resultPort;
     }
 
-    public String getDbName() {
-        return dbName;
+    public String getDatabase() {
+        return database;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
@@ -61,8 +61,8 @@ public class ConnectParam {
         private String type;        // 类型
         private String host;        // 主机地址
         private Integer port;       // 端口号
-        private String dbName;      // 数据库名
-        private String userName;    // 用户名
+        private String database;      // 数据库名
+        private String username;    // 用户名
         private String password;    // 用户密码
 
         private ConnectParamBuilder() {
@@ -82,11 +82,11 @@ public class ConnectParam {
                 connectParam.port = port;
             }
 
-            if (null == dbName || null == userName || null == password) {
+            if (null == database || null == username || null == password) {
                 throw new ConfigException("数据库名、用户名、密码不能为空");
             }
-            connectParam.dbName = dbName;
-            connectParam.userName = userName;
+            connectParam.database = database;
+            connectParam.username = username;
             connectParam.password = password;
             return connectParam;
         }
@@ -107,12 +107,12 @@ public class ConnectParam {
         }
 
         public ConnectParamBuilder databaseName(String databaseName) {
-            this.dbName = databaseName;
+            this.database = databaseName;
             return this;
         }
 
         public ConnectParamBuilder userName(String userName) {
-            this.userName = userName;
+            this.username = userName;
             return this;
         }
 

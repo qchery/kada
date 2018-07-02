@@ -41,13 +41,13 @@ public abstract class DBHelper {
      * @throws SQLException 获取数据库异常
      */
     public Connection getConnection() throws SQLException {
-        String url = getLink(connectParam.getHost(), connectParam.getPort(), connectParam.getDbName());
+        String url = getLink(connectParam.getHost(), connectParam.getPort(), connectParam.getDatabase());
         try {
             Class.forName(getDriverName());
         } catch (ClassNotFoundException e) {
             logger.error("msg={} | driverName={}", "驱动类配置错误", getDriverName());
             throw new IllegalArgumentException("驱动类配置错误");
         }
-        return DriverManager.getConnection(url, connectParam.getUserName(), connectParam.getPassword());
+        return DriverManager.getConnection(url, connectParam.getUsername(), connectParam.getPassword());
     }
 }

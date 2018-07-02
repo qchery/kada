@@ -21,16 +21,16 @@ buildscript {
 其次，定义生成任务，配置好数据库在相关参数，及生成后文件的包信息，其中 `host` 与 `port` 为非必填，默认为 `localhost` 与 `3306`。
 
 ```groovy
-import com.qchery.kada.plugin.KadaTask
+apply plugin: 'kada'
 
-task generateEntity(type: KadaTask) {
+generating {
     packageName = "com.qchery.kada"
     connect {
         host = "localhost"
         port = 3306
-        userName = "root"
+        username = "root"
         password = "123456"
-        dbName = "jeesite"
+        database = "jeesite"
     }
 }
 ```
@@ -38,10 +38,11 @@ task generateEntity(type: KadaTask) {
 此时，会扫描全库所有表生成实体类，如若只需要选择其中的部分表进行生成，可自定义 tableNameFileter　进行过滤，如：只对以 `cms_` 开头的表进行操作。
 
 ```groovy
-import com.qchery.kada.plugin.KadaTask
+apply plugin: 'kada'
+
 import com.qchery.kada.filter.TableNameFilter
 
-task generateEntity(type: KadaTask) {
+generating {
     ...
 
     tableNameFilter = new TableNameFilter() {
@@ -56,10 +57,11 @@ task generateEntity(type: KadaTask) {
 如若对命名转换不满意，可自定义 NameConvertor，如：为所有实体增加 `Entity` 后缀。
 
 ```groovy
-import com.qchery.kada.plugin.KadaTask
+apply plugin: 'kada'
+
 import com.qchery.kada.convertor.DefaultNameConvertor
 
-task generateEntity(type: KadaTask) {
+generating {
     ...
 
     nameConvertor = new DefaultNameConvertor() {
