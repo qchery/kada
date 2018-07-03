@@ -20,10 +20,11 @@ public class JavaClassInfoFileBuilder implements ClassInfoFileBuilder {
 
     @Override
     public FileInfo getFileInfo(IClassInfo classInfo) {
-        String packagePath = classInfo.getPackageName().replaceAll("\\.", "/");
-        String fileName = classInfo.getClassName() + ".java";
-        String content = buildContent(classInfo);
-        return new FileInfo(packagePath, fileName, content);
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setPackagePath(classInfo.getPackageName().replaceAll("\\.", "/"));
+        fileInfo.setFileName(classInfo.getClassName() + ".java");
+        fileInfo.setContent(buildContent(classInfo));
+        return fileInfo;
     }
 
     /**

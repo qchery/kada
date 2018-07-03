@@ -3,7 +3,6 @@ package com.qchery.kada.descriptor;
 import com.qchery.kada.descriptor.db.TableInfo;
 import com.qchery.kada.descriptor.java.IClassInfo;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +11,6 @@ import java.util.List;
  * @date 2017/5/4 - 下午11:20
  */
 public class Mapping {
-
-    /**
-     * 文件编码
-     */
-    private Charset charset;
 
     private IClassInfo classInfo;
 
@@ -36,14 +30,6 @@ public class Mapping {
             pkItems.add(mappingItem);
         }
         mappingItems.add(mappingItem);
-    }
-
-    public void setCharset(Charset charset) {
-        this.charset = charset;
-    }
-
-    public Charset getCharset() {
-        return this.charset;
     }
 
     public IClassInfo getClassInfo() {

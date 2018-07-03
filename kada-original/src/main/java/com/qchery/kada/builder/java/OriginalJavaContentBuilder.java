@@ -1,9 +1,12 @@
 package com.qchery.kada.builder.java;
 
+import com.qchery.kada.builder.ContentBuilder;
+import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.java.FieldInfo;
 import com.qchery.kada.descriptor.java.IClassInfo;
 import com.qchery.kada.utils.StringUtils;
 
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
 
@@ -11,9 +14,14 @@ import java.util.List;
  * @author Chery
  * @date 2018/4/14 16:42
  */
-public class OriginalJavaContentBuilder implements JavaContentBuilder {
+public class OriginalJavaContentBuilder implements JavaContentBuilder, ContentBuilder {
 
     private AnnotationStrategy annotationStrategy;
+
+    @Override
+    public String build(Charset charset, Mapping mapping) {
+        return build(mapping.getClassInfo());
+    }
 
     @Override
     public String build(IClassInfo classInfo) {
@@ -31,7 +39,7 @@ public class OriginalJavaContentBuilder implements JavaContentBuilder {
     }
 
     private String getMainContent(IClassInfo classInfo) {
-        StringBuilder fields = declareFileds(classInfo);
+        StringBuilder fields = declareFields(classInfo);
         StringBuilder setGetMethods = declareSetGetMethods(classInfo);
         StringBuilder toStringMethod = declareToString(classInfo);
         return fields.append(setGetMethods).append(toStringMethod).toString();
@@ -46,7 +54,7 @@ public class OriginalJavaContentBuilder implements JavaContentBuilder {
         return methods;
     }
 
-    private StringBuilder declareFileds(IClassInfo classInfo) {
+    private StringBuilder declareFields(IClassInfo classInfo) {
         StringBuilder fields = new StringBuilder();
         for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
             if (StringUtils.isNotBlank(fieldInfo.getComment())) {

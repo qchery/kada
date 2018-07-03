@@ -11,6 +11,6 @@ import com.qchery.kada.descriptor.file.FileInfo;
  */
 public interface MappingFileBuilder {
 
-    FileInfo build(Mapping mapping);
+    FileInfo build(FileInfo fileInfo, Mapping mapping);
 
 }

@@ -7,12 +7,12 @@ import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.descriptor.db.ColumnInfo;
 import com.qchery.kada.descriptor.db.TableInfo;
+import com.qchery.kada.descriptor.file.FileInfo;
 import com.qchery.kada.descriptor.java.ClassInfo;
 import com.qchery.kada.descriptor.java.FieldInfo;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.charset.Charset;
 
 /**
  * Java 对象生成 orm 配置
@@ -25,10 +25,10 @@ public class JavaOrmer {
     private MappingFileBuilder mappingFileBuilder;
     private NameConvertor convertor = new DefaultNameConvertor();
 
-    private String rootPath;
+    private FileInfo fileInfo;
 
     public JavaOrmer(String rootPath, MappingFileBuilder mappingFileBuilder) {
-        this.rootPath = rootPath;
+        this.fileInfo = new FileInfo(rootPath);
         this.mappingFileBuilder = mappingFileBuilder;
     }
 
@@ -44,7 +44,7 @@ public class JavaOrmer {
      */
     public void generateFile(Class<?> clazz) throws IOException {
         Mapping mapping = getMapping(clazz);
-        FileCreator.createFile(rootPath, mappingFileBuilder.build(mapping));
+        FileCreator.createFile(fileInfo.getRootPath(), mappingFileBuilder.build(fileInfo, mapping));
     }
 
     private Mapping getMapping(Class<?> clazz) {
@@ -64,7 +64,6 @@ public class JavaOrmer {
             mapping.addMappingItem(new MappingItem(fieldInfo, columnInfo));
         }
 
-        mapping.setCharset(Charset.forName("utf-8"));
         return mapping;
     }
 

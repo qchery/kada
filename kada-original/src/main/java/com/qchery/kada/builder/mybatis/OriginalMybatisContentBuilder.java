@@ -1,5 +1,6 @@
 package com.qchery.kada.builder.mybatis;
 
+import com.qchery.kada.builder.ContentBuilder;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.utils.XMLUtils;
@@ -7,6 +8,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,19 +16,20 @@ import java.util.List;
  * @author Chery
  * @date 2018/4/15 11:11
  */
-public class OriginalMybatisContentBuilder implements MybatisContentBuilder {
+public class OriginalMybatisContentBuilder implements ContentBuilder {
 
     public static final String FULL_RESULT_MAP = "FullResultMap";
 
     @Override
-    public String build(Mapping mapping) {
+    public String build(Charset charset, Mapping mapping) {
         Document document = DocumentHelper.createDocument();
-        document.setXMLEncoding(mapping.getCharset().name());
+        document.setXMLEncoding(charset.name());
         document.addDocType("mapper", "-//mybatis.org//DTD Mapper 3.0//EN",
                 "http://mybatis.org/dtd/mybatis-3-mapper.dtd");
 
         Element mapperEle = document.addElement("mapper")
-                .addAttribute("namespace", mapping.getClassInfo().getType() + "Dao");
+                .addAttribute("namespace", mapping.getClassInfo().getPackageName() + ".dao." +
+                        mapping.getClassInfo().getClassName() + "Dao");
 
         List<MappingItem> mappingItems = mapping.getMappingItems();
 

@@ -9,6 +9,7 @@ import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.descriptor.db.ColumnInfo;
 import com.qchery.kada.descriptor.db.TableInfo;
+import com.qchery.kada.descriptor.file.FileInfo;
 import com.qchery.kada.descriptor.java.ClassInfo;
 import com.qchery.kada.descriptor.java.FieldInfo;
 import com.qchery.kada.descriptor.java.TypeInfo;
@@ -21,9 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,12 +37,11 @@ public class DBOrmer {
 
     private DBHelper dbHelper;    // 支持多数据库
     private NameConvertor nameConvertor;
-    private MappingFileBuilder mappingFileBuilder;
+    private List<MappingFileBuilder> mappingFileBuilders;
     private TableNameFilter tableNameFilter;
     private DBScanner dbScanner = new DefaultDBScanner();
-    private Charset fileCharset;
     private String packageName;
-    private String rootPath;
+    private FileInfo fileInfo;
 
     private Logger logger = LoggerFactory.getLogger(DBOrmer.class);
 
@@ -96,7 +96,9 @@ public class DBOrmer {
     private void generateFile(Connection conn, TableInfo tableInfo) {
         try {
             Mapping mapping = getMapping(conn, tableInfo);
-            FileCreator.createFile(rootPath, mappingFileBuilder.build(mapping));
+            for (MappingFileBuilder mappingFileBuilder : mappingFileBuilders) {
+                FileCreator.createFile(fileInfo.getRootPath(), mappingFileBuilder.build(fileInfo, mapping));
+            }
         } catch (IOException e) {
             logger.error("msg={}", "文件生成失败", e);
         }
@@ -119,7 +121,6 @@ public class DBOrmer {
             mapping.addMappingItem(new MappingItem(fieldInfo, columnInfo));
         }
 
-        mapping.setCharset(fileCharset);
         return mapping;
     }
 
@@ -128,30 +129,23 @@ public class DBOrmer {
         private static final String DEFAULT_PACKAGE_NAME = "com.qchery";
 
         private DBHelper dbHelper;
-        private MappingFileBuilder mappingFileBuilder;
+        private List<MappingFileBuilder> mappingFileBuilders = new ArrayList<>();
+        private FileInfo fileInfo;
         private NameConvertor nameConvertor;
         private TableNameFilter tableNameFilter;
-        private Charset charset;
         private String packageName;
-        private String rootPath;
 
         private DBOrmerBuilder() {
         }
 
         public DBOrmer build() {
-            if (null == dbHelper || null == mappingFileBuilder) {
-                throw new ConfigException("dbHelper 与 MappingFileBuilder 不能为空");
+            if (null == dbHelper || mappingFileBuilders.size() == 0) {
+                throw new ConfigException("dbHelper 与 MappingFileBuilders 不能为空");
             }
             DBOrmer dbOrmer = new DBOrmer();
             dbOrmer.dbHelper = dbHelper;
-            dbOrmer.mappingFileBuilder = mappingFileBuilder;
+            dbOrmer.mappingFileBuilders = mappingFileBuilders;
             dbOrmer.tableNameFilter = tableNameFilter;
-
-            // 设置文件生成根路径
-            if (rootPath == null) {
-                rootPath = System.getProperty("user.dir");
-            }
-            dbOrmer.rootPath = rootPath;
 
             // 设置 NameConvertor
             if (null == nameConvertor) {
@@ -159,11 +153,10 @@ public class DBOrmer {
             }
             dbOrmer.nameConvertor = nameConvertor;
 
-            // 设置文件编码
-            if (null == charset) {
-                charset = Charset.defaultCharset();
+            if (fileInfo == null) {
+                fileInfo = new FileInfo();
             }
-            dbOrmer.fileCharset = charset;
+            dbOrmer.fileInfo = fileInfo;
 
             // 设置包名
             if (null == packageName) {
@@ -178,18 +171,13 @@ public class DBOrmer {
             return this;
         }
 
-        public DBOrmerBuilder fileBuilder(MappingFileBuilder mappingFileBuilder) {
-            this.mappingFileBuilder = mappingFileBuilder;
+        public DBOrmerBuilder addFileBuilder(MappingFileBuilder mappingFileBuilder) {
+            this.mappingFileBuilders.add(mappingFileBuilder);
             return this;
         }
 
         public DBOrmerBuilder nameConvertor(NameConvertor nameConvertor) {
             this.nameConvertor = nameConvertor;
-            return this;
-        }
-
-        public DBOrmerBuilder charset(Charset charset) {
-            this.charset = charset;
             return this;
         }
 
@@ -203,15 +191,15 @@ public class DBOrmer {
             return this;
         }
 
-        /**
-         * 源码生成根路径，若不设置，则默认为 {@see System.getProperty(" user.dir ")}
-         *
-         * @param rootPath 源码根路径，不包括包路径
-         * @return DBOrmerBuilder
-         */
-        public DBOrmerBuilder rootPath(String rootPath) {
-            this.rootPath = rootPath;
+        public DBOrmerBuilder fileInfo(FileInfo fileInfo) {
+            this.fileInfo = fileInfo;
             return this;
         }
+
+        public DBOrmerBuilder clearBuilders() {
+            this.mappingFileBuilders.clear();
+            return this;
+        }
+
     }
 }

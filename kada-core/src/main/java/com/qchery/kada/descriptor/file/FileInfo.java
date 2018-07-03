@@ -10,21 +10,34 @@ import java.nio.charset.Charset;
  */
 public class FileInfo {
 
+    private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
     private String packagePath;
     private String fileName;
     private String content;
-    private Charset charset;
+    private Charset charset = DEFAULT_CHARSET;
+    private String rootPath;
 
-    public FileInfo(String packagePath, String fileName, String content) {
-        this.packagePath = packagePath;
-        this.fileName = fileName;
-        this.content = content;
-        this.charset = Charset.forName("UTF-8");
+    public FileInfo() {
+        this(System.getProperty("user.dir"));
     }
 
-    public FileInfo(String packagePath, String fileName, String content, Charset charset) {
-        this(packagePath, fileName, content);
-        this.charset = charset;
+    public FileInfo(String rootPath) {
+        this(rootPath, DEFAULT_CHARSET);
+    }
+
+    public FileInfo(String rootPath, Charset charset) {
+        this.rootPath = rootPath;
+        if (charset != null) {
+            this.charset = charset;
+        }
+    }
+
+    public String getRootPath() {
+        return rootPath;
+    }
+
+    public void setRootPath(String rootPath) {
+        this.rootPath = rootPath;
     }
 
     public String getContent() {

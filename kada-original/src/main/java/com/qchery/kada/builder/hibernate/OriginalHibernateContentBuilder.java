@@ -1,5 +1,6 @@
 package com.qchery.kada.builder.hibernate;
 
+import com.qchery.kada.builder.ContentBuilder;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.utils.XMLUtils;
@@ -7,6 +8,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.List;
  * @author Chery
  * @date 2018/6/30 19:13
  */
-public class OriginalHibernateContentBuilder implements HibernateContentBuilder {
+public class OriginalHibernateContentBuilder implements ContentBuilder {
 
     public static final String NAME = "name";
     public static final String TYPE = "type";
@@ -30,9 +32,9 @@ public class OriginalHibernateContentBuilder implements HibernateContentBuilder 
     public static final String PROPERTY = "property";
 
     @Override
-    public String build(Mapping mapping) {
+    public String build(Charset charset, Mapping mapping) {
         Document document = DocumentHelper.createDocument();
-        document.setXMLEncoding(mapping.getCharset().name());
+        document.setXMLEncoding(charset.name());
         document.addDocType("hibernate-hibernateMapping",
                 "-//Hibernate/Hibernate Mapping DTD 3.0//EN",
                 "http://hibernate.sourceforge.net/hibernate-hibernateMapping-3.0.dtd");

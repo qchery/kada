@@ -1,7 +1,9 @@
 package com.qchery.kada.builder.hibernate;
 
 import com.qchery.kada.builder.AbstractMappingFileBuilder;
+import com.qchery.kada.builder.ContentBuilder;
 import com.qchery.kada.descriptor.Mapping;
+import com.qchery.kada.descriptor.file.FileInfo;
 
 /**
  * Hibernate配置文件建造器
@@ -11,15 +13,15 @@ import com.qchery.kada.descriptor.Mapping;
  */
 public class HibernateMappingFileBuilder extends AbstractMappingFileBuilder {
 
-    private HibernateContentBuilder hibernateContentBuilder;
+    private ContentBuilder contentBuilder;
 
-    public HibernateMappingFileBuilder(HibernateContentBuilder hibernateContentBuilder) {
-        this.hibernateContentBuilder = hibernateContentBuilder;
+    public HibernateMappingFileBuilder(ContentBuilder contentBuilder) {
+        this.contentBuilder = contentBuilder;
     }
 
     @Override
-    public String getContent(Mapping mapping) {
-        return hibernateContentBuilder.build(mapping);
+    public String getContent(FileInfo fileInfo, Mapping mapping) {
+        return contentBuilder.build(fileInfo.getCharset(), mapping);
     }
 
     @Override

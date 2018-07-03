@@ -3,8 +3,6 @@ package com.qchery.kada.builder;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.file.FileInfo;
 
-import java.nio.charset.Charset;
-
 /**
  * @author Chery
  * @date 2018/4/15 15:37
@@ -12,12 +10,11 @@ import java.nio.charset.Charset;
 public abstract class AbstractMappingFileBuilder implements MappingFileBuilder {
 
     @Override
-    public FileInfo build(Mapping mapping) {
-        String content = getContent(mapping);
-        String fileName = getFileName(mapping.getClassName());
-        String filePath = getFilePath(mapping.getPackageName());
-        Charset charset = mapping.getCharset();
-        return new FileInfo(filePath, fileName, content, charset);
+    public FileInfo build(FileInfo fileInfo, Mapping mapping) {
+        fileInfo.setContent(getContent(fileInfo, mapping));
+        fileInfo.setFileName(getFileName(mapping.getClassName()));
+        fileInfo.setPackagePath(getFilePath(mapping.getPackageName()));
+        return fileInfo;
     }
 
     protected String getFilePath(String packageName) {
@@ -35,8 +32,9 @@ public abstract class AbstractMappingFileBuilder implements MappingFileBuilder {
     /**
      * 解析数据库关系为相应格式
      *
-     * @param mapping 类与表的映射
+     * @param fileInfo 文件信息
+     * @param mapping  类与表的映射
      * @return {@link String}
      */
-    protected abstract String getContent(Mapping mapping);
+    protected abstract String getContent(FileInfo fileInfo, Mapping mapping);
 }

@@ -1,7 +1,9 @@
 package com.qchery.kada.builder.mybatis;
 
 import com.qchery.kada.builder.AbstractMappingFileBuilder;
+import com.qchery.kada.builder.ContentBuilder;
 import com.qchery.kada.descriptor.Mapping;
+import com.qchery.kada.descriptor.file.FileInfo;
 
 import java.io.File;
 
@@ -13,15 +15,15 @@ import java.io.File;
  */
 public class MybatisMappingFileBuilder extends AbstractMappingFileBuilder {
 
-    private MybatisContentBuilder mybatisContentBuilder;
+    private ContentBuilder contentBuilder;
 
-    public MybatisMappingFileBuilder(MybatisContentBuilder mybatisContentBuilder) {
-        this.mybatisContentBuilder = mybatisContentBuilder;
+    public MybatisMappingFileBuilder(ContentBuilder contentBuilder) {
+        this.contentBuilder = contentBuilder;
     }
 
     @Override
-    public String getContent(Mapping mapping) {
-        return mybatisContentBuilder.build(mapping);
+    public String getContent(FileInfo fileInfo, Mapping mapping) {
+        return contentBuilder.build(fileInfo.getCharset(), mapping);
     }
 
 
