@@ -37,7 +37,7 @@ public class JsonStructParser {
         } else if (rootElement.isJsonArray()) {
             classInfo = parseListClassInfo(packageName, className, rootElement);
         } else if (rootElement.isJsonObject()) {
-            classInfo = ClassInfo.of(packageName, className);
+            classInfo = ClassInfo.ofEntity(packageName, className);
             JsonObject jsonObject = rootElement.getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
                 FieldInfo fieldInfo = parseFieldInfo(packageName, entry.getKey(), entry.getValue());

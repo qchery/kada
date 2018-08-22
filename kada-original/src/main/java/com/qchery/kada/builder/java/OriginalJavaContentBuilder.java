@@ -26,7 +26,7 @@ public class OriginalJavaContentBuilder implements JavaContentBuilder, ContentBu
     @Override
     public String build(IClassInfo classInfo) {
         StringBuilder builder = new StringBuilder();
-        builder.append("package ").append(classInfo.getPackageName()).append(";\n\n")
+        builder.append("package ").append(classInfo.toEntityPackage()).append(";\n\n")
                 .append(declareImports(classInfo));
 
         if (StringUtils.isNotBlank(classInfo.getComment())) {

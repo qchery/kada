@@ -2,8 +2,7 @@ package com.qchery.kada.builder.java;
 
 import com.qchery.kada.builder.AbstractMappingFileBuilder;
 import com.qchery.kada.builder.ContentBuilder;
-import com.qchery.kada.descriptor.Mapping;
-import com.qchery.kada.descriptor.file.FileInfo;
+import com.qchery.kada.descriptor.java.IClassInfo;
 
 /**
  * 映射生成Java类
@@ -13,20 +12,17 @@ import com.qchery.kada.descriptor.file.FileInfo;
  */
 public class JavaMappingFileBuilder extends AbstractMappingFileBuilder {
 
-    private ContentBuilder contentBuilder;
-
     public JavaMappingFileBuilder(ContentBuilder contentBuilder) {
-        this.contentBuilder = contentBuilder;
+        super(contentBuilder);
     }
 
     @Override
-    public String getContent(FileInfo fileInfo, Mapping mapping) {
-        return contentBuilder.build(fileInfo.getCharset(), mapping);
+    public String getFileName(IClassInfo classInfo) {
+        return classInfo.getClassName() + ".java";
     }
 
     @Override
-    public String getFileName(String className) {
-        return className + ".java";
+    protected String getPackageName(IClassInfo classInfo) {
+        return classInfo.toEntityPackage();
     }
-
 }

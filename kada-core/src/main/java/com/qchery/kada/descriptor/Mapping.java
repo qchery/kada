@@ -57,22 +57,34 @@ public class Mapping {
     }
 
     public String getPackageName() {
-        return classInfo.getPackageName();
+        return getClassInfo().getPackageName();
     }
 
     public String getClassName() {
-        return classInfo.getClassName();
+        return getClassInfo().getClassName();
     }
 
     public String getTableName() {
-        return tableInfo.getTableName();
+        return getTableInfo().getTableName();
     }
 
     public String getTableComment() {
-        String comment = tableInfo.getComment();
+        String comment = getTableInfo().getComment();
         if (null == comment || "".equals(comment)) {
-            comment = tableInfo.getTableName();
+            comment = getTableInfo().getTableName();
         }
         return comment;
+    }
+
+    public String getType() {
+        return getClassInfo().getType();
+    }
+
+    public String toDaoPackage() {
+        return getClassInfo().toDaoPackage();
+    }
+
+    public String toDaoClassName() {
+        return getClassInfo().toDaoClassName();
     }
 }

@@ -2,6 +2,7 @@ package com.qchery.kada.builder;
 
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.file.FileInfo;
+import com.qchery.kada.descriptor.java.IClassInfo;
 
 /**
  * @author Chery
@@ -9,32 +10,37 @@ import com.qchery.kada.descriptor.file.FileInfo;
  */
 public abstract class AbstractMappingFileBuilder implements MappingFileBuilder {
 
+    protected ContentBuilder contentBuilder;
+
+    public AbstractMappingFileBuilder(ContentBuilder contentBuilder) {
+        this.contentBuilder = contentBuilder;
+    }
+
     @Override
     public FileInfo build(FileInfo fileInfo, Mapping mapping) {
         fileInfo.setContent(getContent(fileInfo, mapping));
-        fileInfo.setFileName(getFileName(mapping.getClassName()));
-        fileInfo.setPackagePath(getFilePath(mapping.getPackageName()));
+        fileInfo.setFileName(getFileName(mapping.getClassInfo()));
+        fileInfo.setPackagePath(getFilePath(mapping.getClassInfo()));
         return fileInfo;
     }
 
-    protected String getFilePath(String packageName) {
-        return packageName.replaceAll("\\.", "/");
+    private String getFilePath(IClassInfo classInfo) {
+        return getPackageName(classInfo).replaceAll("\\.", "/");
+    }
+
+    protected String getPackageName(IClassInfo classInfo) {
+        return classInfo.getPackageName();
     }
 
     /**
      * 根据类名获取文件名
      *
-     * @param className 类名
+     * @param classInfo 类信息
      * @return {@link String}
      */
-    protected abstract String getFileName(String className);
+    protected abstract String getFileName(IClassInfo classInfo);
 
-    /**
-     * 解析数据库关系为相应格式
-     *
-     * @param fileInfo 文件信息
-     * @param mapping  类与表的映射
-     * @return {@link String}
-     */
-    protected abstract String getContent(FileInfo fileInfo, Mapping mapping);
+    protected String getContent(FileInfo fileInfo, Mapping mapping) {
+        return contentBuilder.build(fileInfo.getCharset(), mapping);
+    }
 }

@@ -6,6 +6,7 @@ import com.qchery.kada.builder.java.OriginalJavaContentBuilder;
 import com.qchery.kada.builder.mybatis.MybatisDaoMappingFileBuilder;
 import com.qchery.kada.builder.mybatis.MybatisMappingFileBuilder;
 import com.qchery.kada.builder.mybatis.OriginalMybatisContentBuilder;
+import com.qchery.kada.builder.mybatis.OriginalMybatisDaoContentBuilder;
 import com.qchery.kada.db.DBHelper;
 import com.qchery.kada.db.DBHelperFactory;
 import com.qchery.kada.descriptor.file.FileInfo;
@@ -45,7 +46,7 @@ public class KadaTask extends DefaultTask {
                     .fileInfo(new FileInfo(rootPath + "/src/main/java", kadaExtension.getCharset()));
 
             builder.addFileBuilder(new JavaMappingFileBuilder(new OriginalJavaContentBuilder()))
-                    .addFileBuilder(new MybatisDaoMappingFileBuilder())
+                    .addFileBuilder(new MybatisDaoMappingFileBuilder(new OriginalMybatisDaoContentBuilder()))
                     .build().generateFile();
 
             builder.clearBuilders()

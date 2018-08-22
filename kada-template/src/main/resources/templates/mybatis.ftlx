@@ -3,7 +3,7 @@
 <#assign pkItems = mapping.pkItems>
 <?xml version="1.0" encoding="${charset}" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${classInfo.packageName}.dao.${classInfo.className}Dao">
+<mapper namespace="${classInfo.toDaoPackage}.${classInfo.toDaoClassName}">
     <resultMap id="FullResultMap" type="${classInfo.type}">
     <#list mappingItems as mappingItem>
         <#if mappingItem.PK>

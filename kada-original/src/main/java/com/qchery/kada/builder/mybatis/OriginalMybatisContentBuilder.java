@@ -28,15 +28,15 @@ public class OriginalMybatisContentBuilder implements ContentBuilder {
                 "http://mybatis.org/dtd/mybatis-3-mapper.dtd");
 
         Element mapperEle = document.addElement("mapper")
-                .addAttribute("namespace", mapping.getClassInfo().getPackageName() + ".dao." +
-                        mapping.getClassInfo().getClassName() + "Dao");
+                .addAttribute("namespace", mapping.toDaoPackage() + "." +
+                        mapping.toDaoClassName());
 
         List<MappingItem> mappingItems = mapping.getMappingItems();
 
         // 字段映射生成
         Element resultMapEle = mapperEle.addElement("resultMap")
                 .addAttribute("id", FULL_RESULT_MAP)
-                .addAttribute("type", mapping.getClassInfo().getType());
+                .addAttribute("type", mapping.getType());
         for (MappingItem item : mappingItems) {
             Element propEle;
             if (item.isPK()) {
@@ -130,10 +130,12 @@ public class OriginalMybatisContentBuilder implements ContentBuilder {
         Iterator<MappingItem> iterator = items.iterator();
         while (iterator.hasNext()) {
             MappingItem item = iterator.next();
-            Element ifEle = set.addElement("if").addAttribute("test", "null != " + item.getFieldName())
-                    .addText(item.getColumnName() + " = #{" + item.getFieldName() + "}");
-            if (iterator.hasNext()) {
-                ifEle.addText(",");
+            if (!item.isPK()) {
+                Element ifEle = set.addElement("if").addAttribute("test", "null != " + item.getFieldName())
+                        .addText(item.getColumnName() + " = #{" + item.getFieldName() + "}");
+                if (iterator.hasNext()) {
+                    ifEle.addText(",");
+                }
             }
         }
         addWhere(update, mapping);

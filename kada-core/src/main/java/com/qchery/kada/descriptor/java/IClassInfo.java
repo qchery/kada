@@ -61,4 +61,25 @@ public interface IClassInfo {
      * @return 需要导入的类型
      */
     Set<String> getImportTypes();
+
+    /**
+     * 转换成实体类的包名
+     *
+     * @return 实体类包名
+     */
+    String toEntityPackage();
+
+    /**
+     * 转换成Dao对应的包名
+     *
+     * @return Dao的包名
+     */
+    String toDaoPackage();
+
+    /**
+     * 转换成Dao对应的类名
+     *
+     * @return Dao的类名
+     */
+    String toDaoClassName();
 }

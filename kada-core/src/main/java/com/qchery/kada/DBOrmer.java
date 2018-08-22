@@ -108,7 +108,7 @@ public class DBOrmer {
         List<ColumnInfo> columnInfos = dbScanner.scannerColumns(conn, tableInfo.getTableName());
         tableInfo.addAll(columnInfos);
         String className = nameConvertor.toClassName(tableInfo.getTableName());
-        ClassInfo classInfo = ClassInfo.of(packageName, className);
+        ClassInfo classInfo = ClassInfo.ofEntity(packageName, className);
         classInfo.setComment(tableInfo.getComment());
         Mapping mapping = new Mapping(classInfo, tableInfo);
 

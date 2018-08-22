@@ -2,8 +2,7 @@ package com.qchery.kada.builder.hibernate;
 
 import com.qchery.kada.builder.AbstractMappingFileBuilder;
 import com.qchery.kada.builder.ContentBuilder;
-import com.qchery.kada.descriptor.Mapping;
-import com.qchery.kada.descriptor.file.FileInfo;
+import com.qchery.kada.descriptor.java.IClassInfo;
 
 /**
  * Hibernate配置文件建造器
@@ -13,20 +12,13 @@ import com.qchery.kada.descriptor.file.FileInfo;
  */
 public class HibernateMappingFileBuilder extends AbstractMappingFileBuilder {
 
-    private ContentBuilder contentBuilder;
-
     public HibernateMappingFileBuilder(ContentBuilder contentBuilder) {
-        this.contentBuilder = contentBuilder;
+        super(contentBuilder);
     }
 
     @Override
-    public String getContent(FileInfo fileInfo, Mapping mapping) {
-        return contentBuilder.build(fileInfo.getCharset(), mapping);
-    }
-
-    @Override
-    public String getFileName(String className) {
-        return className + ".hbm.xml";
+    public String getFileName(IClassInfo classInfo) {
+        return classInfo.getClassName() + ".hbm.xml";
     }
 
 }

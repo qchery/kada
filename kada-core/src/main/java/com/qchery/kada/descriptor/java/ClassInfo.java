@@ -5,6 +5,10 @@ import java.util.*;
 public class ClassInfo implements IClassInfo {
 
     /**
+     * 是否为实体类
+     */
+    private boolean entityClass;
+    /**
      * 类注释
      */
     private String comment;
@@ -21,8 +25,10 @@ public class ClassInfo implements IClassInfo {
      */
     private List<FieldInfo> fieldInfos;
 
-    public static ClassInfo of(String packageName, String typeName) {
-        return of(new TypeInfo(packageName, typeName));
+    public static ClassInfo ofEntity(String packageName, String typeName) {
+        ClassInfo classInfo = of(new TypeInfo(packageName, typeName));
+        classInfo.setEntityClass(true);
+        return classInfo;
     }
 
     public static ClassInfo of(TypeInfo typeInfo) {
@@ -63,6 +69,14 @@ public class ClassInfo implements IClassInfo {
         return typeInfo.getTypeName();
     }
 
+    public boolean isEntityClass() {
+        return entityClass;
+    }
+
+    public void setEntityClass(boolean entityClass) {
+        this.entityClass = entityClass;
+    }
+
     @Override
     public List<FieldInfo> getFieldInfos() {
         if (typeInfo.isPrimitive()) {
@@ -89,12 +103,27 @@ public class ClassInfo implements IClassInfo {
 
     @Override
     public String getType() {
-        return typeInfo.getType();
+        return (isEntityClass() ? toEntityPackage() : getPackageName()) + "." + typeInfo.getTypeName();
     }
 
     @Override
     public Set<String> getImportTypes() {
         return this.importTypes;
+    }
+
+    @Override
+    public String toEntityPackage() {
+        return getPackageName() + ".entity";
+    }
+
+    @Override
+    public String toDaoPackage() {
+        return getPackageName() + ".dao";
+    }
+
+    @Override
+    public String toDaoClassName() {
+        return getClassName() + "Dao";
     }
 
 }

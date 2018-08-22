@@ -51,10 +51,6 @@ public class TypeInfo {
         return primitive;
     }
 
-    public String getType() {
-        return this.packageName + "." + this.typeName;
-    }
-
     @Override
     public String toString() {
         return "TypeInfo{" +
