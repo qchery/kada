@@ -82,4 +82,11 @@ public interface IClassInfo {
      * @return Dao的类名
      */
     String toDaoClassName();
+
+    /**
+     * 获取注释信息
+     *
+     * @return 注释信息
+     */
+    CommentInfo getCommentInfo();
 }

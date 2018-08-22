@@ -2,6 +2,7 @@ package com.qchery.kada.plugin;
 
 import com.qchery.kada.convertor.NameConvertor;
 import com.qchery.kada.db.ConnectParam;
+import com.qchery.kada.descriptor.java.AuthorInfo;
 import com.qchery.kada.filter.TableNameFilter;
 import org.gradle.api.Action;
 
@@ -25,12 +26,22 @@ public class KadaExtension {
 
     private File target;
 
+    private AuthorInfo authorInfo = new AuthorInfo();
+
     void connect(Action<ConnectParam> action) {
         action.execute(connectParam);
     }
 
     public ConnectParam getConnectParam() {
         return connectParam;
+    }
+
+    void authorInfo(Action<AuthorInfo> action) {
+        action.execute(authorInfo);
+    }
+
+    public AuthorInfo getAuthorInfo() {
+        return authorInfo;
     }
 
     public TableNameFilter getTableNameFilter() {

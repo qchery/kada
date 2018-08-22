@@ -10,14 +10,13 @@ import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.descriptor.db.ColumnInfo;
 import com.qchery.kada.descriptor.db.TableInfo;
 import com.qchery.kada.descriptor.file.FileInfo;
-import com.qchery.kada.descriptor.java.ClassInfo;
-import com.qchery.kada.descriptor.java.FieldInfo;
-import com.qchery.kada.descriptor.java.TypeInfo;
+import com.qchery.kada.descriptor.java.*;
 import com.qchery.kada.exception.ConfigException;
 import com.qchery.kada.filter.TableNameFilter;
 import com.qchery.kada.scanner.DBScanner;
 import com.qchery.kada.scanner.DefaultDBScanner;
 import com.qchery.kada.utils.DbUtils;
+import com.qchery.kada.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +41,7 @@ public class DBOrmer {
     private DBScanner dbScanner = new DefaultDBScanner();
     private String packageName;
     private FileInfo fileInfo;
+    private AuthorInfo authorInfo;
 
     private Logger logger = LoggerFactory.getLogger(DBOrmer.class);
 
@@ -109,7 +109,7 @@ public class DBOrmer {
         tableInfo.addAll(columnInfos);
         String className = nameConvertor.toClassName(tableInfo.getTableName());
         ClassInfo classInfo = ClassInfo.ofEntity(packageName, className);
-        classInfo.setComment(tableInfo.getComment());
+        classInfo.setCommentInfo(new CommentInfo(authorInfo, tableInfo.getComment()));
         Mapping mapping = new Mapping(classInfo, tableInfo);
 
         for (ColumnInfo columnInfo : tableInfo.getColumnInfos()) {
@@ -134,6 +134,7 @@ public class DBOrmer {
         private NameConvertor nameConvertor;
         private TableNameFilter tableNameFilter;
         private String packageName;
+        private AuthorInfo authorInfo;
 
         private DBOrmerBuilder() {
         }
@@ -146,6 +147,7 @@ public class DBOrmer {
             dbOrmer.dbHelper = dbHelper;
             dbOrmer.mappingFileBuilders = mappingFileBuilders;
             dbOrmer.tableNameFilter = tableNameFilter;
+            dbOrmer.authorInfo = authorInfo;
 
             // 设置 NameConvertor
             if (null == nameConvertor) {
@@ -201,5 +203,22 @@ public class DBOrmer {
             return this;
         }
 
+        public DBOrmerBuilder authorInfo(AuthorInfo authorInfo) {
+            if (authorInfo != null) {
+                // 设置作者
+                if (StringUtils.isBlank(authorInfo.getAuthor())) {
+                    authorInfo.setAuthor(AuthorInfo.DEFAULT_AUTHOR);
+                }
+
+                // 设置邮箱
+                if (StringUtils.isBlank(authorInfo.getEmail())) {
+                    authorInfo.setEmail(AuthorInfo.DEFAULT_EMAIL);
+                }
+                this.authorInfo = authorInfo;
+            } else {
+                this.authorInfo = new AuthorInfo();
+            }
+            return this;
+        }
     }
 }

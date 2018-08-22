@@ -40,6 +40,7 @@ public class KadaTask extends DefaultTask {
             DBHelperFactory dbHelperFactory = new DBHelperFactory();
             DBHelper dbHelper = dbHelperFactory.getDbHelper(kadaExtension.getConnectParam());
             DBOrmer.DBOrmerBuilder builder = DBOrmer.create().dbHelper(dbHelper)
+                    .authorInfo(kadaExtension.getAuthorInfo())
                     .packageName(kadaExtension.getPackageName())
                     .tableNameFilter(kadaExtension.getTableNameFilter())
                     .nameConvertor(kadaExtension.getNameConvertor())

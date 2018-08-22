@@ -9,9 +9,9 @@ public class ClassInfo implements IClassInfo {
      */
     private boolean entityClass;
     /**
-     * 类注释
+     * 类注释信息
      */
-    private String comment;
+    private CommentInfo commentInfo;
     /**
      * 类型声明
      */
@@ -50,13 +50,9 @@ public class ClassInfo implements IClassInfo {
         }
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     @Override
     public String getComment() {
-        return this.comment;
+        return commentInfo.getContent();
     }
 
     @Override
@@ -126,4 +122,12 @@ public class ClassInfo implements IClassInfo {
         return getClassName() + "Dao";
     }
 
+    @Override
+    public CommentInfo getCommentInfo() {
+        return commentInfo;
+    }
+
+    public void setCommentInfo(CommentInfo commentInfo) {
+        this.commentInfo = commentInfo;
+    }
 }
