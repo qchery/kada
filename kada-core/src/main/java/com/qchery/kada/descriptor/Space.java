@@ -12,6 +12,7 @@ public class Space {
     private static final Map<Integer, String> SPACE_MAP = new HashMap<Integer, String>() {{
         put(4, "    ");
         put(5, "     ");
+        put(6, "      ");
         put(8, "        ");
         put(16, "                ");
     }};
@@ -22,6 +23,10 @@ public class Space {
 
     public static String ofFour() {
         return of(4);
+    }
+
+    public static String ofSix() {
+        return of(6);
     }
 
     public static String ofEight() {

@@ -3,20 +3,15 @@ package com.qchery.kada.builder.java;
 import com.qchery.kada.builder.ContentBuilder;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.Space;
-import com.qchery.kada.descriptor.java.CommentInfo;
 import com.qchery.kada.descriptor.java.FieldInfo;
 import com.qchery.kada.descriptor.java.IClassInfo;
 import com.qchery.kada.utils.StringUtils;
 
 import java.nio.charset.Charset;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 
-import static com.qchery.kada.descriptor.Space.ofEight;
-import static com.qchery.kada.descriptor.Space.ofFour;
-import static com.qchery.kada.descriptor.Space.ofSixteen;
+import static com.qchery.kada.descriptor.Space.*;
 
 /**
  * @author Chery
@@ -33,33 +28,12 @@ public class OriginalJavaContentBuilder implements JavaContentBuilder, ContentBu
 
     @Override
     public String build(IClassInfo classInfo) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("package ").append(classInfo.toEntityPackage()).append(";\n\n")
-                .append(declareImports(classInfo)).append("\n");
-
-        CommentInfo commentInfo = classInfo.getCommentInfo();
-        if (commentInfo != null) {
-            builder.append("/**\n");
-            if (StringUtils.isNotBlank(commentInfo.getContent())) {
-                builder.append(" * ").append(commentInfo.getContent()).append("\n");
-                builder.append(" * \n");
-            }
-            if (StringUtils.isNotBlank(commentInfo.getAuthor())) {
-                builder.append(" * @author ").append(commentInfo.getAuthor()).append("\n");
-            }
-            if (StringUtils.isNotBlank(commentInfo.getEmail())) {
-                builder.append(" * @email ").append(commentInfo.getEmail()).append("\n");
-            }
-            if (StringUtils.isNotBlank(commentInfo.getCompany())) {
-                builder.append(" * @company ").append(commentInfo.getCompany()).append("\n");
-            }
-            builder.append(" * @date ").append(DateTimeFormatter.ofPattern(commentInfo.getTimePattern()).format(LocalDateTime.now())).append("\n");
-            builder.append(" */\n");
-        }
-
-        builder.append("public class ").append(classInfo.getClassName()).append(" implements Serializable {\n")
-                .append(getMainContent(classInfo)).append("\n}");
-        return builder.toString();
+        String builder = "package " + classInfo.toEntityPackage() + ";\n\n" +
+                declareImports(classInfo) + "\n" +
+                CommentBuilder.build(classInfo) +
+                "public class " + classInfo.getClassName() + " implements Serializable {\n" +
+                getMainContent(classInfo) + "\n}";
+        return builder;
     }
 
     private String getMainContent(IClassInfo classInfo) {

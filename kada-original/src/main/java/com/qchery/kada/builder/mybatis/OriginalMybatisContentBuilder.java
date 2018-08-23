@@ -12,6 +12,9 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.qchery.kada.descriptor.Space.ofFour;
+import static com.qchery.kada.descriptor.Space.ofSix;
+
 /**
  * @author Chery
  * @date 2018/4/15 11:11
@@ -64,17 +67,18 @@ public class OriginalMybatisContentBuilder implements ContentBuilder {
                 .addAttribute("resultMap", FULL_RESULT_MAP);
 
         List<MappingItem> mappingItems = mapping.getMappingItems();
-        StringBuilder builder = new StringBuilder("\nSELECT \n");
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n").append(ofFour()).append("SELECT \n");
         Iterator<MappingItem> iterator = mappingItems.iterator();
         while (iterator.hasNext()) {
             MappingItem item = iterator.next();
-            builder.append("  ").append(item.getColumnName());
+            builder.append(ofSix()).append(item.getColumnName());
             if (iterator.hasNext()) {
                 builder.append(",");
             }
             builder.append("\n");
         }
-        builder.append("FROM ").append(mapping.getTableName()).append(" ");
+        builder.append(ofFour()).append("FROM ").append(mapping.getTableName()).append(" ");
 
         select.addText(builder.toString());
         addWhere(select, mapping);
@@ -82,11 +86,11 @@ public class OriginalMybatisContentBuilder implements ContentBuilder {
 
     private void addWhere(Element element, Mapping mapping) {
         List<MappingItem> pkItems = mapping.getPkItems();
+        Element where = element.addElement("where");
         if (pkItems.size() == 1) {
-            MappingItem item = pkItems.get(0);
-            element.addText("\nWHERE " + item.getColumnName() + " = #{" + item.getFieldName() + "}");
+            MappingItem pkItem = pkItems.get(0);
+            where.addText(pkItem.getColumnName() + " = #{" + pkItem.getFieldName() + "}");
         } else {
-            Element where = element.addElement("where");
             for (MappingItem pkItem : pkItems) {
                 where.addElement("if").addAttribute("test", "null != " + pkItem.getFieldName())
                         .addText("AND " + pkItem.getColumnName() + " = #{" + pkItem.getFieldName() + "}");
@@ -95,36 +99,38 @@ public class OriginalMybatisContentBuilder implements ContentBuilder {
     }
 
     private void addInsert(Element element, Mapping mapping) {
-        StringBuilder builder = new StringBuilder("\nINSERT into ").append(mapping.getTableName())
+        StringBuilder builder = new StringBuilder()
+                .append("\n").append(ofFour()).append("INSERT INTO ")
+                .append(mapping.getTableName())
                 .append(" (\n");
         List<MappingItem> items = mapping.getMappingItems();
         Iterator<MappingItem> iterator = items.iterator();
         while (iterator.hasNext()) {
             MappingItem item = iterator.next();
-            builder.append("  ").append(item.getColumnName());
+            builder.append(ofSix()).append(item.getColumnName());
             if (iterator.hasNext()) {
                 builder.append(",");
             }
             builder.append("\n");
         }
-        builder.append(") VALUES (\n");
+        builder.append(ofFour()).append(") VALUES (\n");
         Iterator<MappingItem> itemIterator = items.iterator();
         while (itemIterator.hasNext()) {
             MappingItem item = itemIterator.next();
-            builder.append("  #{").append(item.getFieldName()).append("}");
+            builder.append(ofSix()).append("#{").append(item.getFieldName()).append("}");
             if (itemIterator.hasNext()) {
                 builder.append(",");
             }
             builder.append("\n");
         }
-        builder.append(")\n");
+        builder.append(ofFour()).append(")\n  ");
 
         element.addElement("insert").addAttribute("id", "insert").addText(builder.toString());
     }
 
     private void addUpdate(Element element, Mapping mapping) {
         Element update = element.addElement("update").addAttribute("id", "updateSelective");
-        update.addText("\nUPDATE " + mapping.getTableName());
+        update.addText("\n" + ofFour() + "UPDATE " + mapping.getTableName());
         Element set = update.addElement("set");
         List<MappingItem> items = mapping.getMappingItems();
         Iterator<MappingItem> iterator = items.iterator();

@@ -1,6 +1,7 @@
 package com.qchery.kada.builder.mybatis;
 
 import com.qchery.kada.builder.ContentBuilder;
+import com.qchery.kada.builder.java.CommentBuilder;
 import com.qchery.kada.descriptor.Mapping;
 import com.qchery.kada.descriptor.MappingItem;
 import com.qchery.kada.utils.StringUtils;
@@ -8,6 +9,8 @@ import com.qchery.kada.utils.StringUtils;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.qchery.kada.descriptor.Space.ofFour;
 
 /**
  * @author Chery
@@ -20,9 +23,11 @@ public class OriginalMybatisDaoContentBuilder implements ContentBuilder {
         StringBuilder builder = new StringBuilder("package ").append(mapping.toDaoPackage()).append(";\n\n");
         builder.append("import ").append(mapping.getType()).append(";\n\n");
 
+        builder.append(CommentBuilder.build(mapping.getClassInfo(), "Dao"));
+
         builder.append("public interface ").append(mapping.toDaoClassName()).append(" {\n\n");
         // 查询方法
-        builder.append("    ").append(mapping.getClassName()).append(" getById(");
+        builder.append(ofFour()).append(mapping.getClassName()).append(" getById(");
         List<MappingItem> pkItems = mapping.getPkItems();
         Iterator<MappingItem> iterator = pkItems.iterator();
         while (iterator.hasNext()) {
@@ -36,10 +41,10 @@ public class OriginalMybatisDaoContentBuilder implements ContentBuilder {
             }
         }
         // 插入方法
-        builder.append("    int insert(").append(mapping.getClassName()).append(" ")
+        builder.append(ofFour()).append("int insert(").append(mapping.getClassName()).append(" ")
                 .append(StringUtils.lowerFirstChar(mapping.getClassName())).append(");\n\n");
         // 更新方法
-        builder.append("    int updateSelective(").append(mapping.getClassName()).append(" ")
+        builder.append(ofFour()).append("int updateSelective(").append(mapping.getClassName()).append(" ")
                 .append(StringUtils.lowerFirstChar(mapping.getClassName())).append(");\n\n");
 
         builder.append("}");
