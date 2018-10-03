@@ -31,9 +31,6 @@ public class CommentBuilder {
             if (StringUtils.isNotBlank(commentInfo.getAuthor())) {
                 builder.append(" * @author ").append(commentInfo.getAuthor()).append("\n");
             }
-            if (StringUtils.isNotBlank(commentInfo.getEmail())) {
-                builder.append(" * @email ").append(commentInfo.getEmail()).append("\n");
-            }
             if (StringUtils.isNotBlank(commentInfo.getCompany())) {
                 builder.append(" * @company ").append(commentInfo.getCompany()).append("\n");
             }

@@ -33,10 +33,6 @@ public class CommentInfo {
         return authorInfo.getAuthor();
     }
 
-    public String getEmail() {
-        return authorInfo.getEmail();
-    }
-
     public String getCompany() {
         return authorInfo.getCompany();
     }

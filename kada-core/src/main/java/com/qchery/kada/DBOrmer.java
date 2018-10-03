@@ -210,10 +210,6 @@ public class DBOrmer {
                     authorInfo.setAuthor(AuthorInfo.DEFAULT_AUTHOR);
                 }
 
-                // 设置邮箱
-                if (StringUtils.isBlank(authorInfo.getEmail())) {
-                    authorInfo.setEmail(AuthorInfo.DEFAULT_EMAIL);
-                }
                 this.authorInfo = authorInfo;
             } else {
                 this.authorInfo = new AuthorInfo();

@@ -7,21 +7,17 @@ package com.qchery.kada.descriptor.java;
 public class AuthorInfo {
 
     public static final String DEFAULT_AUTHOR = "Chery";
-    public static final String DEFAULT_EMAIL = "chinrui1016@163.com";
 
     private String author;
-
-    private String email;
 
     private String company;
 
     public AuthorInfo() {
-        this(DEFAULT_AUTHOR, DEFAULT_EMAIL);
+        this(DEFAULT_AUTHOR);
     }
 
-    public AuthorInfo(String author, String email) {
+    public AuthorInfo(String author) {
         this.author = author;
-        this.email = email;
     }
 
     public String getAuthor() {
@@ -30,14 +26,6 @@ public class AuthorInfo {
 
     public void setAuthor(String author) {
         this.author = author;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getCompany() {
