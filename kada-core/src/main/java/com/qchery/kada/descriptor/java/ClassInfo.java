@@ -127,6 +127,11 @@ public class ClassInfo implements IClassInfo {
         return commentInfo;
     }
 
+    @Override
+    public boolean isArray() {
+        return typeInfo.isArray();
+    }
+
     public void setCommentInfo(CommentInfo commentInfo) {
         this.commentInfo = commentInfo;
     }

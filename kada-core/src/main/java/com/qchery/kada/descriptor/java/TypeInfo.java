@@ -9,34 +9,38 @@ public class TypeInfo {
     public static final String PKG_JAVA_LANG = "java.lang";
     public static final String PKG_JAVA_UTIL = "java.util";
 
-    public static final TypeInfo STRING = new TypeInfo(PKG_JAVA_LANG, "String", true);
-    public static final TypeInfo LONG = new TypeInfo("java.lang", "Long", true);
-    public static final TypeInfo BYTE_ARRAY = new TypeInfo("java.lang", "Byte[]");
-    public static final TypeInfo BOOLEAN = new TypeInfo("java.lang", "Boolean", true);
+    public static final TypeInfo STRING = new TypeInfo(PKG_JAVA_LANG, "String", Category.PRIMITIVE);
+    public static final TypeInfo LONG = new TypeInfo(PKG_JAVA_LANG, "Long", Category.PRIMITIVE);
+    public static final TypeInfo BYTE_ARRAY = new TypeInfo(PKG_JAVA_LANG, "Byte", Category.ARRAY);
+    public static final TypeInfo BOOLEAN = new TypeInfo(PKG_JAVA_LANG, "Boolean", Category.PRIMITIVE);
     public static final TypeInfo DATE = new TypeInfo(PKG_JAVA_UTIL, "Date");
     public static final TypeInfo BIG_DECIMAL = new TypeInfo("java.math", "BigDecimal");
-    public static final TypeInfo DOUBLE = new TypeInfo("java.lang", "Double", true);
-    public static final TypeInfo FLOAT = new TypeInfo("java.lang", "Float", true);
-    public static final TypeInfo INTEGER = new TypeInfo("java.lang", "Integer", true);
-    public static final TypeInfo OBJECT = new TypeInfo("java.lang", "Object");
-    public static final TypeInfo SHORT = new TypeInfo("java.lang", "Short", true);
+    public static final TypeInfo DOUBLE = new TypeInfo(PKG_JAVA_LANG, "Double", Category.PRIMITIVE);
+    public static final TypeInfo FLOAT = new TypeInfo(PKG_JAVA_LANG, "Float", Category.PRIMITIVE);
+    public static final TypeInfo INTEGER = new TypeInfo(PKG_JAVA_LANG, "Integer", Category.PRIMITIVE);
+    public static final TypeInfo OBJECT = new TypeInfo(PKG_JAVA_LANG, "Object");
+    public static final TypeInfo SHORT = new TypeInfo(PKG_JAVA_LANG, "Short", Category.PRIMITIVE);
     public static final TypeInfo TIME = new TypeInfo("java.sql", "Time");
-    public static final TypeInfo BYTE = new TypeInfo("java.lang", "Byte", true);
+    public static final TypeInfo BYTE = new TypeInfo(PKG_JAVA_LANG, "Byte", Category.PRIMITIVE);
 
     private String packageName;
 
     private String typeName;
 
-    private boolean primitive;
+    private Category category;
+
+    public enum Category {
+        PRIMITIVE, ARRAY
+    }
 
     public TypeInfo(String packageName, String typeName) {
         this.packageName = packageName;
         this.typeName = typeName;
     }
 
-    public TypeInfo(String packageName, String typeName, boolean primitive) {
+    public TypeInfo(String packageName, String typeName, Category category) {
         this(packageName, typeName);
-        this.primitive = primitive;
+        this.category = category;
     }
 
     public String getPackageName() {
@@ -48,7 +52,15 @@ public class TypeInfo {
     }
 
     public boolean isPrimitive() {
-        return primitive;
+        return category == Category.PRIMITIVE;
+    }
+
+    public boolean isArray() {
+        return category == Category.ARRAY;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 
     @Override
@@ -56,7 +68,7 @@ public class TypeInfo {
         return "TypeInfo{" +
                 "packageName='" + packageName + '\'' +
                 ", typeName='" + typeName + '\'' +
-                ", primitive=" + primitive +
+                ", category=" + category +
                 '}';
     }
 }

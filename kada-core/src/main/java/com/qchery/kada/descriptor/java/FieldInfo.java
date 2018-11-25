@@ -57,6 +57,9 @@ public class FieldInfo {
         if (classInfo instanceof GenericClassInfo) {
             className += String.format("<%s>", ((GenericClassInfo) classInfo).getInnerClass().getClassName());
         }
+        if (classInfo.isArray()) {
+            className += "[]";
+        }
         return className;
     }
 

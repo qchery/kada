@@ -89,4 +89,9 @@ public interface IClassInfo {
      * @return 注释信息
      */
     CommentInfo getCommentInfo();
+
+    /**
+     * 是否数数组类型
+     */
+    boolean isArray();
 }
