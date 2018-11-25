@@ -26,6 +26,8 @@ public class KadaExtension {
 
     private File target;
 
+    private boolean useLombok;
+
     private AuthorInfo authorInfo = new AuthorInfo();
 
     void connect(Action<ConnectParam> action) {
@@ -84,4 +86,11 @@ public class KadaExtension {
         this.target = target;
     }
 
+    public boolean isUseLombok() {
+        return useLombok;
+    }
+
+    public void setUseLombok(boolean useLombok) {
+        this.useLombok = useLombok;
+    }
 }

@@ -2,7 +2,9 @@ package com.qchery.kada.plugin;
 
 import com.qchery.kada.DBOrmer;
 import com.qchery.kada.builder.java.JavaMappingFileBuilder;
+import com.qchery.kada.builder.java.OriginalCommonJavaContentBuilder;
 import com.qchery.kada.builder.java.OriginalJavaContentBuilder;
+import com.qchery.kada.builder.java.OriginalLombokJavaContentBuilder;
 import com.qchery.kada.builder.mybatis.MybatisDaoMappingFileBuilder;
 import com.qchery.kada.builder.mybatis.MybatisMappingFileBuilder;
 import com.qchery.kada.builder.mybatis.OriginalMybatisContentBuilder;
@@ -25,14 +27,7 @@ public class KadaTask extends DefaultTask {
     public void doTask() {
         KadaExtension kadaExtension = getProject().getExtensions().getByType(KadaExtension.class);
 
-        File target = kadaExtension.getTarget();
-
-        String rootPath;
-        if (target != null) {
-            rootPath = target.getAbsolutePath();
-        } else {
-            rootPath = getProject().getProjectDir().getAbsolutePath();
-        }
+        String rootPath = getRootPath(kadaExtension.getTarget());
 
         System.out.println("Generate Started : Target Dir : " + rootPath);
 
@@ -46,7 +41,8 @@ public class KadaTask extends DefaultTask {
                     .nameConvertor(kadaExtension.getNameConvertor())
                     .fileInfo(new FileInfo(rootPath + "/src/main/java", kadaExtension.getCharset()));
 
-            builder.addFileBuilder(new JavaMappingFileBuilder(new OriginalJavaContentBuilder()))
+            OriginalJavaContentBuilder javaContentBuilder = getOriginalJavaContentBuilder(kadaExtension.isUseLombok());
+            builder.addFileBuilder(new JavaMappingFileBuilder(javaContentBuilder))
                     .addFileBuilder(new MybatisDaoMappingFileBuilder(new OriginalMybatisDaoContentBuilder()))
                     .build().generateFile();
 
@@ -60,6 +56,26 @@ public class KadaTask extends DefaultTask {
         }
 
         System.out.println("Generate Ended : Target Dir : " + rootPath);
+    }
+
+    public String getRootPath(File target) {
+        String rootPath;
+        if (target != null) {
+            rootPath = target.getAbsolutePath();
+        } else {
+            rootPath = getProject().getProjectDir().getAbsolutePath();
+        }
+        return rootPath;
+    }
+
+    public OriginalJavaContentBuilder getOriginalJavaContentBuilder(boolean useLombok) {
+        OriginalJavaContentBuilder javaContentBuilder;
+        if (useLombok) {
+            javaContentBuilder = new OriginalLombokJavaContentBuilder();
+        } else {
+            javaContentBuilder = new OriginalCommonJavaContentBuilder();
+        }
+        return javaContentBuilder;
     }
 
 }

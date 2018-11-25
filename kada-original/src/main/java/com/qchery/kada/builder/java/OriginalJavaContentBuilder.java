@@ -8,16 +8,17 @@ import com.qchery.kada.descriptor.java.IClassInfo;
 import com.qchery.kada.utils.StringUtils;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.qchery.kada.descriptor.Space.*;
+import static com.qchery.kada.descriptor.Space.ofFour;
 
 /**
  * @author Chery
  * @date 2018/4/14 16:42
  */
-public class OriginalJavaContentBuilder implements JavaContentBuilder, ContentBuilder {
+public abstract class OriginalJavaContentBuilder implements JavaContentBuilder, ContentBuilder {
 
     private AnnotationStrategy annotationStrategy;
 
@@ -31,28 +32,17 @@ public class OriginalJavaContentBuilder implements JavaContentBuilder, ContentBu
         String builder = "package " + classInfo.toEntityPackage() + ";\n\n" +
                 declareImports(classInfo) + "\n" +
                 CommentBuilder.build(classInfo) +
+                declareClassAnnotations() +
                 "public class " + classInfo.getClassName() + " implements Serializable {\n" +
                 getMainContent(classInfo) + "\n}";
         return builder;
     }
 
-    private String getMainContent(IClassInfo classInfo) {
-        StringBuilder fields = declareFields(classInfo);
-        StringBuilder setGetMethods = declareSetGetMethods(classInfo);
-        StringBuilder toStringMethod = declareToString(classInfo);
-        return fields.append("\n").append(setGetMethods).append(toStringMethod).toString();
-    }
+    protected abstract String getMainContent(IClassInfo classInfo);
 
-    private StringBuilder declareSetGetMethods(IClassInfo classInfo) {
-        StringBuilder methods = new StringBuilder();
-        for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
-            methods.append(formatGetMethod(fieldInfo));
-            methods.append(formatSetMethod(fieldInfo));
-        }
-        return methods;
-    }
+    protected abstract String declareClassAnnotations();
 
-    private StringBuilder declareFields(IClassInfo classInfo) {
+    protected StringBuilder declareFields(IClassInfo classInfo) {
         StringBuilder fields = new StringBuilder();
         for (FieldInfo fieldInfo : classInfo.getFieldInfos()) {
             if (StringUtils.isNotBlank(fieldInfo.getComment())) {
@@ -69,57 +59,25 @@ public class OriginalJavaContentBuilder implements JavaContentBuilder, ContentBu
         return fields;
     }
 
-    private StringBuilder declareToString(IClassInfo classInfo) {
-        List<FieldInfo> fieldInfos = classInfo.getFieldInfos();
-        StringBuilder toStringMethod = new StringBuilder();
-        toStringMethod.append(ofFour()).append("@Override\n")
-                .append(ofFour()).append("public String toString() {\n")
-                .append(ofEight()).append("return \"").append(classInfo.getClassName()).append(" [\"\n");
-        for (int i = 0; i < fieldInfos.size(); i++) {
-            FieldInfo fieldInfo = fieldInfos.get(i);
-            toStringMethod.append(ofSixteen()).append("+ ").append("\"")
-                    .append(fieldInfo.getFieldName()).append(" = \" + ")
-                    .append(fieldInfo.getFieldName()).append(" + \"");
-            if (i == fieldInfos.size() - 1) {
-                toStringMethod.append("]\";\n");
-            } else {
-                toStringMethod.append(",\"\n");
-            }
-        }
-        toStringMethod.append(ofFour()).append("}");
-        return toStringMethod;
-    }
-
-    private String formatSetMethod(FieldInfo fieldInfo) {
-        String fieldName = fieldInfo.getFieldName();
-        String setMethod = String.format(ofFour() + "public void set%s(%s %s) {\n"
-                        + ofEight() + "this.%s = %s;\n"
-                        + ofFour() + "}\n\n", fieldInfo.getFcuFieldName(),
-                fieldInfo.getSimpleType(), fieldName, fieldName, fieldName);
-        return setMethod;
-    }
-
-    private String formatGetMethod(FieldInfo fieldInfo) {
-        String getMethod = String.format(ofFour() + "public %s get%s() {\n"
-                        + ofEight() + "return this.%s;\n"
-                        + ofFour() + "}\n\n", fieldInfo.getSimpleType(),
-                fieldInfo.getFcuFieldName(), fieldInfo.getFieldName());
-        return getMethod;
-    }
-
     private String declareImports(IClassInfo classInfo) {
 
         StringBuilder imports = new StringBuilder();
         Collection<String> importTypes = classInfo.getImportTypes();
         importTypes.add("java.io.Serializable");
-        if (annotationStrategy != null) {
-            importTypes.add(annotationStrategy.dependClass());
-        }
+        importTypes.addAll(getExtraImportTypes());
         for (String importType : importTypes) {
             imports.append("import ").append(importType).append(";\n");
         }
 
         return imports.toString();
+    }
+
+    protected List<String> getExtraImportTypes() {
+        List<String> extraImportTypes = new ArrayList<>();
+        if (annotationStrategy != null) {
+            extraImportTypes.add(annotationStrategy.dependClass());
+        }
+        return extraImportTypes;
     }
 
     public void setAnnotationStrategy(AnnotationStrategy annotationStrategy) {

@@ -2,14 +2,13 @@ package com.qchery.kada;
 
 import com.qchery.kada.builder.hibernate.HibernateMappingFileBuilder;
 import com.qchery.kada.builder.hibernate.OriginalHibernateContentBuilder;
-import com.qchery.kada.builder.java.JavaMappingFileBuilder;
-import com.qchery.kada.builder.java.OriginalJavaContentBuilder;
-import com.qchery.kada.builder.java.TemplateJavaContentBuilder;
+import com.qchery.kada.builder.java.*;
 import com.qchery.kada.builder.mybatis.MybatisMappingFileBuilder;
 import com.qchery.kada.builder.mybatis.TemplateMybatisContentBuilder;
 import com.qchery.kada.convertor.IgnorePrefixNameConvertor;
 import com.qchery.kada.db.ConnectParam;
 import com.qchery.kada.db.DBHelperFactory;
+import com.qchery.kada.descriptor.java.AuthorInfo;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,10 +34,22 @@ public class DBOrmerTest {
     @Test
     public void testDbWithMysql() {
         IgnorePrefixNameConvertor nameConvertor = new IgnorePrefixNameConvertor();
+        OriginalJavaContentBuilder contentBuilder;
+        boolean useLombok = false;
+        if (useLombok) {
+            contentBuilder = new OriginalLombokJavaContentBuilder();
+        } else {
+            contentBuilder = new OriginalCommonJavaContentBuilder();
+        }
+        AuthorInfo authorInfo = new AuthorInfo();
+        authorInfo.setAuthor("chinrui1016@163.com");
+        authorInfo.setCompany("www.chery.com");
+
         DBOrmer dbOrmer = DBOrmer.create()
                 .dbHelper(dbHelperFactory.getDbHelper(mysqlConnectParam))
-                .addFileBuilder(new JavaMappingFileBuilder(new OriginalJavaContentBuilder())).packageName("com.qchery.kada")
+                .addFileBuilder(new JavaMappingFileBuilder(contentBuilder)).packageName("com.qchery.kada")
                 .tableNameFilter(tableName -> tableName.startsWith("cms"))
+                .authorInfo(authorInfo)
                 .nameConvertor(nameConvertor).build();
         dbOrmer.generateFile();
     }

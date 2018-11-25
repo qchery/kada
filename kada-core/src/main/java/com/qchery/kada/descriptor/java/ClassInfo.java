@@ -46,7 +46,7 @@ public class ClassInfo implements IClassInfo {
         // 当类型不为基础类型时，分配字段列表
         if (!typeInfo.isPrimitive()) {
             fieldInfos = new ArrayList<>();
-            importTypes = new HashSet<>();
+            importTypes = new LinkedHashSet<>();
         }
     }
 
